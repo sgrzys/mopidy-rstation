@@ -5,7 +5,7 @@ import subprocess
 import os
 import glob
 os.environ["SDL_FBDEV"] = "/dev/fb1"
-os.environ["SDL_MOUSEDEV"] = "/dev/input/touchscreen"
+os.environ["SDL_MOUSEDEV"] = "/dev/input/event2"
 os.environ["SDL_MOUSEDRV"] = "TSLIB"
 pygame.init()
 
@@ -66,7 +66,7 @@ def button(number):
 	if number == 0:    #specific script when exiting
 		screen.fill(black)
 		font=pygame.font.Font(None,24)
-        	label=font.render("Rstation bedzie dzialalo w tle", 1, (white))
+        	label=font.render("Rstation dziala w tle", 1, (white))
         	screen.blit(label,(0,90))
 		pygame.display.flip()
 		time.sleep(5)
