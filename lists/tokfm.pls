@@ -1,0 +1,9 @@
+numberofentries=4
+File1=http://poznan6.radio.pionier.net.pl:8000/radiotok.ogg
+Title1=Radio TOK FM (Feed 128 kb/s, 48kHz, stereo) from AMS
+File2=http://poznan6.radio.pionier.net.pl:8000/radiotok2.ogg
+Title2=Radio TOK FM (Feed 64 kb/s, 48kHz, stereo) from AMS
+File3=http://poznan6.radio.pionier.net.pl:8000/radiotok3.ogg
+Title3=Radio TOK FM (Feed 48 kb/s, 44kHz, stereo) from AMS
+File4=http://poznan6.radio.pionier.net.pl:8000/radiotok4.ogg
+Title4=Radio TOK FM (Feed 32 kb/s, 22kHz, stereo) from AMS
