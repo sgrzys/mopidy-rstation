@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 import unittest
 
-from mopidy_ttsgpio import Extension
+from Rstation import Extension
 
 
 class ExtensionTest(unittest.TestCase):
