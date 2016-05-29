@@ -13,7 +13,7 @@ def get_version(filename):
 
 setup(
     name='Mopidy-TtsGpio',
-    version=get_version('__init__.py'),
+    version=get_version('mopidy_ttsgpio/__init__.py'),
     url='https://github.com/9and3r/mopidy-ttsgpio',
     license='Apache License, Version 2.0',
     author='9and3r',
@@ -35,7 +35,7 @@ setup(
     ],
     entry_points={
         'mopidy.ext': [
-            'ttsgpio = Rstation:Extension',
+            'ttsgpio = mopidy_ttsgpio:Extension',
         ],
     },
     classifiers=[
