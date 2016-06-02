@@ -6,36 +6,32 @@ from setuptools import find_packages, setup
 
 
 def get_version(filename):
-    content = open(filename).read()
-    metadata = dict(re.findall("__([a-z]+)__ = '([^']+)'", content))
-    return metadata['version']
+    with open(filename) as fh:
+        metadata = dict(re.findall("__([a-z]+)__ = '([^']+)'", fh.read()))
+        return metadata['version']
 
 
 setup(
-    name='Mopidy-TtsGpio',
-    version=get_version('mopidy_ttsgpio/__init__.py'),
-    url='https://github.com/9and3r/mopidy-ttsgpio',
+    name='Mopidy-Rstation',
+    version=get_version('mopidy_rstation/__init__.py'),
+    url='https://github.com/araczkowski/mopidy-rstation',
     license='Apache License, Version 2.0',
-    author='9and3r',
-    author_email='9and3r@gmail.com',
-    description='Controll mopidy without screen using GPIO and TTS',
+    author='Andrzej Raczkowski',
+    author_email='araczkowski@gmail.com',
+    description='Mopidy extension, Raspberry Station or Radio Station',
     long_description=open('README.rst').read(),
     packages=find_packages(exclude=['tests', 'tests.*']),
     zip_safe=False,
     include_package_data=True,
     install_requires=[
         'setuptools',
-        'Mopidy >= 0.18',
+        'Mopidy >=1.1.1',
         'Pykka >= 1.1',
-    ],
-    test_suite='nose.collector',
-    tests_require=[
-        'nose',
-        'mock >= 1.0',
+        'pylirc2 >= 0.1',
     ],
     entry_points={
         'mopidy.ext': [
-            'ttsgpio = mopidy_ttsgpio:Extension',
+            'rstation = mopidy_rstation:Extension',
         ],
     },
     classifiers=[
