@@ -4,6 +4,7 @@ import threading
 import select
 
 from mopidy.core import PlaybackState
+from .tts import TTS
 
 logger = logging.getLogger('mopidy_IRControl')
 
@@ -27,24 +28,33 @@ class CommandDispatcher(object):
     def __init__(self, core, config, buttonPressEvent):
         self.core = core
         self.config = config
+        self.tts = TTS(self, config)
         self._handlers = {}
-        self.registerHandler('playpause', self._playpauseHandler)
-        self.registerHandler('mute', self._muteHandler)
-        self.registerHandler('stop', lambda: self.core.playback.stop().get())
-        self.registerHandler('next', lambda: self.core.playback.next().get())
-        self.registerHandler('previous',
-                             lambda: self.core.playback.previous().get())
-        self.registerHandler('volumedown',
+
+        self.registerHandler('ch_minus', self._chmHandler)
+        self.registerHandler('ch', self._chHandler)
+        self.registerHandler('ch_plus', self._chpHandler)
+        self.registerHandler('prev', self._prevHandler)
+        self.registerHandler('next', self._nextHandler)
+        self.registerHandler('play_pause', self._playpauseHandler)
+        self.registerHandler('vol_down',
                              self._volumeFunction(lambda vol: vol - 5))
-        self.registerHandler('volumeup',
+        self.registerHandler('vol_up',
                              self._volumeFunction(lambda vol: vol + 5))
+        self.registerHandler('eq', self._eqHandler)
+        self.registerHandler('fl_minus', self._flmHandler)
+        self.registerHandler('fl_plus', self._flpHandler)
 
         for i in range(10):
             self.registerHandler('num{0}'.format(i), self._playlistFunction(i))
 
+        self.registerHandler('mute', self._muteHandler)
+        self.registerHandler('stop', lambda: self.core.playback.stop().get())
+
         buttonPressEvent.append(self.handleCommand)
 
     def handleCommand(self, cmd):
+
         if cmd in self._handlers:
             logger.debug("Command {0} was handled".format(cmd))
             self._handlers[cmd]()
@@ -57,19 +67,56 @@ class CommandDispatcher(object):
     def _playpauseHandler(self):
         state = self.core.playback.get_state().get()
         if(state == PlaybackState.PAUSED):
+            self.tts.speak("PLAY")
             self.core.playback.resume().get()
         elif (state == PlaybackState.PLAYING):
+            self.tts.speak("PAUSE")
             self.core.playback.pause().get()
         elif (state == PlaybackState.STOPPED):
+            self.tts.speak("PLAY")
             self.core.playback.play().get()
 
+    def _nextHandler(self):
+        self.tts.speak("NEXT")
+        lambda: self.core.playback.next().get()
+
+    def _prevHandler(self):
+        self.tts.speak("PREV")
+        lambda: self.core.playback.prev().get()
+
+    def _chmHandler(self):
+        self.tts.speak("CHM")
+
+    def _chHandler(self):
+        self.tts.speak("CH")
+
+    def _chpHandler(self):
+        self.tts.speak("CHP")
+
+    def _flmHandler(self):
+        self.tts.speak("FLM")
+
+    def _flpHandler(self):
+        self.tts.speak("FLP")
+
+    def _eqHandler(self):
+        if self.tts.speak_on is True:
+            self.tts.speak("SPEAK_OFF")
+            self.tts.speak_on = False
+        else:
+            self.tts.speak_on = True
+            self.tts.speak("SPEAK_ON")
+
     def _muteHandler(self):
+        self.tts.speak('MUTE')
         self.core.mixer.set_mute(not self.core.mixer.get_mute().get())
 
     def _volumeFunction(self, changeFct):
         def volumeChange():
             vol = self.core.mixer.get_volume().get()
             self.core.mixer.set_volume(min(max(0, changeFct(vol)), 100))
+            self.tts.speak(
+                'VOL', val=str(min(max(0, changeFct(vol)), 100)))
         return volumeChange
 
     def _playPlaylist(self, uri):
