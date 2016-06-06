@@ -3,6 +3,9 @@ import logging
 import threading
 import select
 
+# from mopidy_touchscreen.screen_manager import ScreenManager
+import pygame
+
 from mopidy.core import PlaybackState
 from .tts import TTS
 
@@ -30,6 +33,8 @@ class CommandDispatcher(object):
         self.config = config
         self.tts = TTS(self, config)
         self._handlers = {}
+
+        # self.screen_manager = ScreenManager()
 
         self.registerHandler('ch_minus', self._chmHandler)
         self.registerHandler('ch', self._chHandler)
@@ -86,12 +91,37 @@ class CommandDispatcher(object):
 
     def _chmHandler(self):
         self.tts.speak("CHM")
+        dict = {}
+        type = pygame.KEYDOWN
+        dict['unicode'] = None
+        dict['key'] = pygame.K_LEFT
+        event = pygame.event.Event(type, dict)
+        pygame.event.post(event)
+        # and up
+        type = pygame.KEYUP
+        event = pygame.event.Event(type, dict)
+        pygame.event.post(event)
 
     def _chHandler(self):
         self.tts.speak("CH")
+        dict = {}
+        type = pygame.USEREVENT
+        dict['key'] = "CH"
+        event = pygame.event.Event(type, dict)
+        pygame.event.post(event)
 
     def _chpHandler(self):
         self.tts.speak("CHP")
+        dict = {}
+        type = pygame.KEYDOWN
+        dict['unicode'] = None
+        dict['key'] = pygame.K_RIGHT
+        event = pygame.event.Event(type, dict)
+        pygame.event.post(event)
+        # and up
+        type = pygame.KEYUP
+        event = pygame.event.Event(type, dict)
+        pygame.event.post(event)
 
     def _flmHandler(self):
         self.tts.speak("FLM")
