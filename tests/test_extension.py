@@ -1,25 +1,29 @@
-from __future__ import unicode_literals
+# from __future__ import unicode_literals
 
-from mopidy_rstation import Extension, frontend as frontend_lib
+import unittest
 
-
-def test_get_default_config():
-    ext = Extension()
-
-    config = ext.get_default_config()
-
-    assert '[rstation]' in config
-    assert 'enabled = true' in config
+from mopidy_touchscreen import Extension
 
 
-def test_get_config_schema():
-    ext = Extension()
-
-    schema = ext.get_config_schema()
-
-    # TODO Test the content of your config schema
-    #assert 'username' in schema
-    #assert 'password' in schema
+# ,touch_screen as frontend_lib
 
 
-# TODO Write more tests
+class ExtensionTest(unittest.TestCase):
+
+    def test_get_default_config(self):
+        ext = Extension()
+
+        config = ext.get_default_config()
+
+        self.assertIn('[touchscreen]', config)
+        self.assertIn('enabled = true', config)
+
+    def test_get_config_schema(self):
+        pass
+        # ext = Extension()
+
+        # schema = ext.get_config_schema()
+
+        # TODO Test the content of your config schema
+        # self.assertIn('username', schema)
+        # self.assertIn('password', schema)

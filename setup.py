@@ -12,26 +12,32 @@ def get_version(filename):
 
 
 setup(
-    name='Mopidy-Rstation',
-    version=get_version('mopidy_rstation/__init__.py'),
-    url='https://github.com/araczkowski/mopidy-rstation',
+    name='Mopidy-Touchscreen',
+    version=get_version('mopidy_touchscreen/__init__.py'),
+    url='https://github.com/9and3r/mopidy-touchscreen',
     license='Apache License, Version 2.0',
-    author='Andrzej Raczkowski',
-    author_email='araczkowski@gmail.com',
-    description='Mopidy extension, Raspberry Station or Radio Station',
+    author='9and3r',
+    author_email='9and3r@gmail.com',
+    description='Mopidy extension to show info '
+                'on a display and control from it',
     long_description=open('README.rst').read(),
     packages=find_packages(exclude=['tests', 'tests.*']),
     zip_safe=False,
     include_package_data=True,
     install_requires=[
         'setuptools',
-        'Mopidy >=1.1.1',
+        'Mopidy >= 1.0',
         'Pykka >= 1.1',
-        'pylirc2 >= 0.1',
+        'pygame'
+    ],
+    test_suite='nose.collector',
+    tests_require=[
+        'nose',
+        'mock >= 1.0',
     ],
     entry_points={
         'mopidy.ext': [
-            'rstation = mopidy_rstation:Extension',
+            'touchscreen = mopidy_touchscreen:Extension',
         ],
     },
     classifiers=[

@@ -1,10 +1,12 @@
 *.egg-info
 *.pyc
 *.swp
+*~
 *.raw
-.cache/
 .coverage
+.idea/
 .tox/
 MANIFEST
 build/
 dist/
+xunit-*.xml

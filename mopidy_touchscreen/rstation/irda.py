@@ -83,51 +83,33 @@ class CommandDispatcher(object):
 
     def _nextHandler(self):
         self.tts.speak("NEXT")
+        # self._screenEvent("NEXT")
         lambda: self.core.playback.next().get()
 
     def _prevHandler(self):
         self.tts.speak("PREV")
+        # self._screenEvent("PREV")
         lambda: self.core.playback.prev().get()
 
     def _chmHandler(self):
         self.tts.speak("CHM")
-        dict = {}
-        type = pygame.KEYDOWN
-        dict['unicode'] = None
-        dict['key'] = pygame.K_LEFT
-        event = pygame.event.Event(type, dict)
-        pygame.event.post(event)
-        # and up
-        type = pygame.KEYUP
-        event = pygame.event.Event(type, dict)
-        pygame.event.post(event)
+        self._screenEvent("CHM")
 
     def _chHandler(self):
         self.tts.speak("CH")
-        dict = {}
-        type = pygame.USEREVENT
-        dict['key'] = "CH"
-        event = pygame.event.Event(type, dict)
-        pygame.event.post(event)
+        self._screenEvent("CH")
 
     def _chpHandler(self):
         self.tts.speak("CHP")
-        dict = {}
-        type = pygame.KEYDOWN
-        dict['unicode'] = None
-        dict['key'] = pygame.K_RIGHT
-        event = pygame.event.Event(type, dict)
-        pygame.event.post(event)
-        # and up
-        type = pygame.KEYUP
-        event = pygame.event.Event(type, dict)
-        pygame.event.post(event)
+        self._screenEvent("CHP")
 
     def _flmHandler(self):
         self.tts.speak("FLM")
+        self._screenEvent("FLM")
 
     def _flpHandler(self):
         self.tts.speak("FLP")
+        self._screenEvent("FLP")
 
     def _eqHandler(self):
         if self.tts.speak_on is True:
@@ -175,6 +157,13 @@ class CommandDispatcher(object):
         return lambda: self._playPlaylist(
             self.config['playlist_uri_template'].format(num)
         )
+
+    def _screenEvent(self, key):
+        dict = {}
+        type = pygame.USEREVENT
+        dict['key'] = key
+        event = pygame.event.Event(type, dict)
+        pygame.event.post(event)
 
 
 class LircThread(threading.Thread):
