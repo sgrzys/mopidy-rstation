@@ -1,0 +1,6 @@
+#!/bin/sh
+now=$(date)
+
+echo Cześć Rysiek | espeak -v pl
+echo "dzisiaj jest $now" | espeak -v pl
+
