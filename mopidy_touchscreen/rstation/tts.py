@@ -42,11 +42,11 @@ class TTS():
         if code == 'PREV':
             self.speak_text("Poprzedni")
         if code == 'CHM':
-            self.speak_text("Kanał minus")
+            self.speak_text("Biblioteka")
         if code == 'CH':
-            self.speak_text("Kanał")
+            self.speak_text("Odtwarzacz")
         if code == 'CHP':
-            self.speak_text("Kanał plus")
+            self.speak_text("Listy")
         if code == 'NUM0':
             self.speak_text("Numer 0")
         if code == 'FLM':

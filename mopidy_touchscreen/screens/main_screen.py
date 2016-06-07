@@ -471,3 +471,10 @@ class MainScreen(BaseScreen):
             return track.album.name
         else:
             return "Unknow Album"
+
+    @staticmethod
+    def info(track):
+        album_name = MainScreen.get_track_album_name(track)
+        track_name = MainScreen.get_track_name(track)
+
+        return album_name + ' ' + track_name

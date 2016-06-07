@@ -30,11 +30,11 @@ class RstationFrontend(pykka.ThreadingActor, core.CoreListener):
 
         self.debug_irda_simulate = config['touchscreen']['debug_irda_simulate']
         if self.debug_irda_simulate:
+            logger.debug('IrdaSimulator is ON')
             from rstation.irda_simulator import IrdaSimulator
             self.simulator = IrdaSimulator(self.dispatcher)
-        # else:
-        #     from .gpio_input_manager import GPIOManager
-        #     self.gpio_manager = GPIOManager(self, config['ttsgpio'])
+        else:
+            logger.debug('IrdaSimulator is OFF')
 
     def on_start(self):
         try:

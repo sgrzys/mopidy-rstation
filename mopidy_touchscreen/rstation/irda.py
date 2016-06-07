@@ -9,9 +9,9 @@ import pygame
 from mopidy.core import PlaybackState
 from .tts import TTS
 
-logger = logging.getLogger('mopidy_IRControl')
+logger = logging.getLogger('mopidy_Rstation')
 
-LIRC_PROG_NAME = "mopidyIRControl"
+LIRC_PROG_NAME = "mopidyRstation"
 
 
 class Event(list):
@@ -33,8 +33,6 @@ class CommandDispatcher(object):
         self.config = config
         self.tts = TTS(self, config)
         self._handlers = {}
-
-        # self.screen_manager = ScreenManager()
 
         self.registerHandler('ch_minus', self._chmHandler)
         self.registerHandler('ch', self._chHandler)
@@ -178,12 +176,13 @@ class LircThread(threading.Thread):
         try:
             self.run_inside_try()
         except Exception as e:
-            logger.warning('IRControl has problems starting pylirc: ' + str(e))
+            logger.warning('Rstation has problems starting pylirc: ' + str(e))
 
     def run_inside_try(self):
         self.startPyLirc()
 
     def startPyLirc(self):
+        logger.debug('Rstation start pylirc')
         lircHandle = pylirc.init(LIRC_PROG_NAME, self.configFile, 0)
         if(lircHandle != 0):
             while(self.frontendActive):

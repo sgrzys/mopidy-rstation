@@ -11,7 +11,6 @@ import pykka
 
 from .screen_manager import ScreenManager
 
-
 logger = logging.getLogger(__name__)
 
 

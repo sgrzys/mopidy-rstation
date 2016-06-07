@@ -11,8 +11,10 @@ from pkg_resources import Requirement, resource_filename
 
 import pygame
 
-from screens import BaseScreen, Keyboard, LibraryScreen, MainScreen, MenuScreen,\
-    PlaylistScreen, SearchScreen, Tracklist
+from rstation.tts import TTS
+
+from screens import BaseScreen, Keyboard, LibraryScreen, MainScreen,\
+    MenuScreen, PlaylistScreen, SearchScreen, Tracklist
 
 
 logger = logging.getLogger(__name__)
@@ -33,7 +35,7 @@ class ScreenManager():
         self.fonts = {}
         self.background = None
         self.current_screen = library_index
-
+        self.tts = TTS(self, None)
         # Init variables in init
         self.base_size = None
         self.size = None
@@ -243,12 +245,19 @@ class ScreenManager():
         if key is not None:
             if key == 'CH':
                 self.change_screen(1)
+                track = self.core.playback.current_track.get()
+                if track is not None:
+                    print(str(MainScreen.info(track)))
+                    self.tts.speak_text(MainScreen.info(track))
                 return True
             elif key == 'CHP':
-                self.change_screen(self.current_screen+1)
+                self.change_screen(4)
+                # TODO navigate throuaout the liberary and read the titles
                 return True
             elif key == 'CHM':
-                self.change_screen(self.current_screen-1)
+                self.change_screen(3)
+                # TODO navigate throuaout the playlist and read the titles
+
                 return True
 
         return False
