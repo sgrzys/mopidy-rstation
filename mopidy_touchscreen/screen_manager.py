@@ -196,6 +196,7 @@ class ScreenManager():
             self.update_type = BaseScreen.update_all
 
     def manage_event(self, event):
+
         if event.type == pygame.USEREVENT:
             return self.manage_custom_event(event)
 
@@ -245,18 +246,39 @@ class ScreenManager():
         if key is not None:
             if key == 'CH':
                 self.change_screen(1)
-                track = self.core.playback.current_track.get()
-                if track is not None:
-                    print(str(MainScreen.info(track)))
-                    self.tts.speak_text(MainScreen.info(track))
-                return True
-            elif key == 'CHP':
-                self.change_screen(4)
-                # TODO navigate throuaout the liberary and read the titles
-                return True
             elif key == 'CHM':
                 self.change_screen(3)
-                # TODO navigate throuaout the playlist and read the titles
+            elif key == 'CHP':
+                self.change_screen(4)
+            elif key == 'NEXT':
+                event = self.input_manager.event(event)
+                self.screens[self.current_screen].touch_event(event)
+                self.update_type = BaseScreen.update_all
+            elif key == 'NEXT':
+                if self.current_screen == 1:
+                    self.core.playback.previous()
+            elif key == 'NUM9':
+                # info about current screan
+                if self.current_screen == 1:
+                    track = self.core.playback.current_track.get()
+                    if track is not None:
+                        self.tts.speak_text(MainScreen.info(track), 'en')
+                        # TODO info about timing...
+                    else:
+                        self.tts.speak_text(
+                            'Aktualnie nie jest odtwarzany żaden utwór')
+                if self.current_screen == 3:
+                    dl = self.screens[3].library_strings
+                    for i in dl:
+                        self.tts.speak_text(i, 'en')
+
+                if self.current_screen == 4:
+                    ps = self.screens[4].playlists_strings
+                    if len(ps) > 0:
+                        for i in ps:
+                            self.tts.speak_text(i, 'en')
+                    else:
+                        self.tts.speak_text('Brak list odtwarzania')
 
                 return True
 

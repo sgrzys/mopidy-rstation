@@ -7,12 +7,13 @@ import urllib
 import urllib2
 from threading import Thread
 
-
 from base_screen import BaseScreen
 
 import mopidy.core
 
 import pygame
+
+from rstation.tts import TTS
 
 from ..graphic_utils import Progressbar, \
     ScreenObjectsManager, TextItem, TouchAndTextItem
@@ -27,6 +28,7 @@ class MainScreen(BaseScreen):
                  background):
         BaseScreen.__init__(self, size, base_size, manager, fonts)
         self.core = core
+        self.tts = TTS(self, None)
         self.track = None
         self.cache = cache
         self.image = None
@@ -367,19 +369,27 @@ class MainScreen(BaseScreen):
                 self.core.mixer.set_volume(volume)
         elif event.type == InputManager.key:
             if event.direction == InputManager.enter:
+                if(state == mopidy.core.PlaybackState.PAUSED):
+                    self.tts.speak("PLAY")
+                elif (state == mopidy.core.PlaybackState.PLAYING):
+                    self.tts.speak("PAUSE")
+                elif (state == mopidy.core.PlaybackState.STOPPED):
+                    self.tts.speak("PLAY")
                 self.click_on_objects(["pause_play"], None)
             elif event.direction == InputManager.up:
-                vol = self.core.mixer.get_volume().get()
-                vol += 3
-                if vol > 100:
-                    vol = 100
-                self.core.mixer.set_volume(vol)
+                self.click_on_objects(["previous"], None)
+                # vol = self.core.mixer.get_volume().get()
+                # vol += 3
+                # if vol > 100:
+                #     vol = 100
+                # self.core.mixer.set_volume(vol)
             elif event.direction == InputManager.down:
-                vol = self.core.mixer.get_volume().get()
-                vol -= 3
-                if vol < 0:
-                    vol = 0
-                self.core.mixer.set_volume(vol)
+                self.click_on_objects(["next"], None)
+                # vol = self.core.mixer.get_volume().get()
+                # vol -= 3
+                # if vol < 0:
+                #     vol = 0
+                # self.core.mixer.set_volume(vol)
             elif event.longpress:
                 if event.direction == InputManager.left:
                     self.click_on_objects(["previous"], None)

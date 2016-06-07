@@ -48,9 +48,10 @@ class CommandDispatcher(object):
         self.registerHandler('fl_minus', self._flmHandler)
         self.registerHandler('fl_plus', self._flpHandler)
 
-        for i in range(10):
+        for i in range(9):
             self.registerHandler('num{0}'.format(i), self._playlistFunction(i))
 
+        self.registerHandler('num9', self._num9Handler)
         self.registerHandler('mute', self._muteHandler)
         self.registerHandler('stop', lambda: self.core.playback.stop().get())
 
@@ -68,26 +69,57 @@ class CommandDispatcher(object):
         self._handlers[cmd] = handler
 
     def _playpauseHandler(self):
-        state = self.core.playback.get_state().get()
-        if(state == PlaybackState.PAUSED):
-            self.tts.speak("PLAY")
-            self.core.playback.resume().get()
-        elif (state == PlaybackState.PLAYING):
-            self.tts.speak("PAUSE")
-            self.core.playback.pause().get()
-        elif (state == PlaybackState.STOPPED):
-            self.tts.speak("PLAY")
-            self.core.playback.play().get()
+        # state = self.core.playback.get_state().get()
+        # if(state == PlaybackState.PAUSED):
+        #     self.tts.speak("PLAY")
+        #     # self.core.playback.resume().get()
+        # elif (state == PlaybackState.PLAYING):
+        #     self.tts.speak("PAUSE")
+        #     # self.core.playback.pause().get()
+        # elif (state == PlaybackState.STOPPED):
+        #     self.tts.speak("PLAY")
+        #     # self.core.playback.play().get()
+        # self._screenEvent("PLAY_PAUSE")
+        dict = {}
+        type = pygame.KEYDOWN
+        dict['unicode'] = None
+        dict['key'] = pygame.K_RETURN
+        event = pygame.event.Event(type, dict)
+        pygame.event.post(event)
+        # and up
+        type = pygame.KEYUP
+        event = pygame.event.Event(type, dict)
+        pygame.event.post(event)
 
     def _nextHandler(self):
         self.tts.speak("NEXT")
         # self._screenEvent("NEXT")
-        lambda: self.core.playback.next().get()
+        # lambda: self.core.playback.next().get()
+        dict = {}
+        type = pygame.KEYDOWN
+        dict['unicode'] = None
+        dict['key'] = pygame.K_DOWN
+        event = pygame.event.Event(type, dict)
+        pygame.event.post(event)
+        # and up
+        type = pygame.KEYUP
+        event = pygame.event.Event(type, dict)
+        pygame.event.post(event)
 
     def _prevHandler(self):
         self.tts.speak("PREV")
         # self._screenEvent("PREV")
-        lambda: self.core.playback.prev().get()
+        # lambda: self.core.playback.prev().get()
+        dict = {}
+        type = pygame.KEYDOWN
+        dict['unicode'] = None
+        dict['key'] = pygame.K_UP
+        event = pygame.event.Event(type, dict)
+        pygame.event.post(event)
+        # and up
+        type = pygame.KEYUP
+        event = pygame.event.Event(type, dict)
+        pygame.event.post(event)
 
     def _chmHandler(self):
         self.tts.speak("CHM")
@@ -100,6 +132,10 @@ class CommandDispatcher(object):
     def _chpHandler(self):
         self.tts.speak("CHP")
         self._screenEvent("CHP")
+
+    def _num9Handler(self):
+        self.tts.speak("NUM9")
+        self._screenEvent("NUM9")
 
     def _flmHandler(self):
         self.tts.speak("FLM")

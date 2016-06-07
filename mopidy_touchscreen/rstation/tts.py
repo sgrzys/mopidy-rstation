@@ -10,9 +10,10 @@ class TTS():
         self.frontend = frontend
         self.speak_on = True
 
-    def speak_text(self, text):
-        t = Thread(target=self.speak_text_thread, args=(text,))
-        t.start()
+    def speak_text(self, text, language='pl'):
+        # t = Thread(target=self.speak_text_thread, args=(text,))
+        # t.start()
+        os.system(' echo "' + text + '" | espeak -v' + language)
 
     def speak_text_thread(self, text):
         os.system(' echo "' + text + '" | espeak -v pl')
@@ -53,3 +54,5 @@ class TTS():
             self.speak_text("Fl minus")
         if code == 'FLP':
             self.speak_text("Fl plus")
+        if code == 'NUM9':
+            self.speak_text("Informacja")
