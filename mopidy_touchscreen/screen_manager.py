@@ -11,7 +11,7 @@ from pkg_resources import Requirement, resource_filename
 
 import pygame
 
-from rstation.tts import TTS
+from .rstation.tts import TTS
 
 from screens import BaseScreen, Keyboard, LibraryScreen, MainScreen,\
     MenuScreen, PlaylistScreen, SearchScreen, Tracklist
