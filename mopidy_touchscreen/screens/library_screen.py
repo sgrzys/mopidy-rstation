@@ -3,6 +3,7 @@ from base_screen import BaseScreen
 import mopidy.models
 
 from ..graphic_utils import ListView
+from ..rstation import tts
 
 
 class LibraryScreen(BaseScreen):
@@ -46,19 +47,36 @@ class LibraryScreen(BaseScreen):
 
     def touch_event(self, touch_event):
         clicked = self.list_view.touch_event(touch_event)
+        selected = self.list_view.selected
+        if self.library_strings[0] == "../":
+                selected = selected - 1
+        if selected == -1:
+            selected_name = '..'
+        else:
+            selected_name = self.library[selected].name
+        print(selected_name)
         if clicked is not None:
             if self.current_directory is not None:
                 if clicked == 0:
                     self.go_up_directory()
+                    tts.speak('GO_UP_DIR')
                 else:
                     if self.library[clicked - 1].type\
                             == mopidy.models.Ref.TRACK:
                         self.play_uri(clicked-1)
+                        tts.speak(
+                            'PLAY_URI', val=selected_name)
                     else:
                         self.go_inside_directory(
                             self.library[clicked - 1].uri)
+                        tts.speak(
+                            'ENTER_DIR', val=selected_name)
             else:
                 self.go_inside_directory(self.library[clicked].uri)
+                tts.speak(
+                    'ENTER_DIR', val=selected_name)
+        else:
+            tts.speak('LIST_ITEM', val=selected_name)
 
     def play_uri(self, track_pos):
         self.manager.core.tracklist.clear()

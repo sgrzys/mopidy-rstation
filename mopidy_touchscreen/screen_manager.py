@@ -11,7 +11,7 @@ from pkg_resources import Requirement, resource_filename
 
 import pygame
 
-from .rstation.tts import TTS
+from .rstation import tts
 
 from screens import BaseScreen, Keyboard, LibraryScreen, MainScreen,\
     MenuScreen, PlaylistScreen, SearchScreen, Tracklist
@@ -35,7 +35,6 @@ class ScreenManager():
         self.fonts = {}
         self.background = None
         self.current_screen = library_index
-        self.tts = TTS(self, None)
         # Init variables in init
         self.base_size = None
         self.size = None
@@ -262,23 +261,23 @@ class ScreenManager():
                 if self.current_screen == 1:
                     track = self.core.playback.current_track.get()
                     if track is not None:
-                        self.tts.speak_text(MainScreen.info(track), 'en')
+                        tts.speak_text(MainScreen.info(track))
                         # TODO info about timing...
                     else:
-                        self.tts.speak_text(
+                        tts.speak_text(
                             'Aktualnie nie jest odtwarzany żaden utwór')
                 if self.current_screen == 3:
                     dl = self.screens[3].library_strings
                     for i in dl:
-                        self.tts.speak_text(i, 'en')
+                        tts.speak_text(i)
 
                 if self.current_screen == 4:
                     ps = self.screens[4].playlists_strings
                     if len(ps) > 0:
                         for i in ps:
-                            self.tts.speak_text(i, 'en')
+                            tts.speak_text(i)
                     else:
-                        self.tts.speak_text('Brak list odtwarzania')
+                        tts.speak_text('Brak list odtwarzania')
 
                 return True
 

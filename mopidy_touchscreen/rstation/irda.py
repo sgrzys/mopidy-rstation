@@ -5,9 +5,7 @@ import select
 
 # from mopidy_touchscreen.screen_manager import ScreenManager
 import pygame
-
-from mopidy.core import PlaybackState
-from .tts import TTS
+import tts
 
 logger = logging.getLogger('mopidy_Rstation')
 
@@ -31,7 +29,6 @@ class CommandDispatcher(object):
     def __init__(self, core, config, buttonPressEvent):
         self.core = core
         self.config = config
-        self.tts = TTS(self, config)
         self._handlers = {}
 
         self.registerHandler('ch_minus', self._chmHandler)
@@ -71,13 +68,13 @@ class CommandDispatcher(object):
     def _playpauseHandler(self):
         # state = self.core.playback.get_state().get()
         # if(state == PlaybackState.PAUSED):
-        #     self.tts.speak("PLAY")
+        #     tts.speak("PLAY")
         #     # self.core.playback.resume().get()
         # elif (state == PlaybackState.PLAYING):
-        #     self.tts.speak("PAUSE")
+        #     tts.speak("PAUSE")
         #     # self.core.playback.pause().get()
         # elif (state == PlaybackState.STOPPED):
-        #     self.tts.speak("PLAY")
+        #     tts.speak("PLAY")
         #     # self.core.playback.play().get()
         # self._screenEvent("PLAY_PAUSE")
         dict = {}
@@ -92,7 +89,7 @@ class CommandDispatcher(object):
         pygame.event.post(event)
 
     def _nextHandler(self):
-        self.tts.speak("NEXT")
+        tts.speak("NEXT")
         # self._screenEvent("NEXT")
         # lambda: self.core.playback.next().get()
         dict = {}
@@ -107,7 +104,7 @@ class CommandDispatcher(object):
         pygame.event.post(event)
 
     def _prevHandler(self):
-        self.tts.speak("PREV")
+        tts.speak("PREV")
         # self._screenEvent("PREV")
         # lambda: self.core.playback.prev().get()
         dict = {}
@@ -122,46 +119,51 @@ class CommandDispatcher(object):
         pygame.event.post(event)
 
     def _chmHandler(self):
-        self.tts.speak("CHM")
+        tts.speak("CHM")
         self._screenEvent("CHM")
 
     def _chHandler(self):
-        self.tts.speak("CH")
+        tts.speak("CH")
         self._screenEvent("CH")
 
     def _chpHandler(self):
-        self.tts.speak("CHP")
+        tts.speak("CHP")
         self._screenEvent("CHP")
 
     def _num9Handler(self):
-        self.tts.speak("NUM9")
+        tts.speak("NUM9")
         self._screenEvent("NUM9")
 
     def _flmHandler(self):
-        self.tts.speak("FLM")
+        tts.speak("FLM")
         self._screenEvent("FLM")
 
     def _flpHandler(self):
-        self.tts.speak("FLP")
+        tts.speak("FLP")
         self._screenEvent("FLP")
 
     def _eqHandler(self):
-        if self.tts.speak_on is True:
-            self.tts.speak("SPEAK_OFF")
-            self.tts.speak_on = False
+        if tts.speak_on is True:
+            if tts.lang == 'en':
+                tts.lang = 'pl'
+                tts.speak('SPEAK_ON')
+            elif tts.lang == 'pl':
+                tts.speak("SPEAK_OFF")
+                tts.speak_on = False
         else:
-            self.tts.speak_on = True
-            self.tts.speak("SPEAK_ON")
+            tts.speak_on = True
+            tts.lang = 'en'
+            tts.speak("SPEAK_ON")
 
     def _muteHandler(self):
-        self.tts.speak('MUTE')
+        tts.speak('MUTE')
         self.core.mixer.set_mute(not self.core.mixer.get_mute().get())
 
     def _volumeFunction(self, changeFct):
         def volumeChange():
             vol = self.core.mixer.get_volume().get()
             self.core.mixer.set_volume(min(max(0, changeFct(vol)), 100))
-            self.tts.speak(
+            tts.speak(
                 'VOL', val=str(min(max(0, changeFct(vol)), 100)))
         return volumeChange
 

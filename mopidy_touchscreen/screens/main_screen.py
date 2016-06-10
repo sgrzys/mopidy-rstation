@@ -13,7 +13,7 @@ import mopidy.core
 
 import pygame
 
-from ..rstation.tts import TTS
+from ..rstation import tts
 
 from ..graphic_utils import Progressbar, \
     ScreenObjectsManager, TextItem, TouchAndTextItem
@@ -28,7 +28,6 @@ class MainScreen(BaseScreen):
                  background):
         BaseScreen.__init__(self, size, base_size, manager, fonts)
         self.core = core
-        self.tts = TTS(self, None)
         self.track = None
         self.cache = cache
         self.image = None
@@ -368,13 +367,14 @@ class MainScreen(BaseScreen):
                     volume = 0
                 self.core.mixer.set_volume(volume)
         elif event.type == InputManager.key:
+            state = self.core.playback.get_state().get()
             if event.direction == InputManager.enter:
                 if(state == mopidy.core.PlaybackState.PAUSED):
-                    self.tts.speak("PLAY")
+                    tts.speak("PLAY")
                 elif (state == mopidy.core.PlaybackState.PLAYING):
-                    self.tts.speak("PAUSE")
+                    tts.speak("PAUSE")
                 elif (state == mopidy.core.PlaybackState.STOPPED):
-                    self.tts.speak("PLAY")
+                    tts.speak("PLAY")
                 self.click_on_objects(["pause_play"], None)
             elif event.direction == InputManager.up:
                 self.click_on_objects(["previous"], None)
