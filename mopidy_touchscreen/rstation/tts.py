@@ -3,6 +3,10 @@ speak_on = True
 lang = 'pl'
 
 
+def convert_text(text):
+    return text.encode('ascii', 'ignore')
+
+
 def speak_text(text):
     # t = Thread(target=speak_text_thread, args=(text,))
     # t.start()
@@ -15,7 +19,7 @@ def speak(code, *param, **key):
         return 0
 
     if ('val' in key):
-        val = key['val']
+        val = convert_text(key['val'])
 
     if code == 'PLAY':
         if lang == 'pl':
