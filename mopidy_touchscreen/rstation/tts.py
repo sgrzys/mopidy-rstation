@@ -1,10 +1,16 @@
+# This Python file uses the following encoding: utf-8
 import os
 speak_on = True
 lang = 'pl'
 
 
 def convert_text(text):
-    return text.encode('ascii', 'ignore')
+    try:
+        t = text.encode('ascii', 'ignore')
+    except Exception as e:
+        t = 'exceptioin ' + e.message
+
+    return t
 
 
 def speak_text(text):
@@ -111,3 +117,8 @@ def speak(code, *param, **key):
             speak_text("Graj " + val)
         elif lang == 'en':
             speak_text("Play " + val)
+    if code == 'GO_UP_DIR':
+        if lang == 'pl':
+            speak_text("Idz do góry")
+        elif lang == 'en':
+            speak_text("Go up")

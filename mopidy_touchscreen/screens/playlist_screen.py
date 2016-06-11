@@ -1,3 +1,4 @@
+# This Python file uses the following encoding: utf-8
 from base_screen import BaseScreen
 
 from ..graphic_utils import ListView
@@ -55,6 +56,9 @@ class PlaylistScreen(BaseScreen):
             selected_name = '..'
         else:
             selected_name = self.playlists[selected].name
+        print('selected_name: ' + selected_name)
+        print('selected_name: ' + selected_name)
+        print('selected_name: ' + selected_name)
         print('selected_name: ' + selected_name)
         tts.speak('LIST_ITEM', val=selected_name)
         if clicked is not None:

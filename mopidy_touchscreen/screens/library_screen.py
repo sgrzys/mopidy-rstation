@@ -1,3 +1,4 @@
+# This Python file uses the following encoding: utf-8
 from base_screen import BaseScreen
 
 import mopidy.models
@@ -51,10 +52,14 @@ class LibraryScreen(BaseScreen):
         if self.library_strings[0] == "../":
                 selected = selected - 1
         if selected == -1:
-            selected_name = '..'
+            if tts.lang == 'pl':
+                selected_name = 'Wyjście'
+            else:
+                selected_name = 'Up'
         else:
             selected_name = self.library[selected].name
         print(selected_name)
+
         if clicked is not None:
             if self.current_directory is not None:
                 if clicked == 0:
