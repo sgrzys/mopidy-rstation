@@ -1,14 +1,16 @@
-# This Python file uses the following encoding: utf-8
+# encoding=utf8
 import os
+
 speak_on = True
 lang = 'pl'
 
 
 def convert_text(text):
     try:
-        t = text.encode('ascii', 'ignore')
+        t = text.encode("utf8", "ignore")
     except Exception as e:
-        t = 'exceptioin ' + e.message
+        print(str(e))
+        t = 'Error ' + e.message
 
     return t
 
@@ -29,96 +31,93 @@ def speak(code, *param, **key):
 
     if code == 'PLAY':
         if lang == 'pl':
-            speak_text("Graj")
+            speak_text(u"Graj")
         elif lang == 'en':
-            speak_text("Play")
+            speak_text(u"Play")
     if code == 'PAUSE':
         if lang == 'pl':
-            speak_text("Pauza")
+            speak_text(u"Pauza")
         elif lang == 'en':
-            speak_text("Pause")
+            speak_text(u"Pause")
     if code == 'SPEAK_ON':
         if lang == 'pl':
-            speak_text("Podpowiedzi")
+            speak_text(u"Podpowiedzi")
         elif lang == 'en':
-            speak_text("Hints on")
+            speak_text(u"Hints on")
     if code == 'SPEAK_OFF':
         if lang == 'pl':
-            speak_text("Bez podpowiedzi")
+            speak_text(u"Bez podpowiedzi")
         elif lang == 'en':
-            speak_text("Hints off")
+            speak_text(u"Hints off")
     if code == 'VOL':
         if lang == 'pl':
-            speak_text("głośność " + val)
+            speak_text(u"głośność " + val)
         elif lang == 'en':
-            speak_text("Volume " + val)
+            speak_text(u"Volume " + val)
     if code == 'MUTE':
         if lang == 'pl':
-            speak_text("Wycisz")
+            speak_text(u"Wycisz")
         elif lang == 'en':
-            speak_text("Mute")
+            speak_text(u"Mute")
     if code == 'NEXT':
         if lang == 'pl':
-            speak_text("Następny")
+            speak_text(u"Następny")
         elif lang == 'en':
-            speak_text("Next")
+            speak_text(u"Next")
     if code == 'PREV':
         if lang == 'pl':
-            speak_text("Poprzedni")
+            speak_text(u"Poprzedni")
         elif lang == 'en':
-            speak_text("Previous")
+            speak_text(u"Previous")
     if code == 'CHM':
         if lang == 'pl':
-            speak_text("Biblioteka")
+            speak_text(u"Biblioteka")
         elif lang == 'en':
-            speak_text("library")
+            speak_text(u"library")
     if code == 'CH':
         if lang == 'pl':
-            speak_text("Odtwarzacz")
+            speak_text(u"Odtwarzacz")
         elif lang == 'en':
-            speak_text("Player")
+            speak_text(u"Player")
     if code == 'CHP':
         if lang == 'pl':
-            speak_text("Listy")
+            speak_text(u"Listy")
         elif lang == 'en':
-            speak_text("Play lists")
+            speak_text(u"Play lists")
     if code == 'NUM0':
         if lang == 'pl':
-            speak_text("Numer 0")
+            speak_text(u"Numer 0")
         elif lang == 'en':
-            speak_text("Number 0")
+            speak_text(u"Number 0")
     if code == 'FLM':
         if lang == 'pl':
-            speak_text("Fl minus")
+            speak_text(u"Fl minus")
         elif lang == 'en':
-            speak_text("Fl minus")
+            speak_text(u"Fl minus")
     if code == 'FLP':
         if lang == 'pl':
-            speak_text("Fl plus")
+            speak_text(u"Fl plus")
         elif lang == 'en':
-            speak_text("Fl plus")
+            speak_text(u"Fl plus")
     if code == 'NUM9':
         if lang == 'pl':
-            speak_text("Informacja")
+            speak_text(u"Informacja")
         elif lang == 'en':
-            speak_text("Information")
+            speak_text(u"Information")
     if code == 'LIST_ITEM':
-        if lang == 'pl':
-            speak_text(val)
-        elif lang == 'en':
             speak_text(val)
     if code == 'ENTER_DIR':
         if lang == 'pl':
-            speak_text("Wybierz " + val)
+            speak_text(u"Wybierz " + val)
         elif lang == 'en':
             speak_text("Go to " + val)
     if code == 'PLAY_URI':
         if lang == 'pl':
-            speak_text("Graj " + val)
+            speak_text(u"Graj " + val)
         elif lang == 'en':
-            speak_text("Play " + val)
+            speak_text(u"Play " + val)
     if code == 'GO_UP_DIR':
         if lang == 'pl':
-            speak_text("Idz do góry")
+            speak_text(u"Idz do góry")
         elif lang == 'en':
-            speak_text("Go up")
+            speak_text(u"Go up")
