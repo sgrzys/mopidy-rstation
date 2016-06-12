@@ -31,93 +31,93 @@ def speak(code, *param, **key):
 
     if code == 'PLAY':
         if lang == 'pl':
-            speak_text(u"Graj")
+            speak_text("Graj")
         elif lang == 'en':
-            speak_text(u"Play")
+            speak_text("Play")
     if code == 'PAUSE':
         if lang == 'pl':
-            speak_text(u"Pauza")
+            speak_text("Pauza")
         elif lang == 'en':
-            speak_text(u"Pause")
+            speak_text("Pause")
     if code == 'SPEAK_ON':
         if lang == 'pl':
-            speak_text(u"Podpowiedzi")
+            speak_text("Podpowiedzi")
         elif lang == 'en':
-            speak_text(u"Hints on")
+            speak_text("Hints on")
     if code == 'SPEAK_OFF':
         if lang == 'pl':
-            speak_text(u"Bez podpowiedzi")
+            speak_text("Bez podpowiedzi")
         elif lang == 'en':
-            speak_text(u"Hints off")
+            speak_text("Hints off")
     if code == 'VOL':
         if lang == 'pl':
-            speak_text(u"głośność " + val)
+            speak_text("głośność " + val)
         elif lang == 'en':
-            speak_text(u"Volume " + val)
+            speak_text("Volume " + val)
     if code == 'MUTE':
         if lang == 'pl':
-            speak_text(u"Wycisz")
+            speak_text("Wycisz")
         elif lang == 'en':
-            speak_text(u"Mute")
+            speak_text("Mute")
     if code == 'NEXT':
         if lang == 'pl':
-            speak_text(u"Następny")
+            speak_text("Następny")
         elif lang == 'en':
-            speak_text(u"Next")
+            speak_text("Next")
     if code == 'PREV':
         if lang == 'pl':
-            speak_text(u"Poprzedni")
+            speak_text("Poprzedni")
         elif lang == 'en':
-            speak_text(u"Previous")
+            speak_text("Previous")
     if code == 'CHM':
         if lang == 'pl':
-            speak_text(u"Biblioteka")
+            speak_text("Biblioteka")
         elif lang == 'en':
-            speak_text(u"library")
+            speak_text("library")
     if code == 'CH':
         if lang == 'pl':
-            speak_text(u"Odtwarzacz")
+            speak_text("Odtwarzacz")
         elif lang == 'en':
-            speak_text(u"Player")
+            speak_text("Player")
     if code == 'CHP':
         if lang == 'pl':
-            speak_text(u"Listy")
+            speak_text("Listy")
         elif lang == 'en':
-            speak_text(u"Play lists")
+            speak_text("Play lists")
     if code == 'NUM0':
         if lang == 'pl':
-            speak_text(u"Numer 0")
+            speak_text("Numer 0")
         elif lang == 'en':
-            speak_text(u"Number 0")
+            speak_text("Number 0")
     if code == 'FLM':
         if lang == 'pl':
-            speak_text(u"Fl minus")
+            speak_text("Fl minus")
         elif lang == 'en':
-            speak_text(u"Fl minus")
+            speak_text("Fl minus")
     if code == 'FLP':
         if lang == 'pl':
-            speak_text(u"Fl plus")
+            speak_text("Fl plus")
         elif lang == 'en':
-            speak_text(u"Fl plus")
+            speak_text("Fl plus")
     if code == 'NUM9':
         if lang == 'pl':
-            speak_text(u"Informacja")
+            speak_text("Informacja")
         elif lang == 'en':
-            speak_text(u"Information")
+            speak_text("Information")
     if code == 'LIST_ITEM':
             speak_text(val)
     if code == 'ENTER_DIR':
         if lang == 'pl':
-            speak_text(u"Wybierz " + val)
+            speak_text("Wybierz " + val)
         elif lang == 'en':
             speak_text("Go to " + val)
     if code == 'PLAY_URI':
         if lang == 'pl':
-            speak_text(u"Graj " + val)
+            speak_text("Graj " + val)
         elif lang == 'en':
-            speak_text(u"Play " + val)
+            speak_text("Play " + val)
     if code == 'GO_UP_DIR':
         if lang == 'pl':
-            speak_text(u"Idz do góry")
+            speak_text("Idz do góry")
         elif lang == 'en':
-            speak_text(u"Go up")
+            speak_text("Go up")
