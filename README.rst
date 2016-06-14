@@ -1,28 +1,8 @@
 ******************
-Mopidy-Touchscreen
+Mopidy-rstation
 ******************
 
-.. image:: https://img.shields.io/pypi/v/Mopidy-Touchscreen.svg?style=flat
-    :target: https://pypi.python.org/pypi/Mopidy-Touchscreen/
-    :alt: Latest PyPI version
-
-.. image:: https://img.shields.io/pypi/dm/Mopidy-Touchscreen.svg?style=flat
-    :target: https://pypi.python.org/pypi/Mopidy-Touchscreen/
-    :alt: Number of PyPI downloads
-
-.. image:: https://img.shields.io/travis/9and3r/mopidy-touchscreen/develop.svg?style=flat
-    :target: https://travis-ci.org/9and3r/mopidy-touchscreen
-    :alt: Travis CI build status
-
-.. image:: https://img.shields.io/coveralls/9and3r/mopidy-touchscreen/develop.svg?style=flat
-   :target: https://coveralls.io/r/9and3r/mopidy-touchscreen?branch=develop
-   :alt: Test coverage
-
-Extension for displaying track info and controlling Mopidy from a touch screen
-using `PyGame <http://www.pygame.org/>`_/SDL.
-
-Cover images are downloaded from `last.fm <http://www.last.fm/api>`_
-
+Extension for reading track info and controlling Mopidy via IR remote
 
 Dependencies
 ============
@@ -37,10 +17,11 @@ Installation
 
 Install by running::
 
-    pip install Mopidy-Touchscreen
+    clone rstation
 
-Or, if available, install the Debian/Ubuntu package from `apt.mopidy.com
-<http://apt.mopidy.com/>`_.
+    cd rstation
+
+    pip install . --upgrade
 
 
 Basic Configuration
@@ -68,7 +49,7 @@ The following configuration values are available:
 
 - ``touchscreen/screen_height``: The width of the resolution you want to use in
   pixels.
-  
+
 - ``touchscreen/resolutin_factor``: This value sets how big content is shown. Smaller values will make content bigger and less content will be displayed at once.
 
 - ``touchscreen/cursor``: If the mouse cursor should be shown. (If you use a
@@ -116,13 +97,13 @@ Add to the config the next variables::
     sdl_mousdrv = TSLIB
     sdl_mousedev = event0
 
-This is just an example. It may work but each LCD Shield seems to have its own configuration. 
+This is just an example. It may work but each LCD Shield seems to have its own configuration.
 To find your values find an example of using pygame with your LCD Shield and it should be something like this in the code::
 
     os.environ["SDL_FBDEV"] = "/dev/fb1"
     os.environ["SDL_MOUSEDRV"] = "TSLIB"
     os.environ["SDL_MOUSEDEV"] = "event0"
-    
+
 GPIO Buttons
 ````````````
 
@@ -144,7 +125,7 @@ You can choose what pins to use:
 - ``touchscreen/gpio_up``: Pin used to simulate up key press.
 - ``touchscreen/gpio_down``: Pin used to simulate down key press.
 - ``touchscreen/gpio_enter``: Pin used to simulate enter key press.
-    
+
 All pins numbers are in BCM mode. You can check `here <http://raspberrypi.stackexchange.com/a/12967>`_ to see the numbers for your board.
 
 The buttons must be connected to GROUND.
@@ -154,7 +135,7 @@ Pin - Button - Ground
 How To Use
 ==========
 
-You can use it with a touchscreen or mouse clicking on the icons. 
+You can use it with a touchscreen or mouse clicking on the icons.
 In case you are using a keyboard use arrow keys to navigate and enter to select.
 The GPIO buttons simulate keyboard keys so the use is exactly the same as using a keyboard.
 

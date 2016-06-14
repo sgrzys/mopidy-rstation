@@ -53,7 +53,7 @@ class LibraryScreen(BaseScreen):
                 selected = selected - 1
         if selected == -1:
             if tts.lang == 'pl':
-                selected_name = u'Wyjście'
+                selected_name = u'Wyjście do góry'
             else:
                 selected_name = u'Up'
         else:
