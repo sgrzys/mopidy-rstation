@@ -28,9 +28,9 @@ Basic Configuration
 ===================
 
 Before starting Mopidy, you must add configuration for
-Mopidy-Touchscreen to your Mopidy configuration file::
+Mopidy-Rstation to your Mopidy configuration file::
 
-    [touchscreen]
+    [rstation]
     enabled = true
     screen_width = 320
     screen_height = 240
@@ -143,77 +143,18 @@ Help
 ====
 
 You can use `mopidy discuss <https://discuss.mopidy.com/>`_
-or send an email to `9and3r@gmail.com <mailto:9and3r@gmail.com>`_
 
 
 Features
 ========
 
 
-* See track info (track name, album, artist, cover image)
-* Seek Track
-* Play/Pause
-* Mute/Unmute
-* Change volume
-* Next/Previous track
-* Library
-* Menu (exit mopidy, restart...)
-* Shuffle on/off
-* Repeat one/on/off
-* Playback list and song selection
-* Playlists
-* Use keyboard or GPIO buttons instead of touchscreen
 
 
 Screenshots
 ===========
 
-.. image:: http://oi57.tinypic.com/29yjgwo.jpg
 
 
 Video
 =====
-
-`Example video running the extension <https://www.youtube.com/watch?v=KuYoIb8Q2LI>`_
-
-
-Project resources
-=================
-
-- `Source code <https://github.com/9and3r/mopidy-touchscreen>`_
-- `Issue tracker <https://github.com/9and3r/mopidy-touchscreen/issues>`_
-- `Download development snapshot <https://github.com/9and3r/mopidy-touchscreen/archive/master.tar.gz#egg=Mopidy-Touchscreen-dev>`_
-
-
-Changelog
-=========
-
-v1.0.0 (2015-05-26)
--------------------
-
-- Require Mopidy v1.0
-- Update to work with changed core playback API in Mopidy 1.0
-- Search working
-- GPIO and Keyboard support
-- Resolution factor to adapt the interface for different screen sizes (Thanks to `Syco54645 <https://github.com/Syco54645>`_)
-- Background image
-- Lower CPU usage (Update screen only when needed)
-- Bug Fixes
-
-v0.3.2 (2015-01-09)
--------------------
-
-- Bug Fixes
-- UI changes
-- Smoth text scrolling
-- Search albums, artist or songs (Not fully implemented. Basic functionality)
-
-v0.2.1 (2014-08-02)
--------------------
-
-- Font will be included on installation
-
-v0.2.0 (2014-08-02)
--------------------
-
-- First working version

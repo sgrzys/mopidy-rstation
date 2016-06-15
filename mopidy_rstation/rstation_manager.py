@@ -2,8 +2,8 @@ import logging
 from mopidy import core
 import pykka
 import tempfile
-from rstation.irda import LircThread
-from rstation.irda import CommandDispatcher
+from irda.irda import LircThread
+from irda.irda import CommandDispatcher
 
 
 logger = logging.getLogger('mopidy_Rstation')
@@ -18,8 +18,8 @@ class RstationFrontend(pykka.ThreadingActor, core.CoreListener):
     def __init__(self, config, core):
         super(RstationFrontend, self).__init__()
         self.core = core
-        self.config = config['touchscreen']
-        self.configFile = self.generateLircConfigFile(config['touchscreen'])
+        self.config = config['rstation']
+        self.configFile = self.generateLircConfigFile(config['rstation'])
         logger.debug('lircrc file:{0}'.format(self.configFile))
 
         self.thread = LircThread(self.configFile)
@@ -28,10 +28,10 @@ class RstationFrontend(pykka.ThreadingActor, core.CoreListener):
             self.config,
             self.thread.ButtonPressed)
 
-        self.debug_irda_simulate = config['touchscreen']['debug_irda_simulate']
+        self.debug_irda_simulate = config['rstation']['debug_irda_simulate']
         if self.debug_irda_simulate:
             logger.debug('IrdaSimulator is ON')
-            from rstation.irda_simulator import IrdaSimulator
+            from irda.irda_simulator import IrdaSimulator
             self.simulator = IrdaSimulator(self.dispatcher)
         else:
             logger.debug('IrdaSimulator is OFF')

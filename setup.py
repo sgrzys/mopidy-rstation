@@ -12,12 +12,12 @@ def get_version(filename):
 
 
 setup(
-    name='Mopidy-Touchscreen',
-    version=get_version('mopidy_touchscreen/__init__.py'),
-    url='https://github.com/9and3r/mopidy-touchscreen',
+    name='Mopidy-Rstation',
+    version=get_version('mopidy_rstation/__init__.py'),
+    url='https://github.com/araczkowski/mopidy-rstation',
     license='Apache License, Version 2.0',
-    author='9and3r',
-    author_email='9and3r@gmail.com',
+    author='araczkowski',
+    author_email='araczkowski@gmail.com',
     description='Mopidy extension to show info '
                 'on a display and control from it',
     long_description=open('README.rst').read(),
@@ -37,7 +37,7 @@ setup(
     ],
     entry_points={
         'mopidy.ext': [
-            'touchscreen = mopidy_touchscreen:Extension',
+            'rstation = mopidy_rstation:Extension',
         ],
     },
     classifiers=[

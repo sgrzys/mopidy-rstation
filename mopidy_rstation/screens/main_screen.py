@@ -14,7 +14,7 @@ import mopidy.core
 
 import pygame
 
-from ..rstation import tts
+from ..tts import tts
 
 from ..graphic_utils import Progressbar, \
     ScreenObjectsManager, TextItem, TouchAndTextItem

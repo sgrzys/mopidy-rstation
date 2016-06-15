@@ -19,28 +19,28 @@ class TouchScreen(pykka.ThreadingActor, core.CoreListener):
         super(TouchScreen, self).__init__()
         self.core = core
         self.running = False
-        self.cursor = config['touchscreen']['cursor']
-        self.cache_dir = config['touchscreen']['cache_dir']
-        self.fullscreen = config['touchscreen']['fullscreen']
-        self.screen_size = (config['touchscreen']['screen_width'],
-                            config['touchscreen']['screen_height'])
-        self.resolution_factor = (config['touchscreen']['resolution_factor'])
-        if config['touchscreen']['sdl_fbdev'].lower() != "none":
-            os.environ["SDL_FBDEV"] = config['touchscreen']['sdl_fbdev']
-        if config['touchscreen']['sdl_mousdrv'].lower() != "none":
+        self.cursor = config['rstation']['cursor']
+        self.cache_dir = config['rstation']['cache_dir']
+        self.fullscreen = config['rstation']['fullscreen']
+        self.screen_size = (config['rstation']['screen_width'],
+                            config['rstation']['screen_height'])
+        self.resolution_factor = (config['rstation']['resolution_factor'])
+        if config['rstation']['sdl_fbdev'].lower() != "none":
+            os.environ["SDL_FBDEV"] = config['rstation']['sdl_fbdev']
+        if config['rstation']['sdl_mousdrv'].lower() != "none":
             os.environ["SDL_MOUSEDRV"] = (
-                config['touchscreen']['sdl_mousdrv'])
+                config['rstation']['sdl_mousdrv'])
 
-        if config['touchscreen']['sdl_mousedev'].lower() != "none":
-            os.environ["SDL_MOUSEDEV"] = config['touchscreen']['sdl_mousedev']
+        if config['rstation']['sdl_mousedev'].lower() != "none":
+            os.environ["SDL_MOUSEDEV"] = config['rstation']['sdl_mousedev']
 
-        if config['touchscreen']['sdl_audiodriver'].lower() != "none":
+        if config['rstation']['sdl_audiodriver'].lower() != "none":
             os.environ["SDL_AUDIODRIVER"] = (
-                config['touchscreen']['sdl_audiodriver'])
+                config['rstation']['sdl_audiodriver'])
 
-        os.environ["SDL_PATH_DSP"] = config['touchscreen']['sdl_path_dsp']
+        os.environ["SDL_PATH_DSP"] = config['rstation']['sdl_path_dsp']
         pygame.init()
-        pygame.display.set_caption("Mopidy-Touchscreen")
+        pygame.display.set_caption("Mopidy-Rstation")
         self.get_display_surface(self.screen_size)
         pygame.mouse.set_visible(self.cursor)
         self.screen_manager = ScreenManager(self.screen_size,
@@ -49,17 +49,17 @@ class TouchScreen(pykka.ThreadingActor, core.CoreListener):
                                             self.resolution_factor)
 
         # Raspberry pi GPIO
-        self.gpio = config['touchscreen']['gpio']
+        self.gpio = config['rstation']['gpio']
         if self.gpio:
 
             from .input import GPIOManager
 
             pins = {}
-            pins['left'] = config['touchscreen']['gpio_left']
-            pins['right'] = config['touchscreen']['gpio_right']
-            pins['up'] = config['touchscreen']['gpio_up']
-            pins['down'] = config['touchscreen']['gpio_down']
-            pins['enter'] = config['touchscreen']['gpio_enter']
+            pins['left'] = config['rstation']['gpio_left']
+            pins['right'] = config['rstation']['gpio_right']
+            pins['up'] = config['rstation']['gpio_up']
+            pins['down'] = config['rstation']['gpio_down']
+            pins['enter'] = config['rstation']['gpio_enter']
             self.gpio_manager = GPIOManager(pins)
 
     def get_display_surface(self, size):

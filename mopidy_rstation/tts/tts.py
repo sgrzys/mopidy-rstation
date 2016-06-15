@@ -1,7 +1,8 @@
 # encoding=utf8
 import os
 
-speak_on = True
+# TODO add this to settings
+speak_on = False
 lang = 'pl'
 
 

@@ -2,7 +2,7 @@
 
 import unittest
 
-from mopidy_touchscreen import Extension
+from mopidy_rstation import Extension
 
 
 # ,touch_screen as frontend_lib

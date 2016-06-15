@@ -6,13 +6,12 @@ from mopidy import config, ext
 
 from .touch_screen import TouchScreen
 
-
 __version__ = '1.0.0'
 
 
 class Extension(ext.Extension):
-    dist_name = 'Mopidy-Touchscreen'
-    ext_name = 'touchscreen'
+    dist_name = 'Mopidy-Rstation'
+    ext_name = 'rstation'
     version = __version__
 
     def get_default_config(self):
@@ -68,9 +67,15 @@ class Extension(ext.Extension):
         schema['favorites'] = config.String()
         schema['search'] = config.String()
         schema['playlist_uri_template'] = config.String()
+        schema['media_dirs'] = config.List(optional=True)
+        schema['show_dotfiles'] = config.Boolean(optional=True)
+        schema['follow_symlinks'] = config.Boolean(optional=True)
+        schema['metadata_timeout'] = config.Integer(optional=True)
         return schema
 
     def setup(self, registry):
         registry.add('frontend', TouchScreen)
         from .rstation_manager import RstationFrontend
         registry.add('frontend', RstationFrontend)
+        from .file.backend import FileBackend
+        registry.add('backend', FileBackend)

@@ -3,10 +3,8 @@ import pylirc
 import logging
 import threading
 import select
-
-# from mopidy_touchscreen.screen_manager import ScreenManager
 import pygame
-import tts
+from ..tts import tts
 
 logger = logging.getLogger('mopidy_Rstation')
 

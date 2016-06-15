@@ -3,11 +3,11 @@ include .travis.yml
 include LICENSE
 include MANIFEST.in
 include README.rst
-include mopidy_touchscreen/ext.conf
-include mopidy_touchscreen/icomoon.ttf
+include mopidy_rstation/ext.conf
+include mopidy_rstation/icomoon.ttf
 include tox.ini
 
 recursive-include tests *.py
 
 prune docs
-prune mopidy_touchscreen/fonts
+prune mopidy_rstation/fonts

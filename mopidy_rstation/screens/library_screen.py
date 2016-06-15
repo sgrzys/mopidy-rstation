@@ -4,7 +4,7 @@ from base_screen import BaseScreen
 import mopidy.models
 
 from ..graphic_utils import ListView
-from ..rstation import tts
+from ..tts import tts
 
 
 class LibraryScreen(BaseScreen):

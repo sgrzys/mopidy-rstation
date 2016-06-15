@@ -13,7 +13,7 @@ from pkg_resources import Requirement, resource_filename
 
 import pygame
 
-from .rstation import tts
+from .tts import tts
 
 from screens import BaseScreen, Keyboard, LibraryScreen, MainScreen,\
     MenuScreen, PlaylistScreen, SearchScreen, Tracklist
@@ -58,8 +58,8 @@ class ScreenManager():
 
         self.background = DynamicBackground(self.size)
         font = resource_filename(
-            Requirement.parse("mopidy-touchscreen"),
-            "mopidy_touchscreen/icomoon.ttf")
+            Requirement.parse("mopidy-rstation"),
+            "mopidy_rstation/icomoon.ttf")
         self.fonts['base'] = pygame.font.SysFont("arial",
                                                  int(self.base_size*0.9))
         self.fonts['icon'] = pygame.font.Font(font, int(self.base_size*0.9))

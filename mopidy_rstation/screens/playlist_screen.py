@@ -2,7 +2,7 @@
 from base_screen import BaseScreen
 
 from ..graphic_utils import ListView
-from ..rstation import tts
+from ..tts import tts
 
 
 class PlaylistScreen(BaseScreen):
