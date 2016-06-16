@@ -49,18 +49,18 @@ def get_or_create_file(file_path, mkdir=True, content=None):
 
 def path_to_uri(path):
     """
-    Convert OS specific path to file:// URI.
+    Convert OS specific path to rstation:// URI.
 
     Accepts either unicode strings or bytestrings. The encoding of any
     bytestring will be maintained so that :func:`uri_to_path` can return the
     same bytestring.
 
-    Returns a file:// URI as an unicode string.
+    Returns a rstation:// URI as an unicode string.
     """
     if isinstance(path, compat.text_type):
         path = path.encode('utf-8')
     path = urllib.parse.quote(path)
-    return urllib.parse.urlunsplit((b'file', b'', path, b'', b''))
+    return urllib.parse.urlunsplit((b'rstation', b'', path, b'', b''))
 
 
 def uri_to_path(uri):

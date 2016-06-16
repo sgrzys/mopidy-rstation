@@ -43,17 +43,14 @@ class FileLibraryProvider(backend.LibraryProvider):
         self._show_dotfiles = config['rstation']['show_dotfiles']
         self._scanner = scan.Scanner(
             timeout=config['rstation']['metadata_timeout'])
+        self.backend = backend
         logger.debug(
             'Medialib file system encoding: %s', sys.getfilesystemencoding())
 
     def browse(self, uri):
         logger.debug('Browsing files at: %s', uri)
         result = []
-        try:
-            local_path = mpath.uri_to_path(uri)
-        except Exception as e:
-            logger.error('Error!!!! %s', str(e))
-        logger.debug('Browsing files at: %s', 'step1')
+        local_path = mpath.uri_to_path(uri)
 
         if local_path == 'root':
             return list(self._get_media_dir_refs())
@@ -63,7 +60,6 @@ class FileLibraryProvider(backend.LibraryProvider):
                 'Rejected attempt to browse path (%s) outside dirs defined '
                 'in rstation/media_dir config.', uri)
             return []
-        logger.debug('Browsing files at: %s', 'step2')
         for dir_entry in os.listdir(local_path):
             child_path = os.path.join(local_path, dir_entry)
             uri = mpath.path_to_uri(child_path)
@@ -91,21 +87,25 @@ class FileLibraryProvider(backend.LibraryProvider):
     def lookup(self, uri):
         logger.debug('Medialib... Looking up file URI: %s', uri)
         local_path = mpath.uri_to_path(uri)
+        # check if it's playlist
+        if uri.endswith(('.m3u', '.m3u8')):
+            logger.debug('Medialib... we have playlist: %s', uri)
+            return
+        else:
+            try:
+                result = self._scanner.scan(uri)
+                track = tags.convert_tags_to_track(result.tags).copy(
+                    uri=uri, length=result.duration)
+            except exceptions.ScannerError as e:
+                logger.warning('Failed looking up %s: %s', uri, e)
+                track = models.Track(uri=uri)
 
-        try:
-            result = self._scanner.scan(uri)
-            track = tags.convert_tags_to_track(result.tags).copy(
-                uri=uri, length=result.duration)
-        except exceptions.ScannerError as e:
-            logger.warning('Failed looking up %s: %s', uri, e)
-            track = models.Track(uri=uri)
+            if not track.name:
+                filename = os.path.basename(local_path)
+                name = urllib2.unquote(filename).decode(FS_ENCODING, 'replace')
+                track = track.copy(name=name)
 
-        if not track.name:
-            filename = os.path.basename(local_path)
-            name = urllib2.unquote(filename).decode(FS_ENCODING, 'replace')
-            track = track.copy(name=name)
-
-        return [track]
+            return [track]
 
     def _get_media_dir(self, config):
         logger.debug('_get_media_dir ' + str(

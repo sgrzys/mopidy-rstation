@@ -14,7 +14,7 @@ LIRC_PROG_NAME = "mopidyRstation"
 class Event(list):
     """Event subscription.
 
-    A list of callable objects. Calling an instance of this will cause a
+    A list of callable objects. Calling an i_playPlaylistnstance of this will cause a
     call to each item in the list in ascending order by index."""
     def __call__(self, *args, **kwargs):
         for f in self:

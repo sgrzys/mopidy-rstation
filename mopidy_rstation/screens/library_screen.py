@@ -90,13 +90,33 @@ class LibraryScreen(BaseScreen):
     def play_uri(self, track_pos):
         self.manager.core.tracklist.clear()
         tracks = []
-        for item in self.library:
-            if item.type == mopidy.models.Ref.TRACK:
-                tracks.append(self.manager.core.library.lookup(
-                    item.uri).get()[0])
-            else:
-                track_pos -= 1
-        self.manager.core.tracklist.add(tracks)
-        self.manager.core.playback.play(
-            tl_track=self.manager.core.tracklist.tl_tracks.get()
-            [track_pos])
+        logger.debug(str(track_pos))
+        item = self.library[track_pos]
+        logger.debug(str(item))
+        logger.debug(item.uri)
+        if item.uri.startswith(('rstation')):
+            logger.debug('we have rstation playlist to handle...')
+            uri = item.uri.replace('rstation', 'm3u', 1)
+            items = self.manager.core.playlists.get_items(uri).get()
+            if not items:
+                logger.warn("Playlist '%s' does not exist", uri)
+                return
+            logger.debug(str(items))
+            self.manager.core.tracklist.clear()
+            uris = map(lambda ref: ref.uri, items)
+            self.manager.core.tracklist.add(uris=uris)
+            self.manager.core.tracklist.set_consume(False)
+            self.manager.core.tracklist.set_repeat(True)
+            self.manager.core.playback.play()
+            return
+        else:
+            for item in self.library:
+                if item.type == mopidy.models.Ref.TRACK:
+                    tracks.append(self.manager.core.library.lookup(
+                        item.uri).get()[0])
+                else:
+                    track_pos -= 1
+            self.manager.core.tracklist.add(tracks)
+            self.manager.core.playback.play(
+                tl_track=self.manager.core.tracklist.tl_tracks.get()
+                [track_pos])
