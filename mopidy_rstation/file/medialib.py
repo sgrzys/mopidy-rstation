@@ -8,7 +8,7 @@ import urllib2
 
 from mopidy import backend, exceptions, models
 from mopidy.audio import scan, tags
-from mopidy.internal import path
+import mpath
 
 
 logger = logging.getLogger(__name__)
@@ -23,44 +23,50 @@ class FileLibraryProvider(backend.LibraryProvider):
 
     @property
     def root_directory(self):
-        if not self._media_dirs:
+        if not self._media_dir:
             return None
-        elif len(self._media_dirs) == 1:
-            uri = path.path_to_uri(self._media_dirs[0]['path'])
+        # in rstation we have only one media directory
+        elif len(self._media_dir) == 1:
+            uri = mpath.path_to_uri(self._media_dir[0]['path'])
         else:
             uri = 'file:root'
 
-        logger.debug(
-            'ROOT DIR: %s', models.Ref.directory(
-                name='Rstation', uri=uri))
-        return models.Ref.directory(name='Rstation', uri=uri)
+        d = models.Ref.directory(name='Rstation', uri=uri)
+        logger.debug('MEDIA DIR: %s', d)
+        return d
 
     def __init__(self, backend, config):
         super(FileLibraryProvider, self).__init__(backend)
-        self._media_dirs = list(self._get_media_dirs(config))
-        logger.debug(str(self._media_dirs))
+        self._media_dir = list(self._get_media_dir(config))
+        logger.debug('Medialib fmedia dir: ' + str(self._media_dir))
         self._follow_symlinks = config['rstation']['follow_symlinks']
         self._show_dotfiles = config['rstation']['show_dotfiles']
         self._scanner = scan.Scanner(
             timeout=config['rstation']['metadata_timeout'])
+        logger.debug(
+            'Medialib file system encoding: %s', sys.getfilesystemencoding())
 
     def browse(self, uri):
         logger.debug('Browsing files at: %s', uri)
         result = []
-        local_path = path.uri_to_path(uri)
+        try:
+            local_path = mpath.uri_to_path(uri)
+        except Exception as e:
+            logger.error('Error!!!! %s', str(e))
+        logger.debug('Browsing files at: %s', 'step1')
 
         if local_path == 'root':
-            return list(self._get_media_dirs_refs())
+            return list(self._get_media_dir_refs())
 
         if not self._is_in_basedir(os.path.realpath(local_path)):
             logger.warning(
                 'Rejected attempt to browse path (%s) outside dirs defined '
-                'in rstation/media_dirs config.', uri)
+                'in rstation/media_dir config.', uri)
             return []
-
+        logger.debug('Browsing files at: %s', 'step2')
         for dir_entry in os.listdir(local_path):
             child_path = os.path.join(local_path, dir_entry)
-            uri = path.path_to_uri(child_path)
+            uri = mpath.path_to_uri(child_path)
 
             if not self._show_dotfiles and dir_entry.startswith(b'.'):
                 continue
@@ -83,8 +89,8 @@ class FileLibraryProvider(backend.LibraryProvider):
         return result
 
     def lookup(self, uri):
-        logger.debug('Looking up file URI: %s', uri)
-        local_path = path.uri_to_path(uri)
+        logger.debug('Medialib... Looking up file URI: %s', uri)
+        local_path = mpath.uri_to_path(uri)
 
         try:
             result = self._scanner.scan(uri)
@@ -101,25 +107,27 @@ class FileLibraryProvider(backend.LibraryProvider):
 
         return [track]
 
-    def _get_media_dirs(self, config):
-        for entry in config['rstation']['media_dirs']:
+    def _get_media_dir(self, config):
+        logger.debug('_get_media_dir ' + str(
+            config['rstation']['media_dir']))
+        for entry in config['rstation']['media_dir']:
 
-            logger.debug('rstation/media_dirs -> entry ' + entry)
+            logger.debug('rstation/media_dir -> entry ' + entry)
             media_dir = {}
             media_dir_split = entry.split('|', 1)
-            local_path = path.expand_path(
+            local_path = mpath.expand_path(
                 media_dir_split[0].encode(FS_ENCODING))
 
             if not local_path:
                 logger.debug(
-                    'Failed expanding path (%s) from rstation/media_dirs '
+                    'Failed expanding path (%s) from rstation/media_dir '
                     'config value.',
                     media_dir_split[0])
                 continue
             elif not os.path.isdir(local_path):
                 logger.warning(
                     '%s is not a directory. Please create the directory or '
-                    'update the rstation/media_dirs config value.', local_path)
+                    'update the rstation/media_dir config value.', local_path)
                 continue
 
             media_dir['path'] = local_path
@@ -131,16 +139,15 @@ class FileLibraryProvider(backend.LibraryProvider):
 
             yield media_dir
 
-    def _get_media_dirs_refs(self):
-        logger.debug('_get_media_dirs_refs')
-        for media_dir in self._media_dirs:
-            logger.debug('rstation/_get_media_dirs_refs ' + media_dir)
+    def _get_media_dir_refs(self):
+        logger.debug('_get_media_dir_refs')
+        for media_dir in self._media_dir:
+            logger.debug('rstation/_get_media_dir_refs ' + media_dir)
             yield models.Ref.directory(
                 name=media_dir['name'],
-                uri=path.path_to_uri(media_dir['path']))
+                uri=mpath.path_to_uri(media_dir['path']))
 
     def _is_in_basedir(self, local_path):
-        logger.debug('_is_in_basedir ' + local_path)
         return any(
-            path.is_path_inside_base_dir(local_path, media_dir['path'])
-            for media_dir in self._media_dirs)
+            mpath.is_path_inside_base_dir(local_path, media_dir['path'])
+            for media_dir in self._media_dir)

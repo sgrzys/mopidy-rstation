@@ -2,9 +2,12 @@
 from base_screen import BaseScreen
 
 import mopidy.models
+import logging
 
 from ..graphic_utils import ListView
 from ..tts import tts
+
+logger = logging.getLogger(__name__)
 
 
 class LibraryScreen(BaseScreen):
@@ -28,6 +31,7 @@ class LibraryScreen(BaseScreen):
         self.library_strings = []
         if uri is not None:
             self.library_strings.append("../")
+            logger.debug('browse_uri: ' + str(uri))
         self.library = self.manager.core.library.browse(uri).get()
         for lib in self.library:
             self.library_strings.append(lib.name)

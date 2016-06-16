@@ -67,7 +67,7 @@ class Extension(ext.Extension):
         schema['favorites'] = config.String()
         schema['search'] = config.String()
         schema['playlist_uri_template'] = config.String()
-        schema['media_dirs'] = config.List(optional=True)
+        schema['media_dir'] = config.List(optional=True)
         schema['show_dotfiles'] = config.Boolean(optional=True)
         schema['follow_symlinks'] = config.Boolean(optional=True)
         schema['metadata_timeout'] = config.Integer(optional=True)
@@ -77,5 +77,5 @@ class Extension(ext.Extension):
         registry.add('frontend', TouchScreen)
         from .rstation_manager import RstationFrontend
         registry.add('frontend', RstationFrontend)
-        from .file.backend import FileBackend
-        registry.add('backend', FileBackend)
+        from .file.media_backend import MediaBackend
+        registry.add('backend', MediaBackend)
