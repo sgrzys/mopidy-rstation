@@ -250,7 +250,7 @@ class ScreenManager():
             elif key == 'CHM':
                 self.change_screen(3)
             elif key == 'CHP':
-                self.change_screen(4)
+                self.change_screen(2)
             elif key == 'NEXT':
                 event = self.input_manager.event(event)
                 self.screens[self.current_screen].touch_event(event)
@@ -258,6 +258,41 @@ class ScreenManager():
             elif key == 'NEXT':
                 if self.current_screen == 1:
                     self.core.playback.previous()
+            elif key == 'NUM4':
+                # goto folder
+                self.change_screen(3)
+                tts.speak_text('Audiobuki')
+                self.screens[3].go_inside_directory(
+                        '/home/pi/mopidy-rstation/media/Audiobooki'
+                )
+            elif key == 'NUM5':
+                # goto folder
+                self.change_screen(3)
+                tts.speak_text('Informacje')
+                self.screens[3].go_inside_directory(
+                        'rstation:/home/pi/mopidy-rstation/media/Informacje'
+                )
+            elif key == 'NUM6':
+                # goto folder
+                self.change_screen(3)
+                tts.speak_text('Muzyka')
+                self.screens[3].go_inside_directory(
+                        'rstation:/home/pi/mopidy-rstation/media/Muzyka'
+                )
+            elif key == 'NUM7':
+                # goto folder
+                self.change_screen(3)
+                tts.speak_text('Podkasty')
+                self.screens[3].go_inside_directory(
+                        'rstation:/home/pi/mopidy-rstation/media/Podkasty'
+                )
+            elif key == 'NUM8':
+                # goto folder
+                self.change_screen(3)
+                tts.speak_text('Radia')
+                self.screens[3].go_inside_directory(
+                        'rstation:/home/pi/mopidy-rstation/media/Radia'
+                )
             elif key == 'NUM9':
                 # info about current screan
                 if self.current_screen == 1:

@@ -44,9 +44,14 @@ class CommandDispatcher(object):
         self.registerHandler('fl_minus', self._flmHandler)
         self.registerHandler('fl_plus', self._flpHandler)
 
-        for i in range(9):
+        # 0 1 2 and 3 buttons are connected to playlists
+        for i in range(3):
             self.registerHandler('num{0}'.format(i), self._playlistFunction(i))
-
+        self.registerHandler('num4', self._num4Handler)
+        self.registerHandler('num5', self._num5Handler)
+        self.registerHandler('num6', self._num6Handler)
+        self.registerHandler('num7', self._num7Handler)
+        self.registerHandler('num8', self._num8Handler)
         self.registerHandler('num9', self._num9Handler)
         self.registerHandler('mute', self._muteHandler)
         self.registerHandler('stop', lambda: self.core.playback.stop().get())
@@ -76,6 +81,8 @@ class CommandDispatcher(object):
         #     tts.speak("PLAY")
         #     # self.core.playback.play().get()
         # self._screenEvent("PLAY_PAUSE")
+        #
+        # we are going to simulate the return key up and down
         dict = {}
         type = pygame.KEYDOWN
         dict['unicode'] = None
@@ -129,6 +136,26 @@ class CommandDispatcher(object):
         tts.speak("CHP")
         self._screenEvent("CHP")
 
+    def _num4Handler(self):
+        tts.speak("NUM4")
+        self._screenEvent("NUM4")
+
+    def _num5Handler(self):
+        tts.speak("NUM5")
+        self._screenEvent("NUM5")
+
+    def _num6Handler(self):
+        tts.speak("NUM6")
+        self._screenEvent("NUM6")
+
+    def _num7Handler(self):
+        tts.speak("NUM7")
+        self._screenEvent("NUM7")
+
+    def _num8Handler(self):
+        tts.speak("NUM8")
+        self._screenEvent("NUM8")
+
     def _num9Handler(self):
         tts.speak("NUM9")
         self._screenEvent("NUM9")
@@ -179,16 +206,6 @@ class CommandDispatcher(object):
         self.core.playback.play()
 
     def _playlistFunction(self, num):
-        if num == 1:
-            return lambda: self._playPlaylist('m3u:muzyka.m3u')
-        if num == 2:
-            return lambda: self._playPlaylist('m3u:książki.m3u')
-        if num == 3:
-            return lambda: self._playPlaylist('m3u:podkasty.m3u')
-        if num == 4:
-            return lambda: self._playPlaylist('m3u:radia.m3u')
-        if num == 5:
-            return lambda: self._playPlaylist('m3u:wiadomości.m3u')
         return lambda: self._playPlaylist(
             self.config['playlist_uri_template'].format(num)
         )

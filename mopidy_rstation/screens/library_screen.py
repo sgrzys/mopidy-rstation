@@ -62,7 +62,7 @@ class LibraryScreen(BaseScreen):
                 selected_name = u'Up'
         else:
             selected_name = self.library[selected].name
-        print(selected_name)
+        # print(selected_name)
 
         if clicked is not None:
             if self.current_directory is not None:

@@ -2,7 +2,7 @@
 from base_screen import BaseScreen
 
 from ..graphic_utils import ListView
-from ..tts import tts
+# from ..tts import tts
 
 
 class PlaylistScreen(BaseScreen):
@@ -49,15 +49,15 @@ class PlaylistScreen(BaseScreen):
 
     def touch_event(self, touch_event):
         clicked = self.list_view.touch_event(touch_event)
-        selected = self.list_view.selected
-        if self.playlists_strings[0] == "../":
-                selected = selected - 1
-        if selected == -1:
-            selected_name = '..'
-        else:
-            selected_name = self.playlists[selected].name
+        # selected = self.list_view.selected
+        # if self.playlists_strings[0] == "../":
+        #         selected = selected - 1
+        # if selected == -1:
+        #     selected_name = '..'
+        # else:
+        #     selected_name = self.playlists[selected].name
+        # tts.speak('LIST_ITEM', val=selected_name)
 
-        tts.speak('LIST_ITEM', val=selected_name)
         if clicked is not None:
             if self.selected_playlist is None:
                 self.playlist_selected(self.playlists[clicked])
