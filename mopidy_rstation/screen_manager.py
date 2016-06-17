@@ -31,7 +31,8 @@ menu_index = 5
 
 class ScreenManager():
 
-    def __init__(self, size, core, cache, resolution_factor):
+    def __init__(self, size, core, cache, resolution_factor, config):
+        self.media_dir = config['rstation']['media_dir']
         self.core = core
         self.cache = cache
         self.fonts = {}
@@ -261,37 +262,37 @@ class ScreenManager():
             elif key == 'NUM4':
                 if self.current_screen != 3:
                     self.change_screen(3)
-                tts.speak_text('Audiobuki')
+                tts.speak('AUDIOBOOKS_DIR')
                 self.screens[3].go_inside_directory(
-                        'rstation:/home/pi/mopidy-rstation/media/Audiobooki'
+                        'rstation:' + self.media_dir[0] + 'Audiobooki'
                 )
             elif key == 'NUM5':
                 if self.current_screen != 3:
                     self.change_screen(3)
-                tts.speak_text('Informacje')
+                tts.speak('INFO_DIR')
                 self.screens[3].go_inside_directory(
-                        'rstation:/home/pi/mopidy-rstation/media/Informacje'
+                        'rstation:' + self.media_dir[0] + 'Informacje'
                 )
             elif key == 'NUM6':
                 if self.current_screen != 3:
                     self.change_screen(3)
-                tts.speak_text('Muzyka')
+                tts.speak('MUSIC_DIR')
                 self.screens[3].go_inside_directory(
-                        'rstation:/home/pi/mopidy-rstation/media/Muzyka'
+                        'rstation:' + self.media_dir[0] + 'Muzyka'
                 )
             elif key == 'NUM7':
                 if self.current_screen != 3:
                     self.change_screen(3)
-                tts.speak_text('Podkasty')
+                tts.speak('PODCAST_DIR')
                 self.screens[3].go_inside_directory(
-                        'rstation:/home/pi/mopidy-rstation/media/Podkasty'
+                        'rstation:' + self.media_dir[0] + 'Podkasty'
                 )
             elif key == 'NUM8':
                 if self.current_screen != 3:
                     self.change_screen(3)
-                tts.speak_text('Radia')
+                tts.speak('RADIO_DIR')
                 self.screens[3].go_inside_directory(
-                        'rstation:/home/pi/mopidy-rstation/media/Radia'
+                        'rstation:' + self.media_dir[0] + 'Radia'
                 )
             elif key == 'NUM9':
                 # info about current screan
@@ -301,20 +302,28 @@ class ScreenManager():
                         tts.speak_text(MainScreen.info(track))
                         # TODO info about timing...
                     else:
-                        tts.speak_text(
-                            'Aktualnie nie jest odtwarzany żaden utwór')
+                        tts.speak('NO_TRACK')
                 if self.current_screen == 3:
                     dl = self.screens[3].library_strings
-                    for i in dl:
-                        tts.speak_text(i)
+                    tts.speak('LIB_SCREAN_INFO')
+                    if len(dl) > 0:
+                        for i in dl:
+                            tts.speak_text(i)
+                    else:
+                        tts.speak('NO_LIBRARY')
 
                 if self.current_screen == 4:
                     ps = self.screens[4].playlists_strings
+                    tts.speak('PL_SCREAN_INFO')
                     if len(ps) > 0:
                         for i in ps:
                             tts.speak_text(i)
                     else:
-                        tts.speak_text('Brak list odtwarzania')
+                        tts.speak('NO_PLAYLISTS')
+
+                if self.current_screen == 3:
+                    tl = self.screens[3].tracks_strings
+                    tts.speak('TR_SCREAN_INFO', val=str(len(tl)))
 
                 return True
 

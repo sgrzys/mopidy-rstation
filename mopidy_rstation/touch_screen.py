@@ -46,7 +46,8 @@ class TouchScreen(pykka.ThreadingActor, core.CoreListener):
         self.screen_manager = ScreenManager(self.screen_size,
                                             self.core,
                                             self.cache_dir,
-                                            self.resolution_factor)
+                                            self.resolution_factor,
+                                            config)
 
         # Raspberry pi GPIO
         self.gpio = config['rstation']['gpio']

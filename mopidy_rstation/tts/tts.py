@@ -122,3 +122,58 @@ def speak(code, *param, **key):
             speak_text("Idz do góry")
         elif lang == 'en':
             speak_text("Go up")
+    if code == 'NO_TRACK':
+        if lang == 'pl':
+            speak_text("Aktualnie nie jest odtwarzany żaden utwór")
+        elif lang == 'en':
+            speak_text("Currently we do not play any song")
+    if code == 'NO_PLAYLISTS':
+        if lang == 'pl':
+            speak_text("Brak list odtwarzania")
+        elif lang == 'en':
+            speak_text("We do not have any playlist")
+    if code == 'AUDIOBOOKS_DIR':
+        if lang == 'pl':
+            speak_text("Audiobuki")
+        elif lang == 'en':
+            speak_text("Audiobooks")
+    if code == 'INFO_DIR':
+        if lang == 'pl':
+            speak_text("Informacje")
+        elif lang == 'en':
+            speak_text("Information")
+    if code == 'MUSIC_DIR':
+        if lang == 'pl':
+            speak_text("Muzyka")
+        elif lang == 'en':
+            speak_text("Music")
+    if code == 'PODCAST_DIR':
+        if lang == 'pl':
+            speak_text("Podkasty")
+        elif lang == 'en':
+            speak_text("Podcasts")
+    if code == 'RADIO_DIR':
+        if lang == 'pl':
+            speak_text("Radio")
+        elif lang == 'en':
+            speak_text("Radio")
+    if code == 'NO_LIBRARY':
+        if lang == 'pl':
+            speak_text("Brak pozycji w bibliotece")
+        elif lang == 'en':
+            speak_text("There is nothing in the library")
+    if code == 'LIB_SCREAN_INFO':
+        if lang == 'pl':
+            speak_text("Jesteś w bibliotece, mamy tu")
+        elif lang == 'en':
+            speak_text("You are in library, we have here")
+    if code == 'PL_SCREAN_INFO':
+        if lang == 'pl':
+            speak_text("Listy odtwarzania")
+        elif lang == 'en':
+            speak_text("Playlists")
+    if code == 'TR_SCREAN_INFO':
+        if lang == 'pl':
+            speak_text("Lista utworów ma " + val + ' pozycji')
+        elif lang == 'en':
+            speak_text("Tracks list has " + val + ' entries')
