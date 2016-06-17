@@ -259,36 +259,36 @@ class ScreenManager():
                 if self.current_screen == 1:
                     self.core.playback.previous()
             elif key == 'NUM4':
-                # goto folder
-                self.change_screen(3)
+                if self.current_screen != 3:
+                    self.change_screen(3)
                 tts.speak_text('Audiobuki')
                 self.screens[3].go_inside_directory(
-                        '/home/pi/mopidy-rstation/media/Audiobooki'
+                        'rstation:/home/pi/mopidy-rstation/media/Audiobooki'
                 )
             elif key == 'NUM5':
-                # goto folder
-                self.change_screen(3)
+                if self.current_screen != 3:
+                    self.change_screen(3)
                 tts.speak_text('Informacje')
                 self.screens[3].go_inside_directory(
                         'rstation:/home/pi/mopidy-rstation/media/Informacje'
                 )
             elif key == 'NUM6':
-                # goto folder
-                self.change_screen(3)
+                if self.current_screen != 3:
+                    self.change_screen(3)
                 tts.speak_text('Muzyka')
                 self.screens[3].go_inside_directory(
                         'rstation:/home/pi/mopidy-rstation/media/Muzyka'
                 )
             elif key == 'NUM7':
-                # goto folder
-                self.change_screen(3)
+                if self.current_screen != 3:
+                    self.change_screen(3)
                 tts.speak_text('Podkasty')
                 self.screens[3].go_inside_directory(
                         'rstation:/home/pi/mopidy-rstation/media/Podkasty'
                 )
             elif key == 'NUM8':
-                # goto folder
-                self.change_screen(3)
+                if self.current_screen != 3:
+                    self.change_screen(3)
                 tts.speak_text('Radia')
                 self.screens[3].go_inside_directory(
                         'rstation:/home/pi/mopidy-rstation/media/Radia'
