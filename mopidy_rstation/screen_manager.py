@@ -264,12 +264,16 @@ class ScreenManager():
                     self.change_screen(3)
                 tts.speak('AUDIOBOOKS_DIR')
                 self.screens[3].go_inside_directory(
+                        'rstation:' + self.media_dir[0])
+                self.screens[3].go_inside_directory(
                         'rstation:' + self.media_dir[0] + 'Audiobooki'
                 )
             elif key == 'NUM5':
                 if self.current_screen != 3:
                     self.change_screen(3)
                 tts.speak('INFO_DIR')
+                self.screens[3].go_inside_directory(
+                        'rstation:' + self.media_dir[0])
                 self.screens[3].go_inside_directory(
                         'rstation:' + self.media_dir[0] + 'Informacje'
                 )
@@ -278,6 +282,8 @@ class ScreenManager():
                     self.change_screen(3)
                 tts.speak('MUSIC_DIR')
                 self.screens[3].go_inside_directory(
+                        'rstation:' + self.media_dir[0])
+                self.screens[3].go_inside_directory(
                         'rstation:' + self.media_dir[0] + 'Muzyka'
                 )
             elif key == 'NUM7':
@@ -285,12 +291,16 @@ class ScreenManager():
                     self.change_screen(3)
                 tts.speak('PODCAST_DIR')
                 self.screens[3].go_inside_directory(
+                        'rstation:' + self.media_dir[0])
+                self.screens[3].go_inside_directory(
                         'rstation:' + self.media_dir[0] + 'Podkasty'
                 )
             elif key == 'NUM8':
                 if self.current_screen != 3:
                     self.change_screen(3)
                 tts.speak('RADIO_DIR')
+                self.screens[3].go_inside_directory(
+                        'rstation:' + self.media_dir[0])
                 self.screens[3].go_inside_directory(
                         'rstation:' + self.media_dir[0] + 'Radia'
                 )
@@ -322,8 +332,11 @@ class ScreenManager():
                         tts.speak('NO_PLAYLISTS')
 
                 if self.current_screen == 3:
-                    tl = self.screens[3].tracks_strings
-                    tts.speak('TR_SCREAN_INFO', val=str(len(tl)))
+                    try:
+                        tl = len(self.screens[3].tracks_strings)
+                    except Exception:
+                        tl = 0
+                    tts.speak('TR_SCREAN_INFO', val=str(tl))
 
                 return True
 

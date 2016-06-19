@@ -1,6 +1,8 @@
 # encoding=utf8
 import os
 
+from threading import Thread
+
 # TODO add this to settings
 speak_on = False
 lang = 'pl'
@@ -13,13 +15,21 @@ def convert_text(text):
         print(str(e))
         t = 'Error ' + e.message
 
+    t = t.replace('_', ' ')
+    t = t.replace('-', ' ')
+    # TODO remove the file sufix
+
     return t
 
 
 def speak_text(text):
-    # t = Thread(target=speak_text_thread, args=(text,))
-    # t.start()
-    os.system(' echo "' + text + '" | espeak -v ' + lang)
+    t = Thread(target=speak_text_thread, args=(text,))
+    t.start()
+
+
+def speak_text_thread(text):
+        os.system('pkill espeak')
+        os.system(' echo "' + text + '" | espeak -v ' + lang + ' a 200')
 
 
 def speak(code, *param, **key):
