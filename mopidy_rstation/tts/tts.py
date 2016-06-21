@@ -23,13 +23,14 @@ def convert_text(text):
 
 
 def speak_text(text):
+    os.system('pkill espeak')
     t = Thread(target=speak_text_thread, args=(text,))
     t.start()
 
 
 def speak_text_thread(text):
-        os.system('pkill espeak')
-        os.system(' echo "' + text + '" | espeak -v ' + lang + ' a 200')
+
+        os.system(' echo "' + text + '" | espeak -v ' + lang + ' -a 200')
 
 
 def speak(code, *param, **key):
@@ -174,9 +175,9 @@ def speak(code, *param, **key):
             speak_text("There is nothing in the library")
     if code == 'LIB_SCREAN_INFO':
         if lang == 'pl':
-            speak_text("Jesteś w bibliotece, mamy tu")
+            speak_text("Jesteś w bibliotece, mamy tu " + val)
         elif lang == 'en':
-            speak_text("You are in library, we have here")
+            speak_text("You are in library, we have here " + val)
     if code == 'PL_SCREAN_INFO':
         if lang == 'pl':
             speak_text("Listy odtwarzania")

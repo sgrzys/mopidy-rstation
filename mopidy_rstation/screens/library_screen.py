@@ -52,6 +52,7 @@ class LibraryScreen(BaseScreen):
 
     def touch_event(self, touch_event):
         clicked = self.list_view.touch_event(touch_event)
+        print(str(touch_event))
         selected = self.list_view.selected
         if self.library_strings[0] == "../":
                 selected = selected - 1
@@ -62,7 +63,6 @@ class LibraryScreen(BaseScreen):
                 selected_name = u'Up'
         else:
             selected_name = self.library[selected].name
-        # print(selected_name)
 
         if clicked is not None:
             if self.current_directory is not None:

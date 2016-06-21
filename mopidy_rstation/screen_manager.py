@@ -315,10 +315,11 @@ class ScreenManager():
                         tts.speak('NO_TRACK')
                 if self.current_screen == 3:
                     dl = self.screens[3].library_strings
-                    tts.speak('LIB_SCREAN_INFO')
+                    text = ''
                     if len(dl) > 0:
                         for i in dl:
-                            tts.speak_text(i)
+                            text = text + ', ' + i
+                        tts.speak('LIB_SCREAN_INFO', val=text)
                     else:
                         tts.speak('NO_LIBRARY')
 
@@ -331,9 +332,9 @@ class ScreenManager():
                     else:
                         tts.speak('NO_PLAYLISTS')
 
-                if self.current_screen == 3:
+                if self.current_screen == 2:
                     try:
-                        tl = len(self.screens[3].tracks_strings)
+                        tl = len(self.screens[2].tracks_strings)
                     except Exception:
                         tl = 0
                     tts.speak('TR_SCREAN_INFO', val=str(tl))
