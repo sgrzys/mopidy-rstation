@@ -17,15 +17,18 @@ def convert_text(text):
 
     t = t.replace('_', ' ')
     t = t.replace('-', ' ')
-    # TODO remove the file sufix
-
+    # remove the file extension
+    t = os.path.splitext(t)[0]
     return t
 
 
-def speak_text(text):
-    os.system('pkill espeak')
-    t = Thread(target=speak_text_thread, args=(text,))
-    t.start()
+def speak_text(text, thread=True):
+    if thread:
+        os.system('pkill espeak')
+        t = Thread(target=speak_text_thread, args=(text,))
+        t.start()
+    else:
+        os.system(' echo "' + text + '" | espeak -v ' + lang + ' -a 200')
 
 
 def speak_text_thread(text):
@@ -43,14 +46,14 @@ def speak(code, *param, **key):
 
     if code == 'PLAY':
         if lang == 'pl':
-            speak_text("Graj")
+            speak_text("Graj", False)
         elif lang == 'en':
-            speak_text("Play")
+            speak_text("Play", False)
     if code == 'PAUSE':
         if lang == 'pl':
-            speak_text("Pauza")
+            speak_text("Pauza", False)
         elif lang == 'en':
-            speak_text("Pause")
+            speak_text("Pause", False)
     if code == 'SPEAK_ON':
         if lang == 'pl':
             speak_text("Podpowiedzi")
@@ -73,14 +76,14 @@ def speak(code, *param, **key):
             speak_text("Mute")
     if code == 'NEXT':
         if lang == 'pl':
-            speak_text("Następny")
+            speak_text("Następny", False)
         elif lang == 'en':
-            speak_text("Next")
+            speak_text("Next", False)
     if code == 'PREV':
         if lang == 'pl':
-            speak_text("Poprzedni")
+            speak_text("Poprzedni", False)
         elif lang == 'en':
-            speak_text("Previous")
+            speak_text("Previous", False)
     if code == 'CHM':
         if lang == 'pl':
             speak_text("Biblioteka")

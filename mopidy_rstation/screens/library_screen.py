@@ -85,7 +85,8 @@ class LibraryScreen(BaseScreen):
                 tts.speak(
                     'ENTER_DIR', val=selected_name)
         else:
-            tts.speak('LIST_ITEM', val=selected_name)
+            if selected != -1:
+                tts.speak('LIST_ITEM', val=selected_name)
 
     def play_uri(self, track_pos):
         self.manager.core.tracklist.clear()
@@ -96,15 +97,27 @@ class LibraryScreen(BaseScreen):
         logger.debug(item.uri)
         if item.uri.startswith(('rstation')):
             logger.debug('we have rstation playlist to handle...')
-            uri = item.uri.replace('rstation', 'm3u', 1)
-            items = self.manager.core.playlists.get_items(uri).get()
-            if not items:
-                logger.warn("Playlist '%s' does not exist", uri)
-                return
-            logger.debug(str(items))
-            self.manager.core.tracklist.clear()
-            uris = map(lambda ref: ref.uri, items)
-            self.manager.core.tracklist.add(uris=uris)
+            try:
+                uri = item.uri.replace('rstation', 'm3u', 1)
+                items = self.manager.core.playlists.get_items(uri).get()
+                if not items:
+                    logger.warn("Playlist '%s' does not exist", str(uri))
+                    return
+                # logger.debug(str(items))
+                for i in items:
+                    logger.debug('we will add to tracklist: ' + str(i))
+                    if i.type == mopidy.models.Ref.TRACK:
+                        tracks.append(
+                            mopidy.models.Track(uri=i.uri, name=i.name)
+                        )
+                # uris = map(lambda ref: ref.uri, items)
+                # logger.debug('uris: ' + str(uris))
+                # self.manager.core.tracklist.add(uris=uris)
+                self.manager.core.tracklist.add(tracks)
+
+            except Exception as e:
+                logger.debug('we have a problem ' + str(e))
+
             self.manager.core.tracklist.set_consume(False)
             self.manager.core.tracklist.set_repeat(True)
             self.manager.core.playback.play()

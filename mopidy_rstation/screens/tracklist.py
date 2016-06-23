@@ -2,6 +2,9 @@ from base_screen import BaseScreen
 
 from .main_screen import MainScreen
 from ..graphic_utils import ListView
+from ..tts import tts
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Tracklist(BaseScreen):
@@ -39,8 +42,17 @@ class Tracklist(BaseScreen):
 
     def touch_event(self, touch_event):
         pos = self.list_view.touch_event(touch_event)
+        selected = self.list_view.selected
+        if selected is not None:
+            logger.debug('Selected track: ' + str(self.tracks[selected]))
+            selected_name = str(self.tracks[selected].track.name)
+            logger.debug('Selected track: ' + selected_name)
+
         if pos is not None:
             self.manager.core.playback.play(self.tracks[pos])
+            tts.speak('PLAY_URI', val=selected_name)
+        else:
+            tts.speak('LIST_ITEM', val=selected_name)
 
     def track_started(self, track):
         self.list_view.set_active(
