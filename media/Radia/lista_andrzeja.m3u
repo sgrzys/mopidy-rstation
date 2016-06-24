@@ -1,9 +1,0 @@
-#EXTM3U
-#EXTINF:-1, RadioTest1
-http://ubuntu.hbr1.com:19800/tronic.ogg
-#EXTINF:-1, RadioTest2
-http://wknc.sma.ncsu.edu:8000/wknchq.ogg.m3u
-#EXTINF:-1, Radio 3
-mms://stream.polskieradio.pl/program3
-#EXTINF:-1, Radio TOK FM
-http://lodz.radio.pionier.net.pl:8000/pl/tuba10-1.mp3
