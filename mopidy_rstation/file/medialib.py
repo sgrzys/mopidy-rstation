@@ -90,7 +90,7 @@ class FileLibraryProvider(backend.LibraryProvider):
         # check if it's playlist
         if uri.endswith(('.m3u', '.m3u8')):
             logger.debug('Medialib... we have playlist: %s', uri)
-            return
+            track = models.Track(uri=uri)
         else:
             try:
                 result = self._scanner.scan(uri)
@@ -105,7 +105,7 @@ class FileLibraryProvider(backend.LibraryProvider):
                 name = urllib2.unquote(filename).decode(FS_ENCODING, 'replace')
                 track = track.copy(name=name)
 
-            return [track]
+        return [track]
 
     def _get_media_dir(self, config):
         logger.debug('_get_media_dir ' + str(

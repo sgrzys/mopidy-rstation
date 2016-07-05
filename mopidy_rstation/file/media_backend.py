@@ -5,8 +5,7 @@ import logging
 import pykka
 
 from mopidy import backend
-from . import medialib
-
+from . import medialib, playlists, playback
 
 logger = logging.getLogger(__name__)
 
@@ -18,5 +17,10 @@ class MediaBackend(pykka.ThreadingActor, backend.Backend):
         super(MediaBackend, self).__init__()
         self.library = medialib.FileLibraryProvider(
             backend=self, config=config)
+        self.playlists = playlists.FilePlaylistsProvider(backend=self)
         self.playback = backend.PlaybackProvider(audio=audio, backend=self)
-        self.playlists = backend.PlaylistsProvider(backend=self)
+        self.playback = playback.FilePlaybackProvider(
+            audio=audio, backend=self)
+
+    def on_start(self):
+        logger.info("Rstation backend start...")
