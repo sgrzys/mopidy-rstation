@@ -89,8 +89,21 @@ class FileLibraryProvider(backend.LibraryProvider):
         local_path = mpath.uri_to_path(uri)
         # check if it's playlist
         if uri.endswith(('.m3u', '.m3u8')):
+            tracks = []
             logger.debug('Medialib... we have playlist: %s', uri)
             track = models.Track(uri=uri)
+            items = self.backend.playlists.get_items(uri)
+            logger.debug(str(items))
+            if not items:
+                logger.warn("Playlist '%s' does not exist", str(uri))
+                return None
+            for i in items:
+                logger.debug('we will add to tracklist: ' + str(i))
+                if i.type == models.Ref.TRACK:
+                    tracks.append(
+                        models.Track(uri=i.uri, name=i.name)
+                    )
+            return tracks
         else:
             try:
                 result = self._scanner.scan(uri)
