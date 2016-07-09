@@ -5,6 +5,7 @@ import threading
 import select
 import pygame
 from ..tts import tts
+from ..touchscreen import touchscreen
 
 logger = logging.getLogger('mopidy_Rstation')
 
@@ -14,7 +15,8 @@ LIRC_PROG_NAME = "mopidyRstation"
 class Event(list):
     """Event subscription.
 
-    A list of callable objects. Calling an i_playPlaylistnstance of this will cause a
+    A list of callable objects. Calling an
+    i_playPlaylistnstance of this will cause a
     call to each item in the list in ascending order by index."""
     def __call__(self, *args, **kwargs):
         for f in self:
@@ -162,11 +164,11 @@ class CommandDispatcher(object):
 
     def _flmHandler(self):
         tts.speak("FLM")
-        self._screenEvent("FLM")
+        touchscreen.backlight_down()
 
     def _flpHandler(self):
         tts.speak("FLP")
-        self._screenEvent("FLP")
+        touchscreen.backlight_up()
 
     def _eqHandler(self):
         if tts.speak_on is True:
