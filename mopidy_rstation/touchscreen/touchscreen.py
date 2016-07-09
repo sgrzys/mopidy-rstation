@@ -1,14 +1,21 @@
 # encoding=utf8
 import os
+import subprocess
+import logging
+
+logger = logging.getLogger('mopidy_Rstation')
 
 
 def get_actual_brightness():
-    actual_brightness = os.popen(
-        'cat /sys/class/backlight/rpi_backlight/actual_brightness')
-    return actual_brightness
+    ab = subprocess.check_output(
+        'cat /sys/class/backlight/rpi_backlight/actual_brightness', shell=True)
+
+    logger.debug('touchscreen actual_brightness -> ' + str(ab))
+    return ab
 
 
 def set_actual_brightness(ab):
+    logger.debug('touchscreen set_actual_brightness-> ' + str(ab))
     os.system(
         'echo ' + str(ab) +
         ' > /sys/class/backlight/rpi_backlight/brightness')
@@ -16,11 +23,13 @@ def set_actual_brightness(ab):
 
 def backlight_up():
     ab = get_actual_brightness()
-    ab = max(255, int(ab) + 11)
+    ab = min(255, int(ab) + 11)
+    ab = max(0, ab)
     set_actual_brightness(ab)
 
 
 def backlight_down():
     ab = get_actual_brightness()
-    ab = max(255, int(ab) - 11)
+    ab = min(255, int(ab) - 11)
+    ab = max(0, ab)
     set_actual_brightness(ab)
