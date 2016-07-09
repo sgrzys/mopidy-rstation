@@ -59,6 +59,8 @@ class CommandDispatcher(object):
         self.registerHandler('stop', lambda: self.core.playback.stop().get())
 
         buttonPressEvent.append(self.handleCommand)
+        # backlight level to 100
+        touchscreen.backlight()
 
     def handleCommand(self, cmd):
 
