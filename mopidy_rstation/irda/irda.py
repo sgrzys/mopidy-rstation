@@ -60,7 +60,7 @@ class CommandDispatcher(object):
 
         buttonPressEvent.append(self.handleCommand)
         # backlight level to 100
-        touchscreen.backlight()
+        touchscreen.set_actual_brightness(100)
 
     def handleCommand(self, cmd):
 

@@ -2,25 +2,25 @@
 import os
 
 
-def backlight():
+def get_actual_brightness():
+    actual_brightness = os.popen(
+        'cat /sys/class/backlight/rpi_backlight/actual_brightness')
+    return actual_brightness
+
+
+def set_actual_brightness(ab):
     os.system(
-        ' echo 100' +
+        'echo ' + str(ab) +
         ' > /sys/class/backlight/rpi_backlight/brightness')
 
 
 def backlight_up():
-    actual_brightness = os.system(
-        'cat /sys/class/backlight/rpi_backlight/actual_brightness')
-    actual_brightness = max(255, int(actual_brightness) + 11)
-    os.system(
-        ' echo ' + str(actual_brightness) +
-        ' > /sys/class/backlight/rpi_backlight/brightness')
+    ab = get_actual_brightness()
+    ab = max(255, int(ab) + 11)
+    set_actual_brightness(ab)
 
 
 def backlight_down():
-    actual_brightness = os.system(
-        'cat /sys/class/backlight/rpi_backlight/actual_brightness')
-    actual_brightness = min(0, int(actual_brightness) - 11)
-    os.system(
-        ' echo ' + str(actual_brightness) +
-        ' > /sys/class/backlight/rpi_backlight/brightness')
+    ab = get_actual_brightness()
+    ab = max(255, int(ab) - 11)
+    set_actual_brightness(ab)
