@@ -10,7 +10,7 @@ lang = 'pl'
 
 def convert_text(text):
     try:
-        t = text.encode("utf8", "ignore")
+        t = str(text).encode("utf8", "ignore")
     except Exception as e:
         print(str(e))
         t = 'Error ' + e.message

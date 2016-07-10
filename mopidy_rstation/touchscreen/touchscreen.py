@@ -26,7 +26,7 @@ def backlight_up():
     ab = get_actual_brightness()
     ab = min(255, int(ab) + 11)
     ab = max(0, ab)
-    tts.speak('PLAY_URI', val=ab)
+    tts.speak('BRIGHTNESS', val=str(ab))
     set_actual_brightness(ab)
 
 
@@ -34,5 +34,5 @@ def backlight_down():
     ab = get_actual_brightness()
     ab = min(255, int(ab) - 11)
     ab = max(0, ab)
-    tts.speak('PLAY_URI', val=ab)
+    tts.speak('BRIGHTNESS', val=str(ab))
     set_actual_brightness(ab)
