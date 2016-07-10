@@ -191,3 +191,8 @@ def speak(code, *param, **key):
             speak_text("Lista utworów ma " + val + ' pozycji')
         elif lang == 'en':
             speak_text("Tracks list has " + val + ' entries')
+    if code == 'BRIGHTNESS':
+        if lang == 'pl':
+            speak_text("jasność " + val)
+        elif lang == 'en':
+            speak_text("brightness " + val)

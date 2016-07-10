@@ -2,6 +2,7 @@
 import os
 import subprocess
 import logging
+from ..tts import tts
 
 logger = logging.getLogger('mopidy_Rstation')
 
@@ -25,6 +26,7 @@ def backlight_up():
     ab = get_actual_brightness()
     ab = min(255, int(ab) + 11)
     ab = max(0, ab)
+    tts.speak('PLAY_URI', val=ab)
     set_actual_brightness(ab)
 
 
@@ -32,4 +34,5 @@ def backlight_down():
     ab = get_actual_brightness()
     ab = min(255, int(ab) - 11)
     ab = max(0, ab)
+    tts.speak('PLAY_URI', val=ab)
     set_actual_brightness(ab)
