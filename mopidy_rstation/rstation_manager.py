@@ -5,7 +5,6 @@ import tempfile
 from irda.irda import LircThread
 from irda.irda import CommandDispatcher
 
-
 logger = logging.getLogger('mopidy_Rstation')
 
 LIRC_PROG_NAME = "mopidyRstation"
@@ -56,9 +55,11 @@ class RstationFrontend(pykka.ThreadingActor, core.CoreListener):
         self.thread.frontendActive = False
         self.thread.join()
 
-    def handleButtonPress(self, cmd):
-        pass
+    def handleButtonPress(self, button):
+        # logger.error("Start handleButtonPress: {0} ".format(cmd))
         # CoreListener.send("IRButtonPressed", button=cmd)
+        # logger.error("Stop handleButtonPress: {0} ".format(cmd))
+        pass
 
     def generateLircConfigFile(self, config):
         '''Returns file name of generate config file for pylirc'''

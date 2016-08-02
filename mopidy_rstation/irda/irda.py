@@ -6,6 +6,7 @@ import select
 import pygame
 from ..tts import tts
 from ..touchscreen import touchscreen
+from mopidy.core import CoreListener
 
 logger = logging.getLogger('mopidy_Rstation')
 
@@ -63,9 +64,12 @@ class CommandDispatcher(object):
         touchscreen.set_actual_brightness(100)
 
     def handleCommand(self, cmd):
+        logger.error("Start handleRemoteCommand: {0} ".format(cmd))
+        CoreListener.send("handleRemoteCommand", button=cmd)
+        logger.error("Stop handleRemoteCommand: {0} ".format(cmd))
 
         if cmd in self._handlers:
-            logger.debug("Command {0} was handled".format(cmd))
+            logger.debug("Command {0} was handled....".format(cmd))
             self._handlers[cmd]()
         else:
             logger.debug("Command {0} was not handled".format(cmd))
@@ -266,5 +270,5 @@ class LircThread(threading.Thread):
             self.handleCommand(code['config'])
 
     def handleCommand(self, cmd):
-        logger.debug('Command: {0}'.format(cmd))
-        self.ButtonPressed(cmd)
+        logger.error('Command: {0}'.format(cmd))
+        # self.ButtonPressed(cmd)

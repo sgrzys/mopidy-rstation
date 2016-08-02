@@ -15,7 +15,7 @@ class ExtensionTest(unittest.TestCase):
 
         config = ext.get_default_config()
 
-        self.assertIn('[touchscreen]', config)
+        self.assertIn('[rstation]', config)
         self.assertIn('enabled = true', config)
 
     def test_get_config_schema(self):

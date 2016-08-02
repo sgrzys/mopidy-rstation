@@ -1,5 +1,5 @@
 # encoding=utf8
-# import os
+import os
 import subprocess
 import logging
 from ..tts import tts
@@ -15,13 +15,12 @@ def get_actual_brightness():
     return ab
 
 
-def set_actual_brightness(b):
-    b = str(b)
-    logger.debug('touchscreen set_actual_brightness-> ' + b)
-    tts.speak('BRIGHTNESS', val=b)
-    subprocess.call(
-        'echo ' + b + ' > /sys/class/backlight/rpi_backlight/brightness',
-        shell=True)
+def set_actual_brightness(ab):
+    logger.debug('touchscreen set_actual_brightness-> ' + str(ab))
+    tts.speak('BRIGHTNESS', val=str(ab))
+    os.system(
+        'echo ' + str(ab) +
+        ' > /sys/class/backlight/rpi_backlight/brightness')
 
 
 def backlight_up():

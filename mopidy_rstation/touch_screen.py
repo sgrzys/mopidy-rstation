@@ -63,6 +63,12 @@ class TouchScreen(pykka.ThreadingActor, core.CoreListener):
             pins['enter'] = config['rstation']['gpio_enter']
             self.gpio_manager = GPIOManager(pins)
 
+    def handleButtonPress(self, button):
+        # logger.error("Start handleButtonPress: {0} ".format(cmd))
+        # CoreListener.send("IRButtonPressed", button=cmd)
+        # logger.error("Stop handleButtonPress: {0} ".format(cmd))
+        pass
+
     def get_display_surface(self, size):
         try:
             if self.fullscreen:

@@ -43,6 +43,7 @@ class Tracklist(BaseScreen):
     def touch_event(self, touch_event):
         pos = self.list_view.touch_event(touch_event)
         selected = self.list_view.selected
+        selected_name = ' '
         if selected is not None:
             logger.debug('Selected track: ' + str(self.tracks[selected]))
             selected_name = str(self.tracks[selected].track.name)
