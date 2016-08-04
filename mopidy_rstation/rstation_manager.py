@@ -4,11 +4,10 @@ import pykka
 import tempfile
 from irda.irda import LircThread
 from irda.irda import CommandDispatcher
+from touchscreen import touchscreen
 
 logger = logging.getLogger('mopidy_Rstation')
-
 LIRC_PROG_NAME = "mopidyRstation"
-
 logger = logging.getLogger(__name__)
 
 
@@ -38,8 +37,9 @@ class RstationFrontend(pykka.ThreadingActor, core.CoreListener):
     def on_start(self):
         try:
             logger.debug('Rstation starting')
-            self.thread.ButtonPressed.append(self.handleButtonPress)
             self.thread.start()
+            # backlight level to 100
+            touchscreen.set_actual_brightness(100)
             logger.debug('Rstation started')
         except Exception as e:
             logger.warning('Rstation has not started: ' + str(e))
@@ -55,10 +55,7 @@ class RstationFrontend(pykka.ThreadingActor, core.CoreListener):
         self.thread.frontendActive = False
         self.thread.join()
 
-    def handleButtonPress(self, button):
-        # logger.error("Start handleButtonPress: {0} ".format(cmd))
-        # CoreListener.send("IRButtonPressed", button=cmd)
-        # logger.error("Stop handleButtonPress: {0} ".format(cmd))
+    def handleRemoteCommand(self, cmd):
         pass
 
     def generateLircConfigFile(self, config):

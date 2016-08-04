@@ -1,12 +1,8 @@
 from __future__ import absolute_import, unicode_literals
-
 import logging
-
 import pykka
-
 from mopidy import backend
 from . import medialib
-# ,playlists ,playback
 from mopidy.m3u import playlists
 logger = logging.getLogger(__name__)
 
