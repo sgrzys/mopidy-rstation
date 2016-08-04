@@ -2,7 +2,6 @@
 import os
 import subprocess
 import logging
-from ..tts import tts
 
 logger = logging.getLogger('mopidy_Rstation')
 
@@ -17,7 +16,6 @@ def get_actual_brightness():
 
 def set_actual_brightness(ab):
     logger.debug('touchscreen set_actual_brightness-> ' + str(ab))
-    tts.speak('BRIGHTNESS', val=str(ab))
     os.system(
         'echo ' + str(ab) +
         ' > /sys/class/backlight/rpi_backlight/brightness')

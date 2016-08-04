@@ -55,7 +55,5 @@ class Extension(ext.Extension):
     def setup(self, registry):
         from .rstation_manager import RstationFrontend
         registry.add('frontend', RstationFrontend)
-        from .tts.tts import TtsFrontend
-        registry.add('frontend', TtsFrontend)
         from .file.media_backend import MediaBackend
         registry.add('backend', MediaBackend)
