@@ -84,5 +84,4 @@ class LircThread(threading.Thread):
             self.handleCommand(code['config'])
 
     def handleCommand(self, cmd):
-        logger.error('Command: {0}'.format(cmd))
         self.ButtonPressed(cmd)
