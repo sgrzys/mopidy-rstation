@@ -74,6 +74,10 @@ class LircThread(threading.Thread):
         except Exception as e:
             logger.warning('Exception during handling a command: ' + str(e))
 
+    def handleNextCode(self, s):
+        if s:
+            self.handleLircCode(s)
+
     def handleLircCode(self, s):
         logger.error('handleLircCode')
         for code in s:
