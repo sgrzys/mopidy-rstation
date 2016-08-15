@@ -4,6 +4,8 @@ import logging
 import threading
 import select
 from mopidy.core import CoreListener
+import os
+from threading import Thread
 
 logger = logging.getLogger('mopidy_Rstation')
 
@@ -31,9 +33,15 @@ class CommandDispatcher(object):
         buttonPressEvent.append(self.handleCommand)
 
     def handleCommand(self, cmd):
-        logger.debug("Start handleRemoteCommand: {0} ".format(cmd))
+        os.system('killall -9 aplay')
+        t = Thread(target=self.beep_thread)
+        t.start()
         CoreListener.send("handleRemoteCommand", cmd=cmd)
-        logger.debug("Stop handleRemoteCommand: {0} ".format(cmd))
+
+    def beep_thread(self):
+        cmd = "aplay /home/pi/mopidy-rstation/media/Ulubione/covers/"
+        cmd += "alert.wav > /dev/null 2>&1"
+        os.system(cmd)
 
     def registerHandler(self, cmd, handler):
         self._handlers[cmd] = handler
