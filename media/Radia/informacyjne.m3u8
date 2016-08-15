@@ -3,3 +3,5 @@
 http://zet-tun.cdn.eurozet.pl:8080
 #EXTINF:-1,RMF FM
 http://31.192.216.4:8000/rmf_fm
+#EXTINF:-1,Radio TOK FM
+http://lodz.radio.pionier.net.pl:8000/pl/tuba10-1.mp3
