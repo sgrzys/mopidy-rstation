@@ -12,6 +12,8 @@ http://stream3.polskieradio.pl:8908/
 #EXTINF:-1,Polskie Radio Rytm
 http://stream3.polskieradio.pl:8910/
 #EXTINF:-1,Polskie Radio Dzieciom
+http://stream3.polskieradio.pl:8912/
+#EXTINF:-1,Polskie Radio Zagranica Wschód
 http://stream3.polskieradio.pl:8914/
 #EXTINF:-1,Radio TOK FM
 http://lodz.radio.pionier.net.pl:8000/pl/tuba10-1.mp3

@@ -1,0 +1,9 @@
+#EXTM3U
+#EXTINF:-1,Muzyczne Radio 105.8
+http://stream.muzyczneradio.pl:9000
+#EXTINF:-1,Akademickie Radio LUZ
+http://radioluz.pwr.edu.pl/luzhifi.mp3
+#EXTINF:-1,Zet Chilli
+http://chillizetmp3-02.eurozet.pl:8400
+#EXTINF:-1,Złote Przeboje
+http://poznan5-6.radio.pionier.net.pl:8000/tuba9-1.mp3
