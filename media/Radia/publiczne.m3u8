@@ -11,9 +11,5 @@ http://stream3.polskieradio.pl:8906/
 http://stream3.polskieradio.pl:8908/
 #EXTINF:-1,Polskie Radio Dzieciom
 http://stream3.polskieradio.pl:8912/
-#EXTINF:-1,Polskie Radio Zagranica Wschód
+#EXTINF:-1,Polskie Radio Wschód
 http://stream3.polskieradio.pl:8914/
-#EXTINF:-1,Eska Wrocław
-http://s3.deb1.scdn.smcloud.net/t044-1.mp3
-#EXTINF:-1,Radio RAM
-http://stream4.nadaje.com:9220/ram

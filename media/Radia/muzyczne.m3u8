@@ -7,3 +7,9 @@ http://radioluz.pwr.edu.pl/luzhifi.mp3
 http://chillizetmp3-02.eurozet.pl:8400
 #EXTINF:-1,Złote Przeboje
 http://poznan5-6.radio.pionier.net.pl:8000/tuba9-1.mp3
+#EXTINF:-1,Polskie Radio Rytm
+http://stream3.polskieradio.pl:8910/
+#EXTINF:-1,Eska Wrocław
+http://s3.deb1.scdn.smcloud.net/t044-1.mp3
+#EXTINF:-1,Radio RAM
+http://stream4.nadaje.com:9220/ram
