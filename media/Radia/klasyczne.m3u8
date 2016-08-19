@@ -1,0 +1,13 @@
+#EXTM3U
+#EXTINF:-1,Polska Stacja Klasycznie
+http://stream.polskastacja.pl/ps10_mp3?player_group=PS_EXT_MP3
+#EXTINF:-1,Konkurs Chopinowski
+http://stream3.polskieradio.pl:8422
+#EXTINF:-1,W jazzowym klimacie
+http://stream3.polskieradio.pl:8424
+#EXTINF:-1,Najpiekniejsze polskie piosenki
+http://stream3.polskieradio.pl:8420
+#EXTINF:-1,Przeboje Lata z Radiem
+http://stream3.polskieradio.pl:8426
+#EXTINF:-1,Koncerty w Trojce
+http://stream3.polskieradio.pl:8410
