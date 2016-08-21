@@ -33,7 +33,7 @@ class CommandDispatcher(object):
         buttonPressEvent.append(self.handleCommand)
 
     def handleCommand(self, cmd):
-        os.system('killall -9 aplay')
+        # os.system('killall -9 aplay > /dev/null 2>&1')
         t = Thread(target=self.beep_thread)
         t.start()
         CoreListener.send("handleRemoteCommand", cmd=cmd)
