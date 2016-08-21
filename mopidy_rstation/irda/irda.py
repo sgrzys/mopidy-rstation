@@ -87,7 +87,6 @@ class LircThread(threading.Thread):
             self.handleLircCode(s)
 
     def handleLircCode(self, s):
-        logger.error('handleLircCode')
         for code in s:
             self.handleCommand(code['config'])
 
