@@ -52,9 +52,6 @@ class RstationFrontend(pykka.ThreadingActor, core.CoreListener):
         self.thread.frontendActive = False
         self.thread.join()
 
-    def handleRemoteCommand(self, cmd):
-        pass
-
     def generateLircConfigFile(self, config):
         '''Returns file name of generate config file for pylirc'''
         f = tempfile.NamedTemporaryFile(delete=False)
