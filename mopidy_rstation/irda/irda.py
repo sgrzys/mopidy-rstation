@@ -121,11 +121,11 @@ class CommandDispatcher(object):
         if cmd == 'num0':
             pass
 
-        if cmd == 'fl_minus':
-            pass
-
         if cmd == 'fl_plus':
-            pass
+            Utils.backlight_up()
+
+        if cmd == 'fl_minus':
+            Utils.backlight_down()
 
         if cmd == 'num2':
             # go up in library
