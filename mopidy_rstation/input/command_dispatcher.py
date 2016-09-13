@@ -1,14 +1,8 @@
-# This Python file uses the following encoding: utf-8
-import pylirc
-import logging
-import threading
-import select
-from mopidy.core import PlaybackState
-import os
 from threading import Thread
 from ..utils import Utils
+from mopidy.core import PlaybackState
+import os
 
-logger = logging.getLogger('mopidy_Rstation')
 LIRC_PROG_NAME = "mopidyRstation"
 url = u'rstation:/home/pi/mopidy-rstation/media'
 
@@ -39,11 +33,10 @@ class CommandDispatcher(object):
         # send the command to all the
         # CoreListener.send("handleRemoteCommand", cmd=cmd)
 
-        # handle command in frontend
         self.onCommand(cmd)
 
     def onCommand(self, cmd):
-        if cmd == 'ch_minus':
+        if cmd == 'track_list_prev':
             # prev on track list
             tracks = self.core.tracklist.tl_tracks.get()
             if len(tracks) == 0:
@@ -59,7 +52,7 @@ class CommandDispatcher(object):
                 except Exception as e:
                     print(str(e))
 
-        if cmd == 'ch':
+        if cmd == 'track_list_enter':
             # enter on track list
             tracks = self.core.tracklist.tl_tracks.get()
             if len(tracks) == 0:
@@ -69,7 +62,7 @@ class CommandDispatcher(object):
                 Utils.speak('PLAY_URI', val=item.track.name)
                 self.core.playback.play(tlid=item.tlid)
 
-        if cmd == 'ch_plus':
+        if cmd == 'track_list_next':
             # next on track list
             tracks = self.core.tracklist.tl_tracks.get()
             if len(tracks) == 0:
@@ -86,15 +79,15 @@ class CommandDispatcher(object):
                 except Exception as e:
                     print(str(e))
 
-        if cmd == 'prev':
+        if cmd == 'player_prev':
             # prev in player
             self.core.playback.previous()
 
-        if cmd == 'next':
+        if cmd == 'player_next':
             # next in player
             self.core.playback.next()
 
-        if cmd == 'play_pause':
+        if cmd == 'player_play_pause':
             if self.core.playback.state.get() == PlaybackState.PLAYING:
                 self.core.playback.pause()
                 Utils.speak('PAUSE')
@@ -110,7 +103,7 @@ class CommandDispatcher(object):
             vol = min(int(self.core.playback.volume.get()) + 10, 100)
             self.core.playback.volume = vol
 
-        if cmd == 'eq':
+        if cmd == 'change_lang':
             if Utils.lang == 'pl':
                 Utils.lang = 'en'
                 Utils.speak_text('English')
@@ -121,18 +114,18 @@ class CommandDispatcher(object):
         if cmd == 'num0':
             pass
 
-        if cmd == 'fl_plus':
+        if cmd == 'backlight_up':
             Utils.backlight_up()
 
-        if cmd == 'fl_minus':
+        if cmd == 'backlight_down':
             Utils.backlight_down()
 
-        if cmd == 'num2':
+        if cmd == 'lib_root_dir':
             # go up in library
             Utils.speak('CHP')
             self.core.library.browse(url)
 
-        if cmd == 'num4':
+        if cmd == 'lib_prev':
             # prev in library
             if len(Utils.lib_items) == 0:
                 pass
@@ -147,7 +140,7 @@ class CommandDispatcher(object):
                 except Exception as e:
                     print(str(e))
 
-        if cmd == 'num5':
+        if cmd == 'lib_enter':
             # enter in library
             if len(Utils.lib_items) > 0:
                 current_item = Utils.lib_items[Utils.curr_lib_item_id]
@@ -163,12 +156,12 @@ class CommandDispatcher(object):
                     self.core.library.browse(current_item.uri)
                     Utils.speak('ENTER_DIR', val=current_item.name)
 
-                if cmd == 'num2':
+                if cmd == 'lib_root_dir':
                     # library go to level 0
                     self.core.library.browse(url)
                     Utils.speak('CHP')
 
-        if cmd == 'num6':
+        if cmd == 'lib_next':
             # next in library
             if len(Utils.lib_items) == 0:
                 pass
@@ -184,17 +177,17 @@ class CommandDispatcher(object):
                 except Exception as e:
                     print(str(e))
 
-        if cmd == 'num7':
+        if cmd == 'lib_audiobook':
             Utils.speak('AUDIOBOOKS_DIR')
             uri = url + '/Audiobuki'
             self.core.library.browse(uri)
 
-        if cmd == 'num8':
+        if cmd == 'lib_radio':
             Utils.speak('RADIO_DIR')
             uri = url + '/Radia'
             self.core.library.browse(uri)
 
-        if cmd == 'num9':
+        if cmd == 'lib_music':
             Utils.speak('MUSIC_DIR')
             uri = url + '/Muzyka'
             self.core.library.browse(uri)
@@ -203,53 +196,3 @@ class CommandDispatcher(object):
         cmd = "aplay /home/pi/mopidy-rstation/Ulubione/covers/"
         cmd += "alert.wav > /dev/null 2>&1"
         os.system(cmd)
-
-    def registerHandler(self, cmd, handler):
-        self._handlers[cmd] = handler
-
-
-class LircThread(threading.Thread):
-    def __init__(self, configFile):
-        threading.Thread.__init__(self)
-        self.name = 'Lirc worker thread'
-        self.configFile = configFile
-        self.frontendActive = True
-        self.ButtonPressed = Event()
-
-    def run(self):
-        try:
-            self.run_inside_try()
-        except Exception as e:
-            logger.warning('Rstation has problems starting pylirc: ' + str(e))
-
-    def run_inside_try(self):
-        self.startPyLirc()
-
-    def startPyLirc(self):
-        logger.debug('Rstation start pylirc')
-        lircHandle = pylirc.init(LIRC_PROG_NAME, self.configFile, 0)
-        if(lircHandle != 0):
-            while(self.frontendActive):
-                self.consumePylirc(lircHandle)
-            pylirc.exit()
-
-    def consumePylirc(self, lircHandle):
-        try:
-            if(select.select([lircHandle], [], [], 1) == ([], [], [])):
-                pass
-            else:
-                s = pylirc.nextcode(1)
-                self.handleNextCode(s)
-        except Exception as e:
-            logger.warning('Exception during handling a command: ' + str(e))
-
-    def handleNextCode(self, s):
-        if s:
-            self.handleLircCode(s)
-
-    def handleLircCode(self, s):
-        for code in s:
-            self.handleCommand(code['config'])
-
-    def handleCommand(self, cmd):
-        self.ButtonPressed(cmd)

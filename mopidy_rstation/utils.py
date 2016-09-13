@@ -192,7 +192,7 @@ class Utils:
                 Utils.speak_text("Fl plus")
             elif Utils.lang == 'en':
                 Utils.speak_text("Fl plus")
-        if code == 'NUM9':
+        if code == 'lib_music':
             if Utils.lang == 'pl':
                 Utils.speak_text("Informacja")
             elif Utils.lang == 'en':

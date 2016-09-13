@@ -1,9 +1,9 @@
 import logging
 from mopidy import core
 import pykka
-import tempfile
-from irda.irda import LircThread
-from irda.irda import CommandDispatcher
+from input.irda.irda import LircThread
+from input.keyboard.key import KeyPad
+from input.command_dispatcher import CommandDispatcher
 
 logger = logging.getLogger('mopidy_Rstation')
 LIRC_PROG_NAME = "mopidyRstation"
@@ -16,27 +16,41 @@ class RstationFrontend(pykka.ThreadingActor, core.CoreListener):
         super(RstationFrontend, self).__init__()
         self.core = core
         self.config = config['rstation']
-        self.configFile = self.generateLircConfigFile(config['rstation'])
-        logger.debug('lircrc file:{0}'.format(self.configFile))
-
-        self.thread = LircThread(self.configFile)
-        self.dispatcher = CommandDispatcher(
-            self.core,
-            self.config,
-            self.thread.ButtonPressed)
-
         self.debug_irda_simulate = config['rstation']['debug_irda_simulate']
-        if self.debug_irda_simulate:
-            logger.debug('IrdaSimulator is ON')
-            from irda.irda_simulator import IrdaSimulator
-            self.simulator = IrdaSimulator(self.dispatcher)
+        self.enable_irda = config['rstation']['enable_irda']
+        self.enable_keypad = config['rstation']['enable_keypad']
+        # IRDA
+        if self.enable_irda:
+            logger.debug('Irda Input is ON')
+            self.irda_thread = LircThread(self.config)
+            self.irda_dispatcher = CommandDispatcher(
+                self.core,
+                self.config,
+                self.irda_thread.ButtonPressed)
+            if self.debug_irda_simulate:
+                logger.debug('Irda Simulator is ON')
+                from input.irda.irda_simulator import IrdaSimulator
+                self.simulator = IrdaSimulator(self.irda_dispatcher)
+            else:
+                logger.debug('Irda Simulator is OFF')
         else:
-            logger.debug('IrdaSimulator is OFF')
+            logger.debug('Irda Input is OFF')
+
+        # Keyboard
+        if self.enable_keypad:
+            logger.debug('KeyPad Input is ON')
+            self.keypad = KeyPad(self.config)
+            self.keypad_dispatcher = CommandDispatcher(
+                self.core,
+                self.config,
+                self.keypad.ButtonPressed)
+        else:
+            logger.debug('KeyPad Input is OFF')
 
     def on_start(self):
         try:
             logger.debug('Rstation starting')
-            self.thread.start()
+            self.irda_thread.start()
             logger.debug('Rstation started')
         except Exception as e:
             logger.warning('Rstation has not started: ' + str(e))
@@ -44,20 +58,12 @@ class RstationFrontend(pykka.ThreadingActor, core.CoreListener):
 
     def on_stop(self):
         logger.info('Rstation stopped')
-        self.thread.frontendActive = False
-        self.thread.join()
+        if self.enable_irda:
+            self.irda_thread.frontendActive = False
+            self.irda_thread.join()
 
     def on_failure(self):
         logger.warning('Rstation failing')
-        self.thread.frontendActive = False
-        self.thread.join()
-
-    def generateLircConfigFile(self, config):
-        '''Returns file name of generate config file for pylirc'''
-        f = tempfile.NamedTemporaryFile(delete=False)
-        skeleton = 'begin\n   prog={2}\n   button={0}\n   config={1}\nend\n'
-        for action in config:
-            entry = skeleton.format(config[action], action, LIRC_PROG_NAME)
-            f.write(entry)
-        f.close()
-        return f.name
+        if self.enable_irda:
+            self.irda_thread.frontendActive = False
+            self.irda_thread.join()
