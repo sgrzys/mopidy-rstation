@@ -26,7 +26,7 @@ class Utils:
 
     @staticmethod
     def get_title_string(tl_track):
-        name = u'nazwa...'
+        name = u''
         try:
             if 'track' in tl_track:
                 name = tl_track['track']['name']
@@ -38,7 +38,7 @@ class Utils:
 
     @staticmethod
     def get_album_string(tl_track):
-        name = u'album...'
+        name = u''
         try:
             name = tl_track['track']['album']['name']
         except Exception:
@@ -47,7 +47,7 @@ class Utils:
 
     @staticmethod
     def get_artist_string(tl_track):
-        name = u'artysta...'
+        name = u''
         try:
             if len(tl_track['track']['artists']) > 0:
                 name = ""

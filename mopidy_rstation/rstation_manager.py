@@ -4,6 +4,7 @@ import pykka
 from input.irda.irda import LircThread
 from input.keyboard.key import KeyPad
 from input.command_dispatcher import CommandDispatcher
+from utils import Utils
 
 logger = logging.getLogger('mopidy_Rstation')
 LIRC_PROG_NAME = "mopidyRstation"
@@ -46,6 +47,16 @@ class RstationFrontend(pykka.ThreadingActor, core.CoreListener):
                 self.keypad.ButtonPressed)
         else:
             logger.debug('KeyPad Input is OFF')
+
+    def playback_state_changed(self, old_state, new_state):
+        pass
+
+    def track_playback_started(self, tl_track):
+        if tl_track is not None:
+            try:
+                Utils.speak('PLAYING', val=tl_track.track.name)
+            except Exception as e:
+                print(str(e))
 
     def on_start(self):
         try:

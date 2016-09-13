@@ -68,16 +68,16 @@ class IrdaSimulator():
         self.dispatcher.handleCommand('track_list_prev')
 
     def track_list_enter(self):
-        self.dispatcher.handleCommand('ch')
+        self.dispatcher.handleCommand('track_list_enter')
 
     def track_list_next(self):
         self.dispatcher.handleCommand('track_list_next')
 
     def player_prev(self):
-        self.dispatcher.handleCommand('prev')
+        self.dispatcher.handleCommand('player_prev')
 
     def player_next(self):
-        self.dispatcher.handleCommand('next')
+        self.dispatcher.handleCommand('player_next')
 
     def player_play_pause(self):
         self.dispatcher.handleCommand('player_play_pause')
@@ -89,7 +89,7 @@ class IrdaSimulator():
         self.dispatcher.handleCommand('vol_up')
 
     def change_lang(self):
-        self.dispatcher.handleCommand('eq')
+        self.dispatcher.handleCommand('change_lang')
 
     def num0(self):
         self.dispatcher.handleCommand('num0')
