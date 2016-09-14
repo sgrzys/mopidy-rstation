@@ -40,11 +40,11 @@ class RstationFrontend(pykka.ThreadingActor, core.CoreListener):
         # Keyboard
         if self.enable_keypad:
             logger.debug('KeyPad Input is ON')
-            self.keypad = KeyPad(self.config)
+            self.keypad_thread = KeyPad(self.config)
             self.keypad_dispatcher = CommandDispatcher(
                 self.core,
                 self.config,
-                self.keypad.ButtonPressed)
+                self.keypad_thread.ButtonPressed)
         else:
             logger.debug('KeyPad Input is OFF')
 
@@ -63,6 +63,8 @@ class RstationFrontend(pykka.ThreadingActor, core.CoreListener):
             logger.debug('Rstation starting')
             if self.enable_irda:
                 self.irda_thread.start()
+            if self.enable_keypad:
+                self.keypad_thread.start()
             logger.debug('Rstation started')
         except Exception as e:
             logger.warning('Rstation has not started: ' + str(e))
@@ -73,9 +75,15 @@ class RstationFrontend(pykka.ThreadingActor, core.CoreListener):
         if self.enable_irda:
             self.irda_thread.frontendActive = False
             self.irda_thread.join()
+        if self.enable_keypad:
+            self.keypad_thread.stop()
+            self.keypad_thread.join()
 
     def on_failure(self):
         logger.warning('Rstation failing')
         if self.enable_irda:
             self.irda_thread.frontendActive = False
             self.irda_thread.join()
+        if self.enable_keypad:
+            self.keypad_thread.stop()
+            self.keypad_thread.join()
