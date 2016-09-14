@@ -1,7 +1,8 @@
 # This Python file uses the following encoding: utf-8
-from pyxhook import HookManager
 from ..command_dispatcher import Event
 from showkey import ShowKey
+from threading import Thread
+
 
 class KeyPad():
     def __init__(self, config):
@@ -10,7 +11,12 @@ class KeyPad():
         # self.hm.HookKeyboard()
         # self.hm.KeyUp = self.handle_event
         # self.hm.start()
-        # self.ButtonPressed = Event()
+        self.ButtonPressed = Event()
+
+        t = Thread(target=self.show_key)
+        t.start()
+
+    def show_key(self):
         sk = ShowKey()
         sk.addKeyAction("*p", self.key_pressed)
         sk.addKeyAction("*r", self.key_released)
