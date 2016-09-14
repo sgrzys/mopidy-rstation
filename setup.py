@@ -27,8 +27,7 @@ setup(
     install_requires=[
         'setuptools',
         'Mopidy >= 1.0',
-        'Pykka >= 1.1',
-        'pygame'
+        'Pykka >= 1.1'
     ],
     test_suite='nose.collector',
     tests_require=[

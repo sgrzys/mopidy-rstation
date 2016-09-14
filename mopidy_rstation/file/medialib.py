@@ -9,6 +9,7 @@ import urllib2
 from mopidy import backend, exceptions, models
 from mopidy.audio import scan, tags
 import mpath
+from ..utils import Utils
 
 
 logger = logging.getLogger(__name__)
@@ -82,6 +83,8 @@ class FileLibraryProvider(backend.LibraryProvider):
                 result.append(models.Ref.track(name=name, uri=uri))
 
         result.sort(key=operator.attrgetter('name'))
+        Utils.curr_lib_item_id = 0
+        Utils.lib_items = result
         return result
 
     def lookup(self, uri):

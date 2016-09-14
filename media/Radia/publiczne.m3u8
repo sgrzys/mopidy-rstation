@@ -1,0 +1,15 @@
+#EXTM3U
+#EXTINF:-1,Jedynka
+http://stream3.polskieradio.pl:8900/
+#EXTINF:-1,Dwójka
+http://stream3.polskieradio.pl:8902/
+#EXTINF:-1,Trójka
+http://stream3.polskieradio.pl:8904/
+#EXTINF:-1,Czwórka
+http://stream3.polskieradio.pl:8906/
+#EXTINF:-1,Polskie Radio Zagranica
+http://stream3.polskieradio.pl:8908/
+#EXTINF:-1,Polskie Radio Dzieciom
+http://stream3.polskieradio.pl:8912/
+#EXTINF:-1,Polskie Radio Wschód
+http://stream3.polskieradio.pl:8914/

@@ -1,10 +1,6 @@
 from __future__ import unicode_literals
-
 import os
-
 from mopidy import config, ext
-
-from .touch_screen import TouchScreen
 
 __version__ = '1.0.0'
 
@@ -21,45 +17,30 @@ class Extension(ext.Extension):
 
     def get_config_schema(self):
         schema = super(Extension, self).get_config_schema()
-        schema['screen_width'] = config.Integer(minimum=1)
-        schema['screen_height'] = config.Integer(minimum=1)
-        schema['resolution_factor'] = config.Integer(minimum=6)
-        schema['cursor'] = config.Boolean()
-        schema['fullscreen'] = config.Boolean()
-        schema['cache_dir'] = config.Path()
-        schema['gpio'] = config.Boolean()
-        schema['gpio_left'] = config.Integer()
-        schema['gpio_right'] = config.Integer()
-        schema['gpio_up'] = config.Integer()
-        schema['gpio_down'] = config.Integer()
-        schema['gpio_enter'] = config.Integer()
-        schema['sdl_fbdev'] = config.String()
-        schema['sdl_mousdrv'] = config.String()
-        schema['sdl_mousedev'] = config.String()
-        schema['sdl_audiodriver'] = config.String()
-        schema['sdl_path_dsp'] = config.String()
+        schema['enable_irda'] = config.Boolean()
+        schema['enable_keypad'] = config.Boolean()
         schema['debug_irda_simulate'] = config.Boolean()
-        schema['ch_minus'] = config.String()
-        schema['ch'] = config.String()
-        schema['ch_plus'] = config.String()
-        schema['prev'] = config.String()
-        schema['next'] = config.String()
-        schema['play_pause'] = config.String()
+        schema['track_list_prev'] = config.String()
+        schema['track_list_enter'] = config.String()
+        schema['track_list_next'] = config.String()
+        schema['player_prev'] = config.String()
+        schema['player_next'] = config.String()
+        schema['player_play_pause'] = config.String()
         schema['vol_up'] = config.String()
         schema['vol_down'] = config.String()
-        schema['eq'] = config.String()
+        schema['change_lang'] = config.String()
         schema['num0'] = config.String()
-        schema['fl_minus'] = config.String()
-        schema['fl_plus'] = config.String()
+        schema['backlight_down'] = config.String()
+        schema['backlight_up'] = config.String()
         schema['num1'] = config.String()
-        schema['num2'] = config.String()
+        schema['lib_root_dir'] = config.String()
         schema['num3'] = config.String()
-        schema['num4'] = config.String()
-        schema['num5'] = config.String()
-        schema['num6'] = config.String()
-        schema['num7'] = config.String()
-        schema['num8'] = config.String()
-        schema['num9'] = config.String()
+        schema['lib_prev'] = config.String()
+        schema['lib_enter'] = config.String()
+        schema['lib_next'] = config.String()
+        schema['lib_audiobook'] = config.String()
+        schema['lib_radio'] = config.String()
+        schema['lib_music'] = config.String()
         schema['mute'] = config.String()
         schema['stop'] = config.String()
         schema['power'] = config.String()
@@ -74,7 +55,6 @@ class Extension(ext.Extension):
         return schema
 
     def setup(self, registry):
-        registry.add('frontend', TouchScreen)
         from .rstation_manager import RstationFrontend
         registry.add('frontend', RstationFrontend)
         from .file.media_backend import MediaBackend

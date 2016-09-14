@@ -1,0 +1,19 @@
+#EXTM3U
+#EXTINF:-1,Muzyczne Radio
+http://stream.muzyczneradio.pl:9000
+#EXTINF:-1,Zet Chilli
+http://chillizetmp3-02.eurozet.pl:8400
+#EXTINF:-1,Złote Przeboje
+http://poznan5-6.radio.pionier.net.pl:8000/tuba9-1.mp3
+#EXTINF:-1,Polskie Radio Rytm
+http://stream3.polskieradio.pl:8910/
+#EXTINF:-1,Eska Wrocław
+http://s3.deb1.scdn.smcloud.net/t044-1.mp3
+#EXTINF:-1,Radio RAM
+http://stream4.nadaje.com:9220/ram
+#EXTINF:-1,25 Lat RMF FM
+http://files.kusmierz.be/rmf/20lat-2.mp3
+#EXTINF:-1,Bluefm Poznań
+http://stream10.radioagora.pl:80/bluefm.mp3
+#EXTINF:-1,Akademickie Radio LUZ
+http://radioluz.pwr.edu.pl/luzhifi.mp3
