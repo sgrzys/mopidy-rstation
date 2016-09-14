@@ -1,26 +1,30 @@
 # This Python file uses the following encoding: utf-8
 from ..command_dispatcher import Event
-from showkey import ShowKey
 from threading import Thread
+from evdev import InputDevice, categorize, ecodes, list_devices
+from select import select
 
 
 class KeyPad():
     def __init__(self, config):
         self.config = config
-        # self.hm = HookManager()
-        # self.hm.HookKeyboard()
-        # self.hm.KeyUp = self.handle_event
-        # self.hm.start()
         self.ButtonPressed = Event()
 
-        t = Thread(target=self.show_key)
+        t = Thread(target=self.keyboard)
         t.start()
 
-    def show_key(self):
-        sk = ShowKey()
-        sk.addKeyAction("*p", self.key_pressed)
-        sk.addKeyAction("*r", self.key_released)
-        sk.run()
+    def keyboard(self):
+        devices = [InputDevice(fn) for fn in list_devices()]
+        for device in devices:
+            print(device.fn, device.name, device.phys)
+
+        # TODO check the capabilities and add all the keyboards
+        dev = InputDevice('/dev/input/event2')
+        dev.capabilities()
+        dev.capabilities(verbose=True)
+        for event in dev.read_loop():
+            if event.type == ecodes.EV_KEY:
+                print(categorize(event))
 
     def key_pressed(self, kc):
         print("Key pressed - keycode: %d" % kc)

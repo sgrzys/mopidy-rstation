@@ -61,7 +61,8 @@ class RstationFrontend(pykka.ThreadingActor, core.CoreListener):
     def on_start(self):
         try:
             logger.debug('Rstation starting')
-            self.irda_thread.start()
+            if self.enable_irda:
+                self.irda_thread.start()
             logger.debug('Rstation started')
         except Exception as e:
             logger.warning('Rstation has not started: ' + str(e))
