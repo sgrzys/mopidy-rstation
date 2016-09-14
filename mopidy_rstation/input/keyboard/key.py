@@ -26,12 +26,6 @@ class KeyPad():
             if event.type == ecodes.EV_KEY:
                 print(categorize(event))
 
-    def key_pressed(self, kc):
-        print("Key pressed - keycode: %d" % kc)
-
-    def key_released(self, kc):
-        print("Key released - keycode: %d" % kc)
-
     def handle_event(self, event):
         # if event.Key in watched_keys:
         # print(str(event.Key))
