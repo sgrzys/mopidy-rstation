@@ -70,7 +70,6 @@ class KeyPad(threading.Thread):
                                 self.devices[udev.device_node] = new_d
                         except Exception as e:
                             print('Error during add device ' + str(e))
-                            print('Device: ' + new_d.name)
                 elif udev.action == 'remove':
                     if udev.device_node in self.devices:
                         print(
