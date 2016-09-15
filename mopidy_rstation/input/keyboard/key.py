@@ -27,7 +27,8 @@ class KeyPad(threading.Thread):
 
     def checkIfDevIsKeyboard(self, d):
         d.capabilities()
-        return "keyboard" in d.name.lower() or "microsoft" in d.name.lower()
+        return "keyboard" in d.name.lower() or "microsoft" in d.name.lower() \
+            or "airmouse" in d.name.lower()
 
     def run(self):
         try:
