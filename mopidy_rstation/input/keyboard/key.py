@@ -65,20 +65,13 @@ class KeyPad(threading.Thread):
                     if udev.device_node not in self.devices:
                         print("Device added: %s" % udev)
                         try:
-                            self.devices[udev.device_node] = evdev.InputDevice(
-                                udev.device_node)
-                        except IOError as e:
-                            # udev reports MORE devices than are accessible
-                            # evdev; a simple way to check is see if devinfo
-                            # ioctl fails
-                            if e.errno != errno.ENOTTY:
-                                    raise
-                            pass
+                            new_d = evdev.InputDevice(udev.device_node)
+                            if self.checkIfDevIsKeyboard(new_d):
+                                self.devices[udev.device_node] = new_d
+                        except Exception as e:
+                            print('Error during add device ' + str(e))
+                            print('Device: ' + new_d.name)
                 elif udev.action == 'remove':
-                    # NB: This code path isn't exercised very frequently,
-                    # because select() will trigger a read immediately when fil
-                    # descriptor goes away, whereas the udev event takes some
-                    # time to propagate to us.
                     if udev.device_node in self.devices:
                         print(
                             "Device removed (udev): %s" %
