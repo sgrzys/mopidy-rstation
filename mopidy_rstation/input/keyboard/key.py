@@ -94,7 +94,9 @@ class KeyPad(threading.Thread):
                 # ENODEV.  So be sure to handle that.
                 try:
                     for event in r.read():
-                        self.handle_event(evdev.ecodes.KEY[event.code])
+                        if event.type == evdev.ecodes.EV_KEY & \
+                           event.value == 1:
+                            self.handle_event(evdev.ecodes.KEY[event.code])
                 except IOError as e:
                     if e.errno != errno.ENODEV:
                         raise
@@ -123,7 +125,7 @@ class KeyPad(threading.Thread):
         #             self.handle_event(ecodes.KEY[event.code])
 
     def handle_event(self, code):
-        print('KeyPad -> handle_event -> ' + code)
+        logger.debug('KeyPad -> handle_event -> ' + code)
         if code == 'KEY_LEFT':
             self.ButtonPressed('player_prev')
         if code == 'KEY_SPACE':
