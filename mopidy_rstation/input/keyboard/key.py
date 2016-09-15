@@ -123,6 +123,7 @@ class KeyPad(threading.Thread):
         #             self.handle_event(ecodes.KEY[event.code])
 
     def handle_event(self, code):
+        print('KeyPad -> handle_event -> ' + code)
         if code == 'KEY_LEFT':
             self.ButtonPressed('player_prev')
         if code == 'KEY_SPACE':
