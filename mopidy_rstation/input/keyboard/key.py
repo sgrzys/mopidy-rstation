@@ -119,11 +119,11 @@ class KeyPad(threading.Thread):
 
     def handle_event(self, code):
         logger.debug('KeyPad -> handle_event -> ' + code)
-        if code == 'KEY_LEFT':
+        if code == 'KEY_LEFT' or code == 'KEY_PREVIOUSSONG':
             self.ButtonPressed('player_prev')
-        if code == 'KEY_SPACE':
+        if code == 'KEY_SPACE' or code == 'KEY_PLAYPAUSE':
             self.ButtonPressed('player_play_pause')
-        if code == 'KEY_RIGHT':
+        if code == 'KEY_RIGHT' or code == 'KEY_NEXTSONG':
             self.ButtonPressed('player_next')
         if code == 'KEY_DOWN':
             self.ButtonPressed('track_list_prev')
@@ -145,9 +145,9 @@ class KeyPad(threading.Thread):
             self.ButtonPressed('lib_radio')
         if code == 'KEY_9':
             self.ButtonPressed('lib_music')
-        if code == 'KEY_MINUS':
+        if code == 'KEY_MINUS' or code == 'KEY_VOLUMEDOWN':
             self.ButtonPressed('vol_down')
-        if code == 'KEY_EQUAL':
+        if code == 'KEY_EQUAL' or code == 'KEY_VOLUMEUP':
             self.ButtonPressed('vol_up')
-        if code == 'KEY_L':
+        if code == 'KEY_L' or code == 'KEY_F3':
             self.ButtonPressed('change_lang')
