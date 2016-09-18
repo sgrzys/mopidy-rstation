@@ -83,19 +83,20 @@ class Utils:
 
     @staticmethod
     def speak_text(text, thread=True):
+        t = Utils.convert_text(text)
         if thread:
             Utils.speak_time = time.time()
-            t = Thread(target=Utils.speak_text_thread, args=(text,))
+            t = Thread(target=Utils.speak_text_thread, args=(t,))
             t.start()
         else:
             os.system(
-                ' echo "' + text + '" | espeak -v ' +
+                ' echo "' + t + '" | espeak -v ' +
                 Utils.lang + ' -a 180 > /dev/null 2>&1')
 
     @staticmethod
     def speak_text_thread(text):
             # wait a little
-            time.sleep(0.7)
+            time.sleep(0.6)
             # check if no next button was pressed
             if time.time() - Utils.speak_time > 0.7:
                 os.system('pkill espeak')
@@ -322,3 +323,24 @@ class Utils:
             Utils.set_actual_brightness(ab)
         except Exception as e:
             print(str(e))
+
+    @staticmethod
+    def aplay_thread(wav):
+        cmd = "aplay /home/pi/mopidy-rstation/audio/"
+        cmd += wav + ".wav > /dev/null 2>&1"
+        os.system(cmd)
+
+    @staticmethod
+    def beep():
+        t = Thread(target=Utils.aplay_thread, args=("alert",))
+        t.start()
+
+    @staticmethod
+    def start_rec_wav():
+        t = Thread(target=Utils.aplay_thread, args=("start_rec",))
+        t.start()
+
+    @staticmethod
+    def stop_rec_wav():
+        t = Thread(target=Utils.aplay_thread, args=("stop_rec",))
+        t.start()

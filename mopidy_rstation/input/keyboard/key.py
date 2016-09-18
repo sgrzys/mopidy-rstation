@@ -131,6 +131,8 @@ class KeyPad(threading.Thread):
             self.ButtonPressed('track_list_enter')
         if code == 'KEY_UP':
             self.ButtonPressed('track_list_next')
+        if code == 'KEY_0':
+            self.ButtonPressed('ask_bot')
         if code == 'KEY_2':
             self.ButtonPressed('lib_root_dir')
         if code == 'KEY_4':

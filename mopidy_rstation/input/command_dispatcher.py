@@ -1,7 +1,6 @@
-from threading import Thread
 from ..utils import Utils
 from mopidy.core import PlaybackState
-import os
+from .wit import ai
 
 LIRC_PROG_NAME = "mopidyRstation"
 url = u'rstation:/home/pi/mopidy-rstation/media'
@@ -28,11 +27,9 @@ class CommandDispatcher(object):
         buttonPressEvent.append(self.handleCommand)
 
     def handleCommand(self, cmd):
-        t = Thread(target=self.beep_thread)
-        t.start()
+        Utils.beep()
         # send the command to all the
         # CoreListener.send("handleRemoteCommand", cmd=cmd)
-
         self.onCommand(cmd)
 
     def onCommand(self, cmd):
@@ -111,8 +108,14 @@ class CommandDispatcher(object):
                 Utils.lang = 'pl'
                 Utils.speak_text('Polski')
 
-        if cmd == 'num0':
-            pass
+        if cmd == 'ask_bot':
+            try:
+                ai.ask_bot(
+                        self.config['wit_token'],
+                        self.config['ivona_access_key'],
+                        self.config['ivona_secret_key'])
+            except Exception as e:
+                str("Error ")
 
         if cmd == 'backlight_up':
             Utils.backlight_up()
@@ -191,8 +194,3 @@ class CommandDispatcher(object):
             Utils.speak('MUSIC_DIR')
             uri = url + '/Muzyka'
             self.core.library.browse(uri)
-
-    def beep_thread(self):
-        cmd = "aplay /home/pi/mopidy-rstation/Ulubione/covers/"
-        cmd += "alert.wav > /dev/null 2>&1"
-        os.system(cmd)

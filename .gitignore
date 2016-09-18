@@ -3,10 +3,4 @@
 *.swp
 *~
 *.raw
-.coverage
-.idea/
-.tox/
-MANIFEST
-build/
-dist/
-xunit-*.xml
+conf/mopidy.conf
