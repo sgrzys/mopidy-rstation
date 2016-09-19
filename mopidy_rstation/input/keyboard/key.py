@@ -7,6 +7,7 @@ import evdev
 import select
 import functools
 import errno
+import traceback
 
 logger = logging.getLogger('mopidy_Rstation')
 context = pyudev.Context()
@@ -34,7 +35,8 @@ class KeyPad(threading.Thread):
         try:
             self.run_inside_try()
         except Exception as e:
-            logger.warning('Rstation has problems starting KeyPad: ' + str(e))
+            logger.error('Rstation has problems starting KeyPad: ' + str(e))
+            traceback.print_exc()
 
     def run_inside_try(self):
         self.startKeyPad()
