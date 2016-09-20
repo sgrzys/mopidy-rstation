@@ -1,6 +1,7 @@
 from ..utils import Utils
 from mopidy.core import PlaybackState
 from .wit import ai
+import traceback
 
 LIRC_PROG_NAME = "mopidyRstation"
 url = u'rstation:/home/pi/mopidy-rstation/media'
@@ -110,12 +111,10 @@ class CommandDispatcher(object):
 
         if cmd == 'ask_bot':
             try:
-                ai.ask_bot(
-                        self.config['wit_token'],
-                        self.config['ivona_access_key'],
-                        self.config['ivona_secret_key'])
+                ai.ask_bot(self.config)
             except Exception as e:
-                str("Error ")
+                str("Error in ai.ask_bot")
+                traceback.print_exc()
 
         if cmd == 'backlight_up':
             Utils.backlight_up()
@@ -125,7 +124,7 @@ class CommandDispatcher(object):
 
         if cmd == 'lib_root_dir':
             # go up in library
-            Utils.speak('CHP')
+            Utils.speak('LIBRARY')
             self.core.library.browse(url)
 
         if cmd == 'lib_prev':
@@ -158,11 +157,6 @@ class CommandDispatcher(object):
                 else:
                     self.core.library.browse(current_item.uri)
                     Utils.speak('ENTER_DIR', val=current_item.name)
-
-                if cmd == 'lib_root_dir':
-                    # library go to level 0
-                    self.core.library.browse(url)
-                    Utils.speak('CHP')
 
         if cmd == 'lib_next':
             # next in library

@@ -84,6 +84,7 @@ class Utils:
     @staticmethod
     def speak_text(text, thread=True):
         t = Utils.convert_text(text)
+        # TODO switch to Ivona
         if thread:
             Utils.speak_time = time.time()
             t = Thread(target=Utils.speak_text_thread, args=(t,))
@@ -91,24 +92,23 @@ class Utils:
         else:
             os.system(
                 ' echo "' + t + '" | espeak -v ' +
-                Utils.lang + ' -a 180 > /dev/null 2>&1')
+                Utils.lang + ' -a 160 > /dev/null 2>&1')
 
     @staticmethod
     def speak_text_thread(text):
             # wait a little
             time.sleep(0.6)
             # check if no next button was pressed
-            if time.time() - Utils.speak_time > 0.7:
+            if time.time() - Utils.speak_time > 0.6:
                 os.system('pkill espeak')
                 os.system(
                     ' echo "' + text + '" | espeak -v ' +
-                    Utils.lang + ' -a 180 > /dev/null 2>&1')
+                    Utils.lang + ' -a 160 > /dev/null 2>&1')
             else:
                 pass
 
     @staticmethod
     def speak(code, *param, **key):
-
         if Utils.speak_on is False:
             return 0
 
@@ -163,7 +163,7 @@ class Utils:
                 Utils.speak_text("Poprzedni", False)
             elif Utils.lang == 'en':
                 Utils.speak_text("Previous", False)
-        if code == 'CHP':
+        if code == 'LIBRARY':
             if Utils.lang == 'pl':
                 Utils.speak_text("Biblioteka")
             elif Utils.lang == 'en':

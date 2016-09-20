@@ -39,32 +39,49 @@ def record_and_stream():
     p.terminate()
 
 
-def ask_bot(wit_token, ivona_access_key, ivona_secret_key):
+def ask_bot(config):
+
     # output_file = StringIO()
 
-    w = wit.Wit(wit_token)
+    w = wit.Wit(config['wit_token'])
     result = w.post_speech(record_and_stream(), content_type=CONTENT_TYPE)
     pprint(result)
+    intent = u' '
+    item_type = u' '
+    item = u' '
+    t = u' '
+    if result is not None:
+        try:
+            intent = result['entities']['intent'][0]['value']
+            t = u'. Zrozumiałam, że intencją jest ' + intent
 
-    try:
-        intent = u'Zrozumiałam, że intencją jest ' + \
-            result['entities']['intent'][0]['value']
-    except Exception:
-        intent = "Niestety, nie zrozumiałam twojej intencji"
+        except Exception:
+            t = u'. Niestety, nie zrozumiałam twojej intencji'
 
-    try:
-        item_type = "typ " + result['entities']['type'][0]['value']
-    except Exception:
-        item_type = "typ nie został rozpoznany"
+        if intent == 'play_item':
+            try:
+                item_type = "typ " + result['entities']['type'][0]['value']
+            except Exception:
+                item_type = "typ nie został rozpoznany"
 
-    try:
-        item = "pozycja" + result['entities']['item'][0]['value']
-    except Exception:
-        item = "pozycja nie znana"
+            try:
+                item = u'pozycja ' + result['entities']['item'][0]['value']
+            except Exception:
+                item = 'pozycja nie znana'
 
-    v = pyvona.create_voice(ivona_access_key, ivona_secret_key)
-    v.speak(u'Cześć! Usłyszałam ' + result['_text'])
-    v.speak(intent + ". " + item_type + ". " + item)
+        if intent == 'set_volume':
+            try:
+                item = u'wartość ' + result['entities']['value'][0]['value']
+            except Exception:
+                item = u'wartość nie znana'
+
+        v = pyvona.create_voice(config)
+        s = u'Cześć! Usłyszałam ' + result['_text'] + \
+            t + '. ' + item_type + '. ' + item + '.'
+        print(s)
+        v.speak(s)
+    else:
+        v.speak(u'Przepraszam, ale nic nie słyszałam. Czy możesz powtórzyć?')
 
 if __name__ == '__main__':
     ask_bot(1, 1, 1)

@@ -39,10 +39,10 @@ _amazon_date_format = '%Y%m%dT%H%M%SZ'
 _date_format = '%Y%m%d'
 
 
-def create_voice(access_key, secret_key):
+def create_voice(config):
     """Creates and returns a voice object to interact with
     """
-    return Voice(access_key, secret_key)
+    return Voice(config['ivona_access_key'], config['ivona_secret_key'])
 
 
 class Voice(object):

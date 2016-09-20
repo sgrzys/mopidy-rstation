@@ -35,7 +35,7 @@ class KeyPad(threading.Thread):
         try:
             self.run_inside_try()
         except Exception as e:
-            logger.error('Rstation has problems starting KeyPad: ' + str(e))
+            logger.error('KeyPad: ' + str(e))
             traceback.print_exc()
 
     def run_inside_try(self):
@@ -72,7 +72,8 @@ class KeyPad(threading.Thread):
                             if self.checkIfDevIsKeyboard(new_d):
                                 self.devices[udev.device_node] = new_d
                         except Exception as e:
-                            print('Error during add device ' + str(e))
+                            print('Error during add device ')
+                            traceback.print_exc()
                 elif udev.action == 'remove':
                     if udev.device_node in self.devices:
                         print(
@@ -92,11 +93,13 @@ class KeyPad(threading.Thread):
                         if event.type == evdev.ecodes.EV_KEY & \
                            event.value == 1:
                             self.handle_event(evdev.ecodes.KEY[event.code])
-                except IOError as e:
-                    if e.errno != errno.ENODEV:
-                        raise
-                    print("Device removed: %s" % r)
-                    del self.devices[r.fn]
+                except Exception as e:
+                    if hasattr(e, 'errno'):
+                        if e.errno == errno.ENODEV:
+                            print("Device removed: %s" % r)
+                            del self.devices[r.fn]
+                    logger.error('KeyPad: ' + str(e))
+                    traceback.print_exc()
 
         # for device in devices:
         #     if "Microsoft" in device.name and self.dev is None:
@@ -120,7 +123,7 @@ class KeyPad(threading.Thread):
         #             self.handle_event(ecodes.KEY[event.code])
 
     def handle_event(self, code):
-        logger.debug('KeyPad -> handle_event -> ' + code)
+        print('KeyPad -> handle_event -> ' + code)
         if code == 'KEY_LEFT' or code == 'KEY_PREVIOUSSONG':
             self.ButtonPressed('player_prev')
         if code == 'KEY_SPACE' or code == 'KEY_PLAYPAUSE':
