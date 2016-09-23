@@ -168,7 +168,7 @@ class Utils:
                 Utils.speak_text("Biblioteka")
             elif Utils.lang == 'en':
                 Utils.speak_text("library")
-        if code == 'CH':
+        if code == 'PLAYER':
             if Utils.lang == 'pl':
                 Utils.speak_text("Odtwarzacz")
             elif Utils.lang == 'en':

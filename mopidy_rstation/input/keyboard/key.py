@@ -92,7 +92,14 @@ class KeyPad(threading.Thread):
                     for event in r.read():
                         if event.type == evdev.ecodes.EV_KEY & \
                            event.value == 1:
-                            self.handle_event(evdev.ecodes.KEY[event.code])
+                            # enter with mouse mode on airmouse
+                            if event.code == 272:
+                                self.handle_event('KEY_ENTER')
+                            # esc with mouse mode on airmouse
+                            elif event.code == 273:
+                                self.handle_event('KEY_ESC')
+                            else:
+                                self.handle_event(evdev.ecodes.KEY[event.code])
                 except Exception as e:
                     if hasattr(e, 'errno'):
                         if e.errno == errno.ENODEV:
@@ -124,6 +131,14 @@ class KeyPad(threading.Thread):
 
     def handle_event(self, code):
         print('KeyPad -> handle_event -> ' + code)
+        # KEY_COMPOSE
+        # KEY_ESC
+        # KEY_DOWN
+        # KEY_RIGHT
+        # KEY_LEFT
+        # KEY_UP
+        # KEY_ENTER
+        # KEY_POWER
         if code == 'KEY_LEFT' or code == 'KEY_PREVIOUSSONG':
             self.ButtonPressed('player_prev')
         if code == 'KEY_SPACE' or code == 'KEY_PLAYPAUSE':
@@ -132,11 +147,17 @@ class KeyPad(threading.Thread):
             self.ButtonPressed('player_next')
         if code == 'KEY_DOWN':
             self.ButtonPressed('track_list_prev')
+        if code == 'KEY_MINUS' or code == 'KEY_VOLUMEDOWN':
+            self.ButtonPressed('vol_down')
+        if code == 'KEY_EQUAL' or code == 'KEY_VOLUMEUP':
+            self.ButtonPressed('vol_up')
+        if code == 'KEY_L' or code == 'KEY_F3' or code == 'KEY_ESC':
+            self.ButtonPressed('change_lang')
         if code == 'KEY_ENTER':
             self.ButtonPressed('track_list_enter')
         if code == 'KEY_UP':
             self.ButtonPressed('track_list_next')
-        if code == 'KEY_0':
+        if code == 'KEY_0' or code == 'KEY_POWER':
             self.ButtonPressed('ask_bot')
         if code == 'KEY_2':
             self.ButtonPressed('lib_root_dir')
@@ -152,9 +173,3 @@ class KeyPad(threading.Thread):
             self.ButtonPressed('lib_radio')
         if code == 'KEY_9':
             self.ButtonPressed('lib_music')
-        if code == 'KEY_MINUS' or code == 'KEY_VOLUMEDOWN':
-            self.ButtonPressed('vol_down')
-        if code == 'KEY_EQUAL' or code == 'KEY_VOLUMEUP':
-            self.ButtonPressed('vol_up')
-        if code == 'KEY_L' or code == 'KEY_F3':
-            self.ButtonPressed('change_lang')
