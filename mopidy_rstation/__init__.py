@@ -20,6 +20,7 @@ class Extension(ext.Extension):
         schema['wit_token'] = config.String()
         schema['ivona_access_key'] = config.String()
         schema['ivona_secret_key'] = config.String()
+        schema['language'] = config.String(optional=True)
         # optional
         schema['enable_irda'] = config.Boolean(optional=True)
         schema['enable_keypad'] = config.Boolean(optional=True)

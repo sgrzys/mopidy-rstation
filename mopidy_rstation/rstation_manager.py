@@ -17,6 +17,7 @@ class RstationFrontend(pykka.ThreadingActor, core.CoreListener):
         super(RstationFrontend, self).__init__()
         self.core = core
         self.config = config['rstation']
+        Utils.save_config(config['rstation'])
         self.debug_irda_simulate = config['rstation']['debug_irda_simulate']
         self.enable_irda = config['rstation']['enable_irda']
         self.enable_keypad = config['rstation']['enable_keypad']

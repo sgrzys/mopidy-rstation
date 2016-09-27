@@ -4,6 +4,8 @@ import os
 import subprocess
 from threading import Thread
 import time
+from mopidy_rstation.output import pyvona
+import traceback
 
 
 class Utils:
@@ -11,8 +13,21 @@ class Utils:
     curr_lib_item_id = 0
     curr_track_id = 0
     speak_on = True
-    lang = 'pl'
     speak_time = None
+    config = {}
+
+    @staticmethod
+    def save_config(config):
+        for k, v in config.iteritems():
+            Utils.config[k] = v
+
+    @staticmethod
+    def change_lang(language):
+        Utils.config['language'] = language
+        if language == 'en-US':
+            Utils.speak_text('English')
+        elif language == 'pl-PL':
+            Utils.speak_text('Polski')
 
     @staticmethod
     def format_time_to_string(seconds_total):
@@ -69,11 +84,14 @@ class Utils:
 
     @staticmethod
     def convert_text(text):
-        try:
-            t = text.encode("utf8", "ignore")
-        except Exception as e:
-            print(str(e))
-            t = 'Error ' + e.message
+        t = u''
+        t = t + text
+        # try:
+        #     t = text.decode("utf8", "ignore")
+        # except Exception as e:
+        #     print('Error in convert_text ' + str(e))
+        #     # t = 'Error ' + e.message
+        #     traceback.print_exc()
 
         t = t.replace('_', ' ')
         t = t.replace('-', ' ')
@@ -84,15 +102,16 @@ class Utils:
     @staticmethod
     def speak_text(text, thread=True):
         t = Utils.convert_text(text)
-        # TODO switch to Ivona
         if thread:
             Utils.speak_time = time.time()
             t = Thread(target=Utils.speak_text_thread, args=(t,))
             t.start()
         else:
-            os.system(
-                ' echo "' + t + '" | espeak -v ' +
-                Utils.lang + ' -a 160 > /dev/null 2>&1')
+            # os.system(
+            #     ' echo "' + t + '" | espeak -v ' +
+            #     Utils.config['language'] + ' -a 160 > /dev/null 2>&1')
+            v = pyvona.create_voice(Utils.config)
+            v.speak(t, use_cache=False)
 
     @staticmethod
     def speak_text_thread(text):
@@ -100,10 +119,12 @@ class Utils:
             time.sleep(0.6)
             # check if no next button was pressed
             if time.time() - Utils.speak_time > 0.6:
-                os.system('pkill espeak')
-                os.system(
-                    ' echo "' + text + '" | espeak -v ' +
-                    Utils.lang + ' -a 160 > /dev/null 2>&1')
+                # os.system('pkill espeak')
+                # os.system(
+                #     ' echo "' + text + '" | espeak -v ' +
+                #     Utils.config['language'] + ' -a 160 > /dev/null 2>&1')
+                v = pyvona.create_voice(Utils.config)
+                v.speak(text, use_cache=False)
             else:
                 pass
 
@@ -114,172 +135,173 @@ class Utils:
 
         if ('val' in key):
             val = key['val']
-            if not isinstance(val, str) and not isinstance(val, unicode):
-                val = str(val)
+            print(val)
+            # if not isinstance(val, str) and not isinstance(val, unicode):
+            #     val = str(val)
             val = Utils.convert_text(val)
 
         if code == 'PLAY':
-            if Utils.lang == 'pl':
-                Utils.speak_text("Graj", False)
-            elif Utils.lang == 'en':
-                Utils.speak_text("Play", False)
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"Graj", False)
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"Play", False)
         if code == 'PLAYING':
-            if Utils.lang == 'pl':
-                Utils.speak_text("Gramy " + val)
-            elif Utils.lang == 'en':
-                Utils.speak_text("Now playing " + val)
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"Gramy " + val)
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"Now playing " + val)
         if code == 'PAUSE':
-            if Utils.lang == 'pl':
-                Utils.speak_text("Pauza", False)
-            elif Utils.lang == 'en':
-                Utils.speak_text("Pause", False)
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"Pauza", False)
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"Pause", False)
         if code == 'SPEAK_ON':
-            if Utils.lang == 'pl':
-                Utils.speak_text("Podpowiedzi")
-            elif Utils.lang == 'en':
-                Utils.speak_text("Hints on")
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"Podpowiedzi")
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"Hints on")
         if code == 'SPEAK_OFF':
-            if Utils.lang == 'pl':
-                Utils.speak_text("Bez podpowiedzi")
-            elif Utils.lang == 'en':
-                Utils.speak_text("Hints off")
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"Bez podpowiedzi")
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"Hints off")
         if code == 'VOL':
-            if Utils.lang == 'pl':
-                Utils.speak_text("głośność " + val)
-            elif Utils.lang == 'en':
-                Utils.speak_text("Volume " + val)
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"głośność " + val)
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"Volume " + val)
         if code == 'MUTE':
-            if Utils.lang == 'pl':
-                Utils.speak_text("Wycisz")
-            elif Utils.lang == 'en':
-                Utils.speak_text("Mute")
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"Wycisz")
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"Mute")
         if code == 'NEXT':
-            if Utils.lang == 'pl':
-                Utils.speak_text("Następny", False)
-            elif Utils.lang == 'en':
-                Utils.speak_text("Next", False)
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"Następny", False)
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"Next", False)
         if code == 'PREV':
-            if Utils.lang == 'pl':
-                Utils.speak_text("Poprzedni", False)
-            elif Utils.lang == 'en':
-                Utils.speak_text("Previous", False)
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"Poprzedni", False)
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"Previous", False)
         if code == 'LIBRARY':
-            if Utils.lang == 'pl':
-                Utils.speak_text("Biblioteka")
-            elif Utils.lang == 'en':
-                Utils.speak_text("library")
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"Biblioteka")
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"library")
         if code == 'PLAYER':
-            if Utils.lang == 'pl':
-                Utils.speak_text("Odtwarzacz")
-            elif Utils.lang == 'en':
-                Utils.speak_text("Player")
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"Odtwarzacz")
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"Player")
         if code == 'CHM':
-            if Utils.lang == 'pl':
-                Utils.speak_text("Listy")
-            elif Utils.lang == 'en':
-                Utils.speak_text("Play lists")
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"Listy")
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"Play lists")
         if code == 'NUM0':
-            if Utils.lang == 'pl':
-                Utils.speak_text("Numer 0")
-            elif Utils.lang == 'en':
-                Utils.speak_text("Number 0")
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"Numer 0")
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"Number 0")
         if code == 'FLM':
-            if Utils.lang == 'pl':
-                Utils.speak_text("Fl minus")
-            elif Utils.lang == 'en':
-                Utils.speak_text("Fl minus")
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"Fl minus")
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"Fl minus")
         if code == 'FLP':
-            if Utils.lang == 'pl':
-                Utils.speak_text("Fl plus")
-            elif Utils.lang == 'en':
-                Utils.speak_text("Fl plus")
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"Fl plus")
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"Fl plus")
         if code == 'lib_music':
-            if Utils.lang == 'pl':
-                Utils.speak_text("Informacja")
-            elif Utils.lang == 'en':
-                Utils.speak_text("Information")
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"Informacja")
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"Information")
         if code == 'LIST_ITEM':
                 Utils.speak_text(val)
         if code == 'ENTER_DIR':
-            if Utils.lang == 'pl':
-                Utils.speak_text("Wybierz " + val)
-            elif Utils.lang == 'en':
-                Utils.speak_text("Go to " + val)
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"Wybieram " + val)
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"Going to " + val)
         if code == 'PLAY_URI':
-            if Utils.lang == 'pl':
-                Utils.speak_text("Włączam " + val)
-            elif Utils.lang == 'en':
-                Utils.speak_text("Playing " + val)
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"Włączam " + val)
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"Playing " + val)
         if code == 'GO_UP_DIR':
-            if Utils.lang == 'pl':
-                Utils.speak_text("Idz do góry")
-            elif Utils.lang == 'en':
-                Utils.speak_text("Go up")
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"Idz do góry")
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"Go up")
         if code == 'UP_DIR':
-            if Utils.lang == 'pl':
-                Utils.speak_text("Do góry")
-            elif Utils.lang == 'en':
-                Utils.speak_text("Up")
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"Do góry")
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"Up")
         if code == 'NO_TRACK':
-            if Utils.lang == 'pl':
-                Utils.speak_text("Aktualnie nie jest odtwarzany żaden utwór")
-            elif Utils.lang == 'en':
-                Utils.speak_text("Currently we do not play any song")
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"Aktualnie nie jest odtwarzany żaden utwór")
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"Currently we do not play any song")
         if code == 'NO_PLAYLISTS':
-            if Utils.lang == 'pl':
-                Utils.speak_text("Brak list odtwarzania")
-            elif Utils.lang == 'en':
-                Utils.speak_text("We do not have any playlist")
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"Brak list odtwarzania")
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"We do not have any playlist")
         if code == 'AUDIOBOOKS_DIR':
-            if Utils.lang == 'pl':
-                Utils.speak_text("Audiobuki")
-            elif Utils.lang == 'en':
-                Utils.speak_text("Audiobooks")
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"Audiobuki")
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"Audiobooks")
         if code == 'INFO_DIR':
-            if Utils.lang == 'pl':
-                Utils.speak_text("Informacje")
-            elif Utils.lang == 'en':
-                Utils.speak_text("Information")
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"Informacje")
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"Information")
         if code == 'MUSIC_DIR':
-            if Utils.lang == 'pl':
-                Utils.speak_text("Muzyka")
-            elif Utils.lang == 'en':
-                Utils.speak_text("Music")
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"Muzyka")
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"Music")
         if code == 'PODCAST_DIR':
-            if Utils.lang == 'pl':
-                Utils.speak_text("Podkasty")
-            elif Utils.lang == 'en':
-                Utils.speak_text("Podcasts")
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"Podkasty")
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"Podcasts")
         if code == 'RADIO_DIR':
-            if Utils.lang == 'pl':
-                Utils.speak_text("Radio")
-            elif Utils.lang == 'en':
-                Utils.speak_text("Radio")
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"Radio")
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"Radio")
         if code == 'NO_LIBRARY':
-            if Utils.lang == 'pl':
-                Utils.speak_text("Brak pozycji w bibliotece")
-            elif Utils.lang == 'en':
-                Utils.speak_text("There is nothing in the library")
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"Brak pozycji w bibliotece")
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"There is nothing in the library")
         if code == 'LIB_SCREAN_INFO':
-            if Utils.lang == 'pl':
-                Utils.speak_text("Jesteś w bibliotece, mamy tu " + val)
-            elif Utils.lang == 'en':
-                Utils.speak_text("You are in library, we have here " + val)
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"Jesteś w bibliotece, mamy tu " + val)
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"You are in library, we have here " + val)
         if code == 'PL_SCREAN_INFO':
-            if Utils.lang == 'pl':
-                Utils.speak_text("Listy odtwarzania")
-            elif Utils.lang == 'en':
-                Utils.speak_text("Playlists")
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"Listy odtwarzania")
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"Playlists")
         if code == 'TR_SCREAN_INFO':
-            if Utils.lang == 'pl':
-                Utils.speak_text("Lista utworów ma " + val + ' pozycji')
-            elif Utils.lang == 'en':
-                Utils.speak_text("Tracks list has " + val + ' entries')
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"Lista utworów ma " + val + ' pozycji')
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"Tracks list has " + val + ' entries')
         if code == 'BRIGHTNESS':
-            if Utils.lang == 'pl':
-                Utils.speak_text("jasność " + val)
-            elif Utils.lang == 'en':
-                Utils.speak_text("brightness " + val)
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"jasność " + val)
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"brightness " + val)
 
     @staticmethod
     def get_actual_brightness():

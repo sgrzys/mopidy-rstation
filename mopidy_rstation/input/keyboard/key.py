@@ -28,8 +28,10 @@ class KeyPad(threading.Thread):
 
     def checkIfDevIsKeyboard(self, d):
         d.capabilities()
-        return "keyboard" in d.name.lower() or "microsoft" in d.name.lower() \
-            or "airmouse" in d.name.lower()
+        return "airmouse" in d.name.lower()
+        # return "keyboard" in d.name.lower() \
+        #     or "microsoft" in d.name.lower() \
+        #     or "airmouse" in d.name.lower()
 
     def run(self):
         try:
@@ -43,7 +45,9 @@ class KeyPad(threading.Thread):
 
     def stop(self):
         logger.info('Stoping KeyPad')
-        # self.dev.ungrab()
+        # for device in self.devices:
+        #     self.dev = evdev.InputDevice(device.fn)
+        #     self.dev.ungrab()
         self.frontendActive = False
         self._stop.set()
 
@@ -53,6 +57,7 @@ class KeyPad(threading.Thread):
             if self.checkIfDevIsKeyboard(d):
                 print('We have keyboard device ' + str(d))
                 self.devices[d.fn] = d
+                # d.grab()
 
         self.devices['monitor'] = monitor
 
@@ -71,6 +76,7 @@ class KeyPad(threading.Thread):
                             new_d = evdev.InputDevice(udev.device_node)
                             if self.checkIfDevIsKeyboard(new_d):
                                 self.devices[udev.device_node] = new_d
+                                # new_d.grab()
                         except Exception as e:
                             print('Error during add device ')
                             traceback.print_exc()
@@ -131,32 +137,34 @@ class KeyPad(threading.Thread):
 
     def handle_event(self, code):
         print('KeyPad -> handle_event -> ' + code)
-        # KEY_COMPOSE
-        # KEY_ESC
-        # KEY_DOWN
-        # KEY_RIGHT
-        # KEY_LEFT
-        # KEY_UP
-        # KEY_ENTER
+        # main keys
+        if code == 'KEY_COMPOSE':
+            self.ButtonPressed('mode')
+        if code == 'KEY_LEFT':
+            self.ButtonPressed('left')
+        if code == 'KEY_RIGHT':
+            self.ButtonPressed('right')
+        if code == 'KEY_DOWN':
+            self.ButtonPressed('down')
+        if code == 'KEY_UP':
+            self.ButtonPressed('up')
+        if code == 'KEY_ENTER':
+            self.ButtonPressed('enter')
+        if code == 'KEY_ESC':
+            self.ButtonPressed('change_lang')
         # KEY_POWER
-        if code == 'KEY_LEFT' or code == 'KEY_PREVIOUSSONG':
+        if code == 'KEY_PREVIOUSSONG':
             self.ButtonPressed('player_prev')
         if code == 'KEY_SPACE' or code == 'KEY_PLAYPAUSE':
             self.ButtonPressed('player_play_pause')
-        if code == 'KEY_RIGHT' or code == 'KEY_NEXTSONG':
+        if code == 'KEY_NEXTSONG':
             self.ButtonPressed('player_next')
-        if code == 'KEY_DOWN':
-            self.ButtonPressed('track_list_prev')
         if code == 'KEY_MINUS' or code == 'KEY_VOLUMEDOWN':
             self.ButtonPressed('vol_down')
         if code == 'KEY_EQUAL' or code == 'KEY_VOLUMEUP':
             self.ButtonPressed('vol_up')
-        if code == 'KEY_L' or code == 'KEY_F3' or code == 'KEY_ESC':
+        if code == 'KEY_L':
             self.ButtonPressed('change_lang')
-        if code == 'KEY_ENTER':
-            self.ButtonPressed('track_list_enter')
-        if code == 'KEY_UP':
-            self.ButtonPressed('track_list_next')
         if code == 'KEY_0' or code == 'KEY_POWER':
             self.ButtonPressed('ask_bot')
         if code == 'KEY_2':

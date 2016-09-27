@@ -80,12 +80,15 @@ def ask_bot(config):
                 item = u'wartość nie znana'
 
         v = pyvona.create_voice(config)
-        s = u'Cześć! Usłyszałam ' + result['_text'] + \
-            t + '. ' + item_type + '. ' + item + '.'
-        print(s)
-        v.speak(s)
-    else:
-        v.speak(u'Przepraszam, ale nic nie słyszałam. Czy możesz powtórzyć?')
+        if result['_text'] is not None:
+            v.speak(u'Cześć! Usłyszałam ')
+            # s = u'Cześć! Usłyszałam ' + result[u'_text'] + \
+            #     t + '. ' + item_type + '. ' + item + '.'
+            s = result[u'_text']
+            v.speak(s)
+        else:
+            v.speak(
+                u'Przepraszam, ale nic nie słyszałam. Czy możesz powtórzyć?')
 
 if __name__ == '__main__':
     ask_bot(1, 1, 1)

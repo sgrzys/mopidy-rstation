@@ -42,7 +42,10 @@ _date_format = '%Y%m%d'
 def create_voice(config):
     """Creates and returns a voice object to interact with
     """
-    return Voice(config['ivona_access_key'], config['ivona_secret_key'])
+    return Voice(
+        config['ivona_access_key'],
+        config['ivona_secret_key'],
+        config['language'])
 
 
 class Voice(object):
@@ -268,11 +271,16 @@ class Voice(object):
         k_signing = self._sign(k_service, 'aws4_request')
         return k_signing
 
-    def __init__(self, access_key, secret_key):
+    def __init__(self, access_key, secret_key, language):
         """Set initial voice object parameters
         """
         self.region = 'eu-west'
-        self.voice_name = 'Agnieszka'
+        self.language = language
+        if language == 'pl-PL':
+            self.voice_name = 'Agnieszka'
+        else:
+            self.voice_name = 'Joey'
+
         # [Nicole, Enrique, Agnieszka, Tatyana, Russell,
         # Lotte, Geraint, Carmen, Mads, Penelope, Jennifer,
         # Brian, Eric, Ruben, Ricardo, Maxim, Giorgio, Carla,

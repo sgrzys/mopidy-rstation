@@ -2,6 +2,7 @@ from ..utils import Utils
 from mopidy.core import PlaybackState
 from .wit import ai
 import traceback
+import time
 
 LIRC_PROG_NAME = "mopidyRstation"
 C_MODE_PLAYER = 'PLAYER'
@@ -28,7 +29,8 @@ class CommandDispatcher(object):
     def __init__(self, core, config, buttonPressEvent):
         self.core = core
         self.config = config
-        self.current_mode = C_MODE_PLAYER
+        self.current_mode = None
+        self.change_mode_time = None
         buttonPressEvent.append(self.handleCommand)
 
     def handleCommand(self, cmd):
@@ -38,7 +40,9 @@ class CommandDispatcher(object):
         self.onCommand(cmd)
 
     def track_list_prev(self):
+        print('track_list_prev')
         # prev on track list
+        self.change_mode(C_MODE_TRACKLIST)
         tracks = self.core.tracklist.tl_tracks.get()
         if len(tracks) == 0:
             pass
@@ -53,18 +57,10 @@ class CommandDispatcher(object):
             except Exception as e:
                 print(str(e))
 
-    def track_list_enter(self):
-        # enter on track list
-        tracks = self.core.tracklist.tl_tracks.get()
-        if len(tracks) == 0:
-            pass
-        else:
-            item = tracks[Utils.curr_track_id]
-            Utils.speak('PLAY_URI', val=item.track.name)
-            self.core.playback.play(tlid=item.tlid)
-
     def track_list_next(self):
+        print('track_list_next')
         # next on track list
+        self.change_mode(C_MODE_TRACKLIST)
         tracks = self.core.tracklist.tl_tracks.get()
         if len(tracks) == 0:
             pass
@@ -80,7 +76,21 @@ class CommandDispatcher(object):
             except Exception as e:
                 print(str(e))
 
+    def track_list_enter(self):
+        print('track_list_enter')
+        # enter on track list
+        # switch to player mode
+        self.change_mode(C_MODE_PLAYER)
+        tracks = self.core.tracklist.tl_tracks.get()
+        if len(tracks) == 0:
+            pass
+        else:
+            item = tracks[Utils.curr_track_id]
+            Utils.speak('PLAY_URI', val=item.track.name)
+            self.core.playback.play(tlid=item.tlid)
+
     def player_play_pause(self):
+        print('player_play_pause')
         if self.core.playback.state.get() == PlaybackState.PLAYING:
             self.core.playback.pause()
             Utils.speak('PAUSE')
@@ -89,44 +99,34 @@ class CommandDispatcher(object):
             self.core.playback.play()
 
     def go_to_library(self):
+        print('go_to_library')
         # go up in library
         Utils.speak('LIBRARY')
         self.core.library.browse(url)
-        self.current_mode = C_MODE_LIBRARY
+        self.change_mode(C_MODE_LIBRARY)
 
     def go_to_player(self):
+        print('go_to_player')
         # go to player mode
         Utils.speak('PLAYER')
-        self.current_mode = C_MODE_PLAYER
+        self.change_mode(C_MODE_PLAYER)
 
     def change_lang(self):
-        if Utils.lang == 'pl':
-            Utils.lang = 'en'
-            Utils.speak_text('English')
+        print('change_lang from: ' + Utils.config['language'])
+        if Utils.config['language'] == 'pl-PL':
+            Utils.change_lang('en-US')
         else:
-            Utils.lang = 'pl'
-            Utils.speak_text('Polski')
-
-    def lib_prev(self):
-        # prev in library
-        if len(Utils.lib_items) == 0:
-            pass
-        else:
-            if Utils.curr_lib_item_id == 0:
-                Utils.curr_lib_item_id = len(Utils.lib_items) - 1
-            else:
-                Utils.curr_lib_item_id -= 1
-            try:
-                item = Utils.lib_items[Utils.curr_lib_item_id]
-                Utils.speak_text(Utils.convert_text(item.name))
-            except Exception as e:
-                print(str(e))
+            Utils.change_lang('pl-PL')
+        print('change_lang to: ' + Utils.config['language'])
 
     def lib_enter(self):
+        print('lib_enter')
         # enter in library
         if len(Utils.lib_items) > 0:
             current_item = Utils.lib_items[Utils.curr_lib_item_id]
             if current_item.type == 'track':
+                # switch to player mode
+                self.change_mode(C_MODE_PLAYER)
                 self.core.tracklist.clear()
                 self.core.tracklist.add(uri=current_item.uri)
                 self.core.playback.play()
@@ -138,7 +138,8 @@ class CommandDispatcher(object):
                 self.core.library.browse(current_item.uri)
                 Utils.speak('ENTER_DIR', val=current_item.name)
 
-    def lib_next():
+    def lib_next(self):
+        print('lib_next')
         # next in library
         if len(Utils.lib_items) == 0:
             pass
@@ -154,7 +155,150 @@ class CommandDispatcher(object):
             except Exception as e:
                 print(str(e))
 
+    def lib_prev(self):
+        print('lib_prev')
+        # prev in library
+        if len(Utils.lib_items) == 0:
+            pass
+        else:
+            if Utils.curr_lib_item_id == 0:
+                Utils.curr_lib_item_id = len(Utils.lib_items) - 1
+            else:
+                Utils.curr_lib_item_id -= 1
+            try:
+                item = Utils.lib_items[Utils.curr_lib_item_id]
+                Utils.speak_text(Utils.convert_text(item.name))
+            except Exception as e:
+                print(str(e))
+
+    def lib_next_dir(self):
+        print('lib_next_dir')
+        # next dir in library
+        u = Utils.lib_items[Utils.curr_lib_item_id].uri
+        if u.startswith(url + '/Radia'):
+            self.lib_audiobook()
+        elif u.startswith(url + '/Audiobuki'):
+            self.lib_music()
+        elif u.startswith(url + '/Muzyka'):
+            self.lib_radio()
+        else:
+            self.lib_radio()
+
+    def lib_prev_dir(self):
+        print('lib_prev_dir')
+        # prev dir in library
+        u = Utils.lib_items[Utils.curr_lib_item_id].uri
+        if u.startswith(url + url + '/Radia'):
+            self.lib_music()
+        elif u.startswith(url + '/Audiobuki'):
+            self.lib_radio()
+        elif u.startswith(url + '/Muzyka'):
+            self.lib_audiobook()
+        else:
+            self.lib_music()
+
+    def lib_audiobook(self):
+        Utils.speak('AUDIOBOOKS_DIR')
+        uri = url + '/Audiobuki'
+        self.core.library.browse(uri)
+
+    def lib_radio(self):
+        Utils.speak('RADIO_DIR')
+        uri = url + '/Radia'
+        self.core.library.browse(uri)
+
+    def lib_music(self):
+        Utils.speak('MUSIC_DIR')
+        uri = url + '/Muzyka'
+        self.core.library.browse(uri)
+
+    def change_mode(self, mode):
+        print('change_mode to ' + mode)
+        self.change_mode_time = time.time()
+        self.current_mode = mode
+
+    def check_mode(self):
+        # after start switch to PLAYER mode
+        if self.current_mode is None:
+            self.change_mode(C_MODE_PLAYER)
+
+        # if nothing to play switch to LIBRARY mode
+        tracks = self.core.tracklist.tl_tracks.get()
+        if self.current_mode != C_MODE_LIBRARY and len(tracks) == 0:
+            self.change_mode(C_MODE_LIBRARY)
+        # if nothing was pressed after 10 seconds in mode TRACKLIST
+        # switch back to PLAYER mode
+        if self.current_mode == C_MODE_TRACKLIST:
+            sec_left = time.time() - self.change_mode_time
+            print('check_mode sec_left: ' + str(sec_left))
+            if sec_left > 10:
+                self.change_mode(C_MODE_PLAYER)
+                # revert Utils.curr_track_id
+                try:
+                    tl_track = self.core.playback.get_current_tl_track().get()
+                    track = tl_track.track
+                    print(track.name)
+
+                    tracks = self.core.tracklist.tl_tracks.get()
+                    if len(tracks) == 0:
+                        Utils.curr_track_id = 0
+                    else:
+                        for i, val in enumerate(tracks):
+                            if val.track.name == track.name:
+                                print(
+                                    'Utils.curr_track_id rested to ' + str(i))
+                                Utils.curr_track_id = i
+                except Exception as e:
+                    print(e)
+
     def onCommand(self, cmd):
+        print(cmd + ': on Command started, mode: ' + str(self.current_mode))
+        self.check_mode()
+        print('mode after check_mode: ' + self.current_mode)
+        # main commands - avalible on each remote
+        if cmd == 'mode':
+            if len(self.core.tracklist.tl_tracks.get()) == 0:
+                self.go_to_library()
+            else:
+                if self.current_mode == C_MODE_PLAYER:
+                    self.go_to_library()
+                else:
+                    self.go_to_player()
+
+        if cmd == 'left':
+            if self.current_mode != C_MODE_LIBRARY:
+                self.track_list_prev()
+                self.track_list_enter()
+            elif self.current_mode == C_MODE_LIBRARY:
+                self.lib_prev()
+
+        if cmd == 'right':
+            if self.current_mode != C_MODE_LIBRARY:
+                self.track_list_next()
+                self.track_list_enter()
+            elif self.current_mode == C_MODE_LIBRARY:
+                self.lib_next()
+
+        if cmd == 'up':
+            if self.current_mode != C_MODE_LIBRARY:
+                self.track_list_prev()
+            elif self.current_mode == C_MODE_LIBRARY:
+                self.lib_prev()
+
+        if cmd == 'down':
+            if self.current_mode != C_MODE_LIBRARY:
+                self.track_list_next()
+            elif self.current_mode == C_MODE_LIBRARY:
+                self.lib_next()
+
+        if cmd == 'enter':
+            if self.current_mode == C_MODE_PLAYER:
+                self.player_play_pause()
+            elif self.current_mode == C_MODE_TRACKLIST:
+                self.track_list_enter()
+            elif self.current_mode == C_MODE_LIBRARY:
+                self.lib_enter()
+
         if cmd == 'track_list_prev':
             self.track_list_prev()
 
@@ -212,16 +356,12 @@ class CommandDispatcher(object):
             self.lib_next()
 
         if cmd == 'lib_audiobook':
-            Utils.speak('AUDIOBOOKS_DIR')
-            uri = url + '/Audiobuki'
-            self.core.library.browse(uri)
+            self.lib_audiobook()
 
         if cmd == 'lib_radio':
-            Utils.speak('RADIO_DIR')
-            uri = url + '/Radia'
-            self.core.library.browse(uri)
+            self.lib_radio()
 
         if cmd == 'lib_music':
-            Utils.speak('MUSIC_DIR')
-            uri = url + '/Muzyka'
-            self.core.library.browse(uri)
+            self.lib_music()
+
+        print(cmd + ': on Command ended, mode: ' + self.current_mode)
