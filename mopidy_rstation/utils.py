@@ -111,7 +111,7 @@ class Utils:
             #     ' echo "' + t + '" | espeak -v ' +
             #     Utils.config['language'] + ' -a 160 > /dev/null 2>&1')
             v = pyvona.create_voice(Utils.config)
-            v.speak(t, use_cache=False)
+            v.speak(t, use_cache=True)
 
     @staticmethod
     def speak_text_thread(text):
@@ -124,7 +124,7 @@ class Utils:
                 #     ' echo "' + text + '" | espeak -v ' +
                 #     Utils.config['language'] + ' -a 160 > /dev/null 2>&1')
                 v = pyvona.create_voice(Utils.config)
-                v.speak(text, use_cache=False)
+                v.speak(text, use_cache=True)
             else:
                 pass
 
@@ -135,7 +135,6 @@ class Utils:
 
         if ('val' in key):
             val = key['val']
-            print(val)
             # if not isinstance(val, str) and not isinstance(val, unicode):
             #     val = str(val)
             val = Utils.convert_text(val)

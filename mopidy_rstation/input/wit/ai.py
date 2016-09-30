@@ -7,9 +7,9 @@ from mopidy_rstation.output import pyvona
 import pyaudio
 
 
-CHUNK = 1024
+CHUNK = 8192
 FORMAT = pyaudio.paInt16
-CHANNELS = 1
+CHANNELS = 2
 RATE = 44100
 RECORD_SECONDS = 5
 # Change this based on your OSes settings. This should work for OSX, though.
@@ -21,9 +21,14 @@ CONTENT_TYPE = \
 
 def record_and_stream():
     p = pyaudio.PyAudio()
+    # TODO check input_device_index
     stream = p.open(
-        format=pyaudio.paInt16, channels=1, rate=44100,
-        input=True, frames_per_buffer=1024)
+        format=pyaudio.paInt16,
+        channels=CHANNELS,
+        rate=RATE,
+        input=True,
+        frames_per_buffer=CHUNK,
+        input_device_index=3)
 
     stream = p.open(
         format=FORMAT, channels=CHANNELS, rate=RATE,

@@ -4,3 +4,4 @@
 *~
 *.raw
 conf/mopidy.conf
+speech_cache
