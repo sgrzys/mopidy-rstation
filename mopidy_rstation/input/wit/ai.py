@@ -4,6 +4,7 @@ from pprint import pprint
 import wit
 from mopidy_rstation.utils import Utils
 from mopidy_rstation.output import pyvona
+from ConfigParser import ConfigParser
 import pyaudio
 
 
@@ -12,6 +13,7 @@ FORMAT = pyaudio.paInt16
 CHANNELS = 2
 RATE = 44100
 RECORD_SECONDS = 5
+INPUT_DEVICE_INDEX = 0
 # Change this based on your OSes settings. This should work for OSX, though.
 ENDIAN = 'little'
 CONTENT_TYPE = \
@@ -21,18 +23,22 @@ CONTENT_TYPE = \
 
 def record_and_stream():
     p = pyaudio.PyAudio()
-    # TODO check input_device_index
+    for x in range(p.get_device_count()):
+        info = p.get_device_info_by_index(x)
+        if info['maxInputChannels'] > 0:
+            print(str(x) + str(info))
+            INPUT_DEVICE_INDEX = info['index']
+            # name USB Audio Device: - (hw:1,0)
+
+    print('* selected device index: ' + str(INPUT_DEVICE_INDEX))
+
     stream = p.open(
-        format=pyaudio.paInt16,
+        format=FORMAT,
         channels=CHANNELS,
         rate=RATE,
         input=True,
         frames_per_buffer=CHUNK,
-        input_device_index=3)
-
-    stream = p.open(
-        format=FORMAT, channels=CHANNELS, rate=RATE,
-        input=True, frames_per_buffer=CHUNK)
+        input_device_index=INPUT_DEVICE_INDEX)
 
     print("* recording and streaming")
     Utils.start_rec_wav()
@@ -93,7 +99,21 @@ def ask_bot(config):
             v.speak(s)
         else:
             v.speak(
-                u'Przepraszam, ale nic nie słyszałam. Czy możesz powtórzyć?')
+                u'Przepraszam, ale nic nie słyszałam. Czy możesz powtórzyć ?')
+
+
+# to test from cmd
+def get_config():
+    conf = ConfigParser()
+    conf.read('/home/pi/mopidy.conf')
+    the_dict = {}
+    for section in conf.sections():
+        the_dict[section] = {}
+        for key, val in conf.items(section):
+            the_dict[section][key] = val
+    return the_dict
 
 if __name__ == '__main__':
-    ask_bot(1, 1, 1)
+    conf = get_config()
+    print(str(conf['rstation']))
+    ask_bot(conf['rstation'])

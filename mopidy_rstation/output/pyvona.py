@@ -132,6 +132,12 @@ class Voice(object):
     def speak(self, text_to_speak, use_cache=False):
         """Speak a given text
         """
+        try:
+            text = u'' + text_to_speak
+            text_to_speak = text.encode('utf-8')
+        except Exception as e:
+            print('Pyvona speak exception ' + str(e))
+
         if not pygame_available:
             raise PyvonaException(
                 "Pygame not installed. Please install to use speech.")

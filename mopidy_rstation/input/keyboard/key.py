@@ -152,6 +152,10 @@ class KeyPad(threading.Thread):
             self.ButtonPressed('enter')
         if code == 'KEY_ESC':
             self.ButtonPressed('change_lang')
+        if code == 'KEY_MINUS' or code == 'KEY_VOLUMEDOWN':
+            self.ButtonPressed('vol_down')
+        if code == 'KEY_PLUS' or code == 'KEY_VOLUMEUP':
+            self.ButtonPressed('vol_up')
         if code == 'KEY_POWER':
             self.ButtonPressed('ask_bot')
         #
@@ -161,10 +165,6 @@ class KeyPad(threading.Thread):
             self.ButtonPressed('player_play_pause')
         if code == 'KEY_NEXTSONG':
             self.ButtonPressed('player_next')
-        if code == 'KEY_MINUS' or code == 'Kchange_langEY_VOLUMEDOWN':
-            self.ButtonPressed('vol_down')
-        if code == 'KEY_EQUAL' or code == 'KEY_VOLUMEUP':
-            self.ButtonPressed('vol_up')
         if code == 'KEY_L':
             self.ButtonPressed('change_lang')
         if code == 'KEY_0':
