@@ -57,7 +57,7 @@ class KeyPad(threading.Thread):
             if self.checkIfDevIsKeyboard(d):
                 print('We have keyboard device ' + str(d))
                 self.devices[d.fn] = d
-                # d.grab()
+                d.grab()
 
         self.devices['monitor'] = monitor
 
@@ -76,7 +76,7 @@ class KeyPad(threading.Thread):
                             new_d = evdev.InputDevice(udev.device_node)
                             if self.checkIfDevIsKeyboard(new_d):
                                 self.devices[udev.device_node] = new_d
-                                # new_d.grab()
+                                new_d.grab()
                         except Exception as e:
                             print('Error during add device ')
                             traceback.print_exc()
