@@ -12,12 +12,15 @@ class Utils:
     lib_items = []
     curr_lib_item_id = 0
     curr_track_id = 0
+    prev_volume = 100
+    core = None
     speak_on = True
     speak_time = None
     config = {}
 
     @staticmethod
-    def save_config(config):
+    def save_config(config, core):
+        Utils.core = core
         for k, v in config.iteritems():
             Utils.config[k] = v
 
@@ -358,6 +361,9 @@ class Utils:
 
     @staticmethod
     def start_rec_wav():
+        Utils.prev_volume = Utils.core.playback.volume.get()
+        Utils.core.playback.volume = 10
+        print('prev_volume ' + str(Utils.prev_volume))
         t = Thread(target=Utils.aplay_thread, args=("start_rec",))
         t.start()
 
@@ -365,3 +371,5 @@ class Utils:
     def stop_rec_wav():
         t = Thread(target=Utils.aplay_thread, args=("stop_rec",))
         t.start()
+        Utils.core.playback.volume = Utils.prev_volume
+        print('prev_volume ' + str(Utils.prev_volume))

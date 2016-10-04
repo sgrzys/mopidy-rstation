@@ -143,6 +143,7 @@ def ask_bot(config):
                             odtwarzanie ' + item_type + '. Niestety \
                             nie zrozumiałam co konkretnie mam włączyć.')
                         return
+                    v.speak(u'OK, już włączam ' + item_type + ' ' + item)
                     play_item(item_type, item)
 
             else:
