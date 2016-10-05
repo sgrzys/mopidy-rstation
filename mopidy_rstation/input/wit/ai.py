@@ -166,9 +166,7 @@ def ask_bot(config):
 
                 if intent == 'set_volume':
                     try:
-                        vol = int(
-                            result['entities']['value'][0]['value'])
-                        Utils.set_volume(vol)
+                        vol = int(result['entities']['value'][0]['value'])
                     except Exception:
                         traceback.print_exc()
                         v.speak(u'Usłyszałam ' + result['_text'] + u' \
@@ -176,6 +174,12 @@ def ask_bot(config):
                             głośności. Niestety nie zrozumiałam jaką głośność \
                             mam ustawić.')
                         return
+                    try:
+                        Utils.set_volume(vol)
+                    except Exception:
+                        traceback.print_exc()
+                        v.speak(u'Mam problem z ustawieniem głośności, \
+                            sprawdz kotku w logach.')
 
             else:
                 v.speak(u'Usłyszałam ' + result['_text'] + u' Niestety nie \
