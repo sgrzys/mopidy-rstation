@@ -105,15 +105,11 @@ def record_and_stream():
     p.terminate()
 
 
-def play_item(item_type, item):
-    print('*************** play_item ***************')
-    print('***************' + item_type + '***************')
-    print('***************' + item + '***************')
-
-
 def ask_bot(config):
-    try:
 
+    v = pyvona.create_voice(config)
+
+    try:
         w = wit.Wit(config['wit_token'])
         # TODO switch to record_and_stream!!!
         # record_and_stream works fine on my laptop but not on raspberry pi
@@ -123,6 +119,7 @@ def ask_bot(config):
         # record_only
         output_file = StringIO()
         output_file = record_only()
+        v.speak(u'Przetwarzam')
         result = w.post_speech(output_file.getvalue())
     except Exception:
         str("Error in ai.ask_bot")
@@ -139,7 +136,6 @@ def ask_bot(config):
             traceback.print_exc()
             intent = None
 
-        v = pyvona.create_voice(config)
         if result['_text'] is not None:
             if intent is not None:
                 if intent == 'play_item':
@@ -162,7 +158,7 @@ def ask_bot(config):
                             nie zrozumiałam co konkretnie mam włączyć.')
                         return
                     v.speak(u'OK, już włączam ' + item_type + ' ' + item)
-                    play_item(item_type, item)
+                    Utils.play_item(item_type, item)
 
                 if intent == 'set_volume':
                     try:
@@ -183,7 +179,7 @@ def ask_bot(config):
 
             else:
                 v.speak(u'Usłyszałam ' + result['_text'] + u' Niestety nie \
-                zrozumiałam intencji.')
+                zrozumiałam twojej intencji.')
         else:
             v.speak(u'Przepraszam, ale nic nie słyszałam.')
 

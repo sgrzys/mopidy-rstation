@@ -6,6 +6,9 @@ from threading import Thread
 import time
 from mopidy_rstation.output import pyvona
 import traceback
+from fuzzywuzzy import process
+import m3uparser
+import sys
 
 
 class Utils:
@@ -135,11 +138,13 @@ class Utils:
     def speak(code, *param, **key):
         if Utils.speak_on is False:
             return 0
-
+        val = ''
         if ('val' in key):
             val = key['val']
             # if not isinstance(val, str) and not isinstance(val, unicode):
             #     val = str(val)
+            if isinstance(val, int):
+                val = str(val)
             val = Utils.convert_text(val)
 
         if code == 'PLAY':
@@ -378,3 +383,43 @@ class Utils:
     def set_volume(volume):
         Utils.speak('VOL', val=volume)
         Utils.core.playback.volume = volume
+
+    @staticmethod
+    def play_item(item_type, item):
+        if item_type == 'radio':
+            tracks, titles = m3uparser.parseFolder(
+                '/home/pi/mopidy-rstation/media/Radia')
+            title = process.extractOne(item, titles)
+            for track in tracks:
+                if track.title == title[0]:
+                    print('Title: ' + track.title + ' Uri: ' + str(track.path))
+                    if Utils.core is None:
+                        return
+                    Utils.core.tracklist.clear()
+                    Utils.core.tracklist.add(uri=str(track.path))
+                    Utils.core.playback.play()
+                    Utils.speak('PLAY_URI', val=track.title)
+                    Utils.curr_track_id = 0
+                    Utils.track_items = Utils.core.tracklist.get_tracks()
+                    return
+            return
+        if item_type == 'muzyka':
+            None
+            return
+        if item_type == 'audiobook':
+            None
+            return
+        if item_type == 'podcast':
+            None
+            return
+        Utils.speak_text(u'Tego typu ' + item_type + ' jeszcze nie znam.')
+
+
+# for now, just pull the track info and print it onscreen
+# get the M3U file path from the first command line argument
+def main():
+    item = sys.argv[1]
+    Utils.play_item('radio', item)
+
+if __name__ == '__main__':
+    main()
