@@ -8,6 +8,7 @@ from ConfigParser import ConfigParser
 import pyaudio
 import wave
 from StringIO import StringIO
+import traceback
 
 
 CHUNK = 8192
@@ -23,17 +24,14 @@ CONTENT_TYPE = \
         RATE, ENDIAN)
 
 
-p = pyaudio.PyAudio()
-for x in range(p.get_device_count()):
-    info = p.get_device_info_by_index(x)
-    if info['maxInputChannels'] > 0:
-        print(str(x) + str(info))
-        INPUT_DEVICE_INDEX = info['index']
-
-
 def record_only():
     output_file = StringIO()
     p = pyaudio.PyAudio()
+    for x in range(p.get_device_count()):
+        info = p.get_device_info_by_index(x)
+        if info['maxInputChannels'] > 0:
+            print(str(x) + str(info))
+            INPUT_DEVICE_INDEX = info['index']
 
     stream = p.open(
         format=FORMAT,
@@ -99,13 +97,17 @@ def play_item(item_type, item):
 
 
 def ask_bot(config):
-    output_file = StringIO()
-    w = wit.Wit(config['wit_token'])
-    # TODO
-    # record_and_stream works fine on my laptop but not on raspberry pi with
-    # result = w.post_speech(record_and_stream(), content_type=CONTENT_TYPE)
+    try:
+        output_file = StringIO()
+        w = wit.Wit(config['wit_token'])
+        # TODO switch to record_and_stream!!!
+        # record_and_stream works fine on my laptop but not on raspberry pi
+        # result = w.post_speech(record_and_stream(),content_type=CONTENT_TYPE)
+        output_file = record_only()
+    except Exception:
+        str("Error in ai.ask_bot")
+        traceback.print_exc()
 
-    output_file = record_only()
     result = w.post_speech(output_file.getvalue())
     pprint(result)
     intent = u' '
@@ -117,12 +119,6 @@ def ask_bot(config):
         except Exception:
             intent = None
 
-        if intent == 'set_volume':
-            try:
-                item = u'wartość ' + result['entities']['value'][0]['value']
-            except Exception:
-                item = u'wartość nie znana'
-
         v = pyvona.create_voice(config)
         if result['_text'] is not None:
             if intent is not None:
@@ -130,7 +126,7 @@ def ask_bot(config):
                     try:
                         item_type = result['entities']['type'][0]['value']
                     except Exception:
-                        v.speak(u'Usłyszałam ' + result['_text'] + ' \
+                        v.speak(u'Usłyszałam ' + result['_text'] + u' \
                             . Zrozumiałam, że intencją jest dtwarzanie. \
                             Niestety nie zrozumiałam co mam włączyć.')
                         return
@@ -138,13 +134,24 @@ def ask_bot(config):
                     try:
                         item = result['entities']['item'][0]['value']
                     except Exception:
-                        v.speak(u'Usłyszałam ' + result['_text'] + ' \
+                        v.speak(u'Usłyszałam ' + result['_text'] + u' \
                             . Zrozumiałam, że intencją jest \
-                            odtwarzanie ' + item_type + '. Niestety \
+                            odtwarzanie ' + item_type + u'. Niestety \
                             nie zrozumiałam co konkretnie mam włączyć.')
                         return
                     v.speak(u'OK, już włączam ' + item_type + ' ' + item)
                     play_item(item_type, item)
+
+                if intent == 'set_volume':
+                    try:
+                        vol = int(result['entities']['value'][0]['value'])
+                        Utils.set_volume(vol)
+                    except Exception:
+                        v.speak(u'Usłyszałam ' + result['_text'] + u' \
+                            . Zrozumiałam, że intencją jest ustawienie \
+                            głośności. Niestety nie zrozumiałam jaką głośność \
+                            mam ustawić.')
+                        return
 
             else:
                 v.speak(u'Usłyszałam ' + result['_text'] + ' Niestety nie \

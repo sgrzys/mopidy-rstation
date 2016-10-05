@@ -373,3 +373,8 @@ class Utils:
         t.start()
         Utils.core.playback.volume = Utils.prev_volume
         print('prev_volume ' + str(Utils.prev_volume))
+
+    @staticmethod
+    def set_volume(volume):
+        Utils.speak('VOL', val=volume)
+        Utils.core.playback.volume = volume
