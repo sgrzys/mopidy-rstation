@@ -32,11 +32,11 @@ def record_only():
         if info['maxInputChannels'] > 0:
             print(str(x) + str(info))
             INPUT_DEVICE_INDEX = info['index']
-            RATE = info['defaultSampleRate']
+            RATE = int(info['defaultSampleRate'])
 
     print('*********************************************')
-    print('Selected device index: ' + INPUT_DEVICE_INDEX)
-    print('device sample rate: ' + RATE)
+    print('Selected device index: ' + str(INPUT_DEVICE_INDEX))
+    print('device sample rate: ' + str(RATE))
     print('*********************************************')
     stream = p.open(
         format=FORMAT,
@@ -51,7 +51,7 @@ def record_only():
 
     all = []
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
-        data = stream.read(CHUNK)
+        data = stream.read(CHUNK, exception_on_overflow=False)
         all.append(data)
 
     Utils.stop_rec_wav()
@@ -73,6 +73,16 @@ def record_only():
 
 def record_and_stream():
     p = pyaudio.PyAudio()
+    for x in range(p.get_device_count()):
+        info = p.get_device_info_by_index(x)
+        if info['maxInputChannels'] > 0:
+            print(str(x) + str(info))
+            INPUT_DEVICE_INDEX = info['index']
+            RATE = int(info['defaultSampleRate'])
+    print('*********************************************')
+    print('Selected device index: ' + str(INPUT_DEVICE_INDEX))
+    print('device sample rate: ' + str(RATE))
+    print('*********************************************')
     stream = p.open(
         format=FORMAT,
         channels=CHANNELS,
@@ -85,7 +95,7 @@ def record_and_stream():
     Utils.start_rec_wav()
 
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
-        yield stream.read(CHUNK)
+        yield stream.read(CHUNK, exception_on_overflow=False)
 
     Utils.stop_rec_wav()
     print("* done recording and streaming")
@@ -103,18 +113,21 @@ def play_item(item_type, item):
 
 def ask_bot(config):
     try:
-        output_file = StringIO()
+
         w = wit.Wit(config['wit_token'])
         # TODO switch to record_and_stream!!!
         # record_and_stream works fine on my laptop but not on raspberry pi
+        # record_and_stream
         # result = w.post_speech(record_and_stream(),content_type=CONTENT_TYPE)
+        #
+        # record_only
+        output_file = StringIO()
         output_file = record_only()
+        result = w.post_speech(output_file.getvalue())
     except Exception:
         str("Error in ai.ask_bot")
         traceback.print_exc()
         return
-
-    result = w.post_speech(output_file.getvalue())
     pprint(result)
     intent = u' '
     item_type = u' '
@@ -150,7 +163,8 @@ def ask_bot(config):
 
                 if intent == 'set_volume':
                     try:
-                        vol = int(result['entities']['value'][0]['value'])
+                        vol = int(
+                            result['entities']['value'][0]['value']['value'])
                         Utils.set_volume(vol)
                     except Exception:
                         v.speak(u'Usłyszałam ' + result['_text'] + u' \
@@ -160,7 +174,7 @@ def ask_bot(config):
                         return
 
             else:
-                v.speak(u'Usłyszałam ' + result['_text'] + ' Niestety nie \
+                v.speak(u'Usłyszałam ' + result['_text'] + u' Niestety nie \
                 zrozumiałam intencji.')
         else:
             v.speak(u'Przepraszam, ale nic nie słyszałam.')
