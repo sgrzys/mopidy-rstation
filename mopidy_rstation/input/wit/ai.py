@@ -32,7 +32,12 @@ def record_only():
         if info['maxInputChannels'] > 0:
             print(str(x) + str(info))
             INPUT_DEVICE_INDEX = info['index']
+            RATE = info['defaultSampleRate']
 
+    print('*********************************************')
+    print('Selected device index: ' + INPUT_DEVICE_INDEX)
+    print('device sample rate: ' + RATE)
+    print('*********************************************')
     stream = p.open(
         format=FORMAT,
         channels=CHANNELS,
@@ -107,6 +112,7 @@ def ask_bot(config):
     except Exception:
         str("Error in ai.ask_bot")
         traceback.print_exc()
+        return
 
     result = w.post_speech(output_file.getvalue())
     pprint(result)
