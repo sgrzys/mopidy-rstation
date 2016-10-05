@@ -136,6 +136,7 @@ def ask_bot(config):
         try:
             intent = result['entities']['intent'][0]['value']
         except Exception:
+            traceback.print_exc()
             intent = None
 
         v = pyvona.create_voice(config)
@@ -145,6 +146,7 @@ def ask_bot(config):
                     try:
                         item_type = result['entities']['type'][0]['value']
                     except Exception:
+                        traceback.print_exc()
                         v.speak(u'Usłyszałam ' + result['_text'] + u' \
                             . Zrozumiałam, że intencją jest dtwarzanie. \
                             Niestety nie zrozumiałam co mam włączyć.')
@@ -153,6 +155,7 @@ def ask_bot(config):
                     try:
                         item = result['entities']['item'][0]['value']
                     except Exception:
+                        traceback.print_exc()
                         v.speak(u'Usłyszałam ' + result['_text'] + u' \
                             . Zrozumiałam, że intencją jest \
                             odtwarzanie ' + item_type + u'. Niestety \
@@ -164,9 +167,10 @@ def ask_bot(config):
                 if intent == 'set_volume':
                     try:
                         vol = int(
-                            result['entities']['value'][0]['value']['value'])
+                            result['entities']['value'][0]['value'])
                         Utils.set_volume(vol)
                     except Exception:
+                        traceback.print_exc()
                         v.speak(u'Usłyszałam ' + result['_text'] + u' \
                             . Zrozumiałam, że intencją jest ustawienie \
                             głośności. Niestety nie zrozumiałam jaką głośność \
