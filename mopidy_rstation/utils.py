@@ -5,6 +5,7 @@ import subprocess
 from threading import Thread
 import time
 from mopidy_rstation.output import pyvona
+from mopidy.models import Track
 import traceback
 from fuzzywuzzy import process
 import m3uparser
@@ -385,7 +386,7 @@ class Utils:
         Utils.core.playback.volume = volume
 
     @staticmethod
-    def play_item(item_type, item):
+    def play_item(item, item_type):
         if item_type == 'radio':
             tracks, titles = m3uparser.parseFolder(
                 '/home/pi/mopidy-rstation/media/Radia')
@@ -395,24 +396,31 @@ class Utils:
                     print('Title: ' + track.title + ' Uri: ' + str(track.path))
                     if Utils.core is None:
                         return
+                    tracks_to_add = []
+                    tracks_to_add.append(Track(
+                        name=track.title, uri=track.path))
                     Utils.core.tracklist.clear()
-                    Utils.core.tracklist.add(uri=str(track.path))
+                    # uri=track.path
+                    Utils.core.tracklist.add(tracks=tracks_to_add)
                     Utils.core.playback.play()
                     Utils.speak('PLAY_URI', val=track.title)
                     Utils.curr_track_id = 0
                     Utils.track_items = Utils.core.tracklist.get_tracks()
                     return
             return
-        if item_type == 'muzyka':
+        elif item_type == 'muzyka':
             None
             return
-        if item_type == 'audiobook':
+        elif item_type == 'audiobook':
             None
             return
-        if item_type == 'podcast':
+        elif item_type == 'podcast':
             None
             return
-        Utils.speak_text(u'Tego typu ' + item_type + ' jeszcze nie znam.')
+        else:
+            # try to play without a type
+            Utils.speak_text(u'Tego typu ' + item_type + ' jeszcze nie znam. \
+                Postaram się zrozumieć co grać bez kontekstu.')
 
 
 # for now, just pull the track info and print it onscreen

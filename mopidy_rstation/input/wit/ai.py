@@ -143,10 +143,12 @@ def ask_bot(config):
                         item_type = result['entities']['type'][0]['value']
                     except Exception:
                         traceback.print_exc()
-                        v.speak(u'Usłyszałam ' + result['_text'] + u' \
-                            . Zrozumiałam, że intencją jest dtwarzanie. \
-                            Niestety nie zrozumiałam co mam włączyć.')
-                        return
+                        # v.speak(u'Usłyszałam ' + result['_text'] + u' \
+                        #     . Zrozumiałam, że intencją jest dtwarzanie. \
+                        #     Niestety nie zrozumiałam co mam włączyć.')
+                        # return
+                        # continue without item type
+                        item_type = ''
 
                     try:
                         item = result['entities']['item'][0]['value']
@@ -158,7 +160,7 @@ def ask_bot(config):
                             nie zrozumiałam co konkretnie mam włączyć.')
                         return
                     v.speak(u'OK, już włączam ' + item_type + ' ' + item)
-                    Utils.play_item(item_type, item)
+                    Utils.play_item(item, item_type)
 
                 if intent == 'set_volume':
                     try:
