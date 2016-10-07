@@ -28,12 +28,12 @@ def parseFolderForPlaylists(folder):
     playlists = []
     for root, dirs, files in os.walk(folder):
         for file in files:
-            title = str(root[root.rfind('/')+1:]) + ' ' + str(file)
-            path = 'file:/' + os.path.join(root, file)
-            playlist = track(None, title, path)
-            titles.append(title)
-            playlists.append(playlist)
-            print(path)
+            if file.endswith(".m3u8"):
+                title = str(root[root.rfind('/')+1:]) + ' ' + str(file)
+                path = 'rstation:/' + os.path.join(root, file)
+                playlist = track(None, title, path)
+                titles.append(title)
+                playlists.append(playlist)
 
     return playlists, titles
 
