@@ -128,6 +128,7 @@ class CommandDispatcher(object):
                 # switch to player mode
                 self.change_mode(C_MODE_PLAYER)
                 self.core.tracklist.clear()
+                print('#########' + current_item.uri + '#########')
                 self.core.tracklist.add(uri=current_item.uri)
                 self.core.playback.play()
                 Utils.speak('PLAY_URI', val=current_item.name)

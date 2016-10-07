@@ -388,9 +388,10 @@ class Utils:
     @staticmethod
     def play_item(item, item_type):
         if item_type == 'radio':
-            tracks, titles = m3uparser.parseFolder(
+            tracks, titles = m3uparser.parseFolderForTracks(
                 '/home/pi/mopidy-rstation/media/Radia')
             title = process.extractOne(item, titles)
+            print('gram: ' + str(title))
             for track in tracks:
                 if track.title == title[0]:
                     print('Title: ' + track.title + ' Uri: ' + str(track.path))
@@ -407,19 +408,28 @@ class Utils:
                     Utils.curr_track_id = 0
                     Utils.track_items = Utils.core.tracklist.get_tracks()
                     return
-            return
         elif item_type == 'muzyka':
-            None
-            return
+            albums, titles = m3uparser.parseFolderForPlaylists(
+                '/home/pi/mopidy-rstation/media/Muzyka')
+            title = process.extractOne(item, titles)
+            print('gram: ' + str(title))
+            for album in albums:
+                if album.title == title[0]:
+                    print('Title: ' + album.title + ' Uri: ' + str(album.path))
+                    if Utils.core is None:
+                        return
+                    Utils.core.tracklist.clear()
+                    Utils.core.tracklist.add(uri=album.path)
+                    Utils.core.playback.play()
+                    Utils.speak('PLAY_URI', val=album.title)
+                    return
         elif item_type == 'audiobook':
             None
-            return
         elif item_type == 'podcast':
             None
-            return
         else:
             # try to play without a type
-            Utils.speak_text(u'Tego typu ' + item_type + ' jeszcze nie znam. \
+            Utils.speak_text(u'Tego typu ' + item_type + u' jeszcze nie znam. \
                 Postaram się zrozumieć co grać bez kontekstu.')
 
 

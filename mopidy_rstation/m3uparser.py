@@ -20,11 +20,32 @@ class track():
 """
 
 
-def parseFolder(folder):
+def parseFolderForPlaylists(folder):
+    # parse file names in folder
     if folder is None:
         return
+    titles = []
+    playlists = []
+    for root, dirs, files in os.walk(folder):
+        for file in files:
+            title = str(root[root.rfind('/')+1:]) + ' ' + str(file)
+            path = 'file:/' + os.path.join(root, file)
+            playlist = track(None, title, path)
+            titles.append(title)
+            playlists.append(playlist)
+            print(path)
+
+    return playlists, titles
+
+
+def parseFolderForTracks(folder):
+    # parse tracks names in files inside folder
+    if folder is None:
+        return
+
     tracks = []
     titles = []
+
     for root, dirs, files in os.walk(folder):
         for file in files:
             if file.endswith(".m3u8"):
@@ -79,7 +100,7 @@ def parsem3u(infile):
 # get the M3U file path from the first command line argument
 def main():
     folder = sys.argv[1]
-    tracks, titles = parseFolder(folder)
+    tracks, titles = parseFolderForPlaylists(folder)
     for title in titles:
         print(title)
     # m3ufile = sys.argv[1]
