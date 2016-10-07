@@ -30,7 +30,7 @@ def parseFolderForPlaylists(folder):
         for file in files:
             if file.endswith(".m3u8"):
                 title = str(root[root.rfind('/')+1:]) + ' ' + str(file)
-                path = 'rstation:/' + os.path.join(root, file)
+                path = 'rstation:' + os.path.join(root, file)
                 playlist = track(None, title, path)
                 titles.append(title)
                 playlists.append(playlist)
