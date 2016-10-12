@@ -150,7 +150,7 @@ class KeyPad(threading.Thread):
             self.ButtonPressed('up')
         if code == 'KEY_ENTER':
             self.ButtonPressed('enter')
-        if code == 'KEY_ESC':
+        if code == 'KEY_ESC' or code == 'KEY_BACK':
             self.ButtonPressed('change_lang')
         if code == 'KEY_MINUS' or code == 'KEY_VOLUMEDOWN':
             self.ButtonPressed('vol_down')
