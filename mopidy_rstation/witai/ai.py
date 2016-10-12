@@ -4,7 +4,6 @@ from pprint import pprint
 import wit
 from mopidy_rstation.utils import Utils
 from mopidy_rstation.output import pyvona
-from ConfigParser import ConfigParser
 import pyaudio
 import wave
 from StringIO import StringIO
@@ -119,7 +118,7 @@ def ask_bot(config):
         # record_only
         output_file = StringIO()
         output_file = record_only()
-        v.speak(u'Przetwarzam')
+        Utils.speak('PROCESSING')
         result = w.post_speech(output_file.getvalue())
     except Exception:
         str("Error in ai.ask_bot")
@@ -135,7 +134,6 @@ def ask_bot(config):
         except Exception:
             traceback.print_exc()
             intent = None
-
         if result['_text'] is not None:
             if intent is not None:
                 if intent == 'play_item':
@@ -162,7 +160,7 @@ def ask_bot(config):
                     v.speak(u'OK, już włączam ' + item_type + ' ' + item)
                     Utils.play_item(item, item_type)
 
-                if intent == 'set_volume':
+                elif intent == 'set_volume':
                     try:
                         vol = int(result['entities']['value'][0]['value'])
                     except Exception:
@@ -179,6 +177,14 @@ def ask_bot(config):
                         v.speak(u'Mam problem z ustawieniem głośności, \
                             sprawdz kotku w logach.')
 
+                elif intent == 'get_weather':
+                    location = None
+                    try:
+                        location = result['entities']['location'][0]['value']
+                    except Exception:
+                        traceback.print_exc()
+                    Utils.forecast_weather(location)
+
             else:
                 v.speak(u'Usłyszałam ' + result['_text'] + u' Niestety nie \
                 zrozumiałam twojej intencji.')
@@ -186,18 +192,7 @@ def ask_bot(config):
             v.speak(u'Przepraszam, ale nic nie słyszałam.')
 
 
-# to test from cmd
-def get_config():
-    conf = ConfigParser()
-    conf.read('/home/pi/mopidy.conf')
-    the_dict = {}
-    for section in conf.sections():
-        the_dict[section] = {}
-        for key, val in conf.items(section):
-            the_dict[section][key] = val
-    return the_dict
-
 if __name__ == '__main__':
-    conf = get_config()
-    print(str(conf['rstation']))
+    conf = Utils.get_config()
+    Utils.config = conf['rstation']
     ask_bot(conf['rstation'])

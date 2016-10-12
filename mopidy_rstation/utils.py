@@ -5,10 +5,10 @@ import subprocess
 from threading import Thread
 import time
 from mopidy_rstation.output import pyvona
+from mopidy_rstation.finder import m3uparser
 from mopidy.models import Track
-import traceback
 from fuzzywuzzy import process
-import m3uparser
+from ConfigParser import ConfigParser
 import sys
 
 
@@ -147,7 +147,11 @@ class Utils:
             if isinstance(val, int):
                 val = str(val)
             val = Utils.convert_text(val)
-
+        if code == 'PROCESSING':
+            if Utils.config['language'] == 'pl-PL':
+                Utils.speak_text(u"Przetwarzam", False)
+            elif Utils.config['language'] == 'en-US':
+                Utils.speak_text(u"Processing", False)
         if code == 'PLAY':
             if Utils.config['language'] == 'pl-PL':
                 Utils.speak_text(u"Graj", False)
@@ -367,8 +371,12 @@ class Utils:
 
     @staticmethod
     def start_rec_wav():
-        Utils.prev_volume = Utils.core.playback.volume.get()
-        Utils.core.playback.volume = 10
+        try:
+            Utils.prev_volume = Utils.core.playback.volume.get()
+            Utils.core.playback.volume = 10
+        except Exception:
+            Utils.prev_volume = 10
+
         print('prev_volume ' + str(Utils.prev_volume))
         t = Thread(target=Utils.aplay_thread, args=("start_rec",))
         t.start()
@@ -377,7 +385,10 @@ class Utils:
     def stop_rec_wav():
         t = Thread(target=Utils.aplay_thread, args=("stop_rec",))
         t.start()
-        Utils.core.playback.volume = Utils.prev_volume
+        try:
+            Utils.core.playback.volume = Utils.prev_volume
+        except Exception:
+            None
         print('prev_volume ' + str(Utils.prev_volume))
 
     @staticmethod
@@ -440,7 +451,8 @@ class Utils:
                             Utils.core.playback.play()
                             Utils.speak('PLAY_URI', val=track.title)
                             Utils.curr_track_id = 0
-                            Utils.track_items = Utils.core.tracklist.get_tracks()
+                            Utils.track_items = \
+                                Utils.core.tracklist.get_tracks()
                             return
                 else:
                     for album in albums:
@@ -465,13 +477,69 @@ class Utils:
                         Utils.speak('PLAY_URI', val=album.title)
                         return
 
+    @staticmethod
+    def get_config():
+        conf = ConfigParser()
+        conf.read('/home/pi/mopidy.conf')
+        the_dict = {}
+        for section in conf.sections():
+            the_dict[section] = {}
+            for key, val in conf.items(section):
+                the_dict[section][key] = val
+        return the_dict
+
+    @staticmethod
+    def forecast_weather(location=None):
+        try:
+            from mopidy_rstation.weather import forecast
+        except ImportError:
+            print('forecast ImportError')
+            return
+
+        # to test from cmd
+        # conf = Utils.get_config()
+        # Utils.config = conf['rstation']
+        # Utils.config['language'] = 'en-US'
+
+        if location is not None:
+            try:
+                from geopy.geocoders import Nominatim
+            except ImportError:
+                print('geopy ImportError')
+                return
+            geolocator = Nominatim()
+            location = geolocator.geocode(location)
+            print(location.address)
+            Utils.config['location_gps'] = str(location.latitude) + \
+                ',' + str(location.longitude)
+
+        weather = forecast.ForecastData(Utils.config)
+        # weather.verbose = True
+        if Utils.config['language'] == 'pl-PL':
+            Utils.speak_text(
+                'Prognoza pogody dla ' + weather.country_name +
+                ', ' + weather.location_name, False)
+        else:
+            Utils.speak_text(
+                'Weather forecast for ' + weather.country_name +
+                ', ' + weather.location_name, False)
+        days = weather.read_txt_forecast()
+        Utils.speak_text(days[0]['title'] + ' ' + days[0]['text'], False)
+        Utils.speak_text(days[1]['title'] + ' ' + days[1]['text'], False)
+        # for day in days:
+        #     Utils.speak_text(day['title'] + ' ' + day['text'], False)
+
 
 # for now, just pull the track info and print it onscreen
 # get the M3U file path from the first command line argument
 def main():
-    item = sys.argv[1]
-    print('item to precess: ' + item)
-    Utils.play_item(item)
+    conf = Utils.get_config()
+    Utils.config = conf['rstation']
+    Utils.forecast_weather()
+
+    # item = sys.argv[1]
+    # print('item to precess: ' + item)
+    # Utils.play_item(item)
 
 if __name__ == '__main__':
     main()

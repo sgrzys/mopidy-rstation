@@ -1,6 +1,6 @@
 from ..utils import Utils
 from mopidy.core import PlaybackState
-from .wit import ai
+from ..witai import ai
 import traceback
 import time
 
