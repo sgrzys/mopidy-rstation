@@ -376,7 +376,7 @@ class Utils:
             Utils.core.playback.volume = 5
         except Exception:
             Utils.prev_volume = 5
-    
+
         Utils.aplay_thread("start_rec")
         # t = Thread(target=Utils.aplay_thread, args=("start_rec",))
         # t.start()
@@ -508,7 +508,6 @@ class Utils:
                 return
             geolocator = Nominatim()
             location = geolocator.geocode(location)
-            print(location.address)
             Utils.config['location_gps'] = str(location.latitude) + \
                 ',' + str(location.longitude)
 

@@ -27,7 +27,8 @@ setup(
     install_requires=[
         'setuptools',
         'Mopidy >= 1.0',
-        'Pykka >= 1.1'
+        'Pykka >= 1.1',
+        'geopy'
     ],
     test_suite='nose.collector',
     tests_require=[
