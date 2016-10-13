@@ -373,13 +373,13 @@ class Utils:
     def start_rec_wav():
         try:
             Utils.prev_volume = Utils.core.playback.volume.get()
-            Utils.core.playback.volume = 10
+            Utils.core.playback.volume = 5
         except Exception:
-            Utils.prev_volume = 10
-
-        print('prev_volume ' + str(Utils.prev_volume))
-        t = Thread(target=Utils.aplay_thread, args=("start_rec",))
-        t.start()
+            Utils.prev_volume = 5
+    
+        Utils.aplay_thread("start_rec")
+        # t = Thread(target=Utils.aplay_thread, args=("start_rec",))
+        # t.start()
 
     @staticmethod
     def stop_rec_wav():
@@ -389,7 +389,6 @@ class Utils:
             Utils.core.playback.volume = Utils.prev_volume
         except Exception:
             None
-        print('prev_volume ' + str(Utils.prev_volume))
 
     @staticmethod
     def set_volume(volume):
@@ -514,7 +513,13 @@ class Utils:
                 ',' + str(location.longitude)
 
         weather = forecast.ForecastData(Utils.config)
-        # weather.verbose = True
+        weather.verbose = True
+        try:
+            Utils.prev_volume = Utils.core.playback.volume.get()
+            Utils.core.playback.volume = 5
+        except Exception:
+            Utils.prev_volume = 5
+
         if Utils.config['language'] == 'pl-PL':
             Utils.speak_text(
                 'Prognoza pogody dla ' + weather.country_name +
@@ -528,6 +533,10 @@ class Utils:
         Utils.speak_text(days[1]['title'] + ' ' + days[1]['text'], False)
         # for day in days:
         #     Utils.speak_text(day['title'] + ' ' + day['text'], False)
+        try:
+            Utils.core.playback.volume = Utils.prev_volume
+        except Exception:
+            pass
 
 
 # for now, just pull the track info and print it onscreen

@@ -37,6 +37,8 @@ def record_only():
     print('Selected device index: ' + str(INPUT_DEVICE_INDEX))
     print('device sample rate: ' + str(RATE))
     print('*********************************************')
+    print("* recording")
+    Utils.start_rec_wav()
     stream = p.open(
         format=FORMAT,
         channels=CHANNELS,
@@ -44,10 +46,6 @@ def record_only():
         input=True,
         frames_per_buffer=CHUNK,
         input_device_index=INPUT_DEVICE_INDEX)
-
-    print("* recording")
-    Utils.start_rec_wav()
-
     all = []
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
         data = stream.read(CHUNK, exception_on_overflow=False)
