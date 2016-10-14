@@ -479,7 +479,7 @@ class Utils:
     @staticmethod
     def get_config():
         conf = ConfigParser()
-        conf.read('/home/pi/mopidy.conf')
+        conf.read('/etc/mopidy/mopidy.conf')
         the_dict = {}
         for section in conf.sections():
             the_dict[section] = {}
