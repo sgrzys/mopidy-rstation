@@ -1,0 +1,49 @@
+Metadata-Version: 1.1
+Name: Mopidy-Rstation
+Version: 1.0.0
+Summary: Mopidy extension to show info on a display and control from it
+Home-page: https://github.com/araczkowski/mopidy-rstation
+Author: araczkowski
+Author-email: araczkowski@gmail.com
+License: Apache License, Version 2.0
+Description: ******************
+        Mopidy-rstation
+        ******************
+        
+        Extension for remotely controlling Mopidy
+        
+        Dependencies
+        ============
+        
+        - ``Mopidy`` >= 1.0
+        - ``Pykka`` >= 1.1
+        
+        
+        Installation
+        ============
+        
+        Install by running::
+        
+            clone rstation
+        
+            cd rstation
+        
+            pip install . --upgrade
+        
+        
+        Basic Configuration
+        ===================
+        
+        Before starting Mopidy, you must add configuration for
+        Mopidy-Rstation to your Mopidy configuration file::
+        
+            [rstation]
+            enabled = true
+        
+Platform: UNKNOWN
+Classifier: Environment :: No Input/Output (Daemon)
+Classifier: Intended Audience :: End Users/Desktop
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 2
+Classifier: Topic :: Multimedia :: Sound/Audio :: Players
