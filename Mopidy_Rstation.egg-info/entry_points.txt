@@ -1,3 +1,0 @@
-[mopidy.ext]
-rstation = mopidy_rstation:Extension
-
