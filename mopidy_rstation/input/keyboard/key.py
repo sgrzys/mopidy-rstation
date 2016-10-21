@@ -10,10 +10,6 @@ import errno
 import traceback
 
 logger = logging.getLogger('mopidy_Rstation')
-context = pyudev.Context()
-monitor = pyudev.Monitor.from_netlink(context)
-monitor.filter_by(subsystem='input')
-monitor.start()
 
 
 class KeyPad(threading.Thread):
@@ -25,6 +21,10 @@ class KeyPad(threading.Thread):
         self.ButtonPressed = Event()
         self.devices = {}
         self._stop = threading.Event()
+        self.context = pyudev.Context()
+        self.monitor = pyudev.Monitor.from_netlink(self.context)
+        self.monitor.filter_by(subsystem='input')
+        self.monitor.start()
 
     def checkIfDevIsKeyboard(self, d):
         d.capabilities()
@@ -44,12 +44,14 @@ class KeyPad(threading.Thread):
         self.startKeyPad()
 
     def stop(self):
-        logger.info('Stoping KeyPad')
+        logger.info('Stoping KeyPad start')
         # for device in self.devices:
         #     self.dev = evdev.InputDevice(device.fn)
         #     self.dev.ungrab()
         self.frontendActive = False
         self._stop.set()
+        logger.info('Stoping KeyPad end')
+        self.monitor.stop()
 
     def startKeyPad(self):
         self.frontendActive = True
@@ -59,14 +61,14 @@ class KeyPad(threading.Thread):
                 self.devices[d.fn] = d
                 d.grab()
 
-        self.devices['monitor'] = monitor
+        self.devices['monitor'] = self.monitor
 
         while self.frontendActive:
             rs, _, _ = select.select(self.devices.values(), [], [])
             # Unconditionally ping monitor; if this is spurious this
             # will no-op because we pass a zero timeout.  Note that
             # it takes some time for udev events to get to us.
-            for udev in iter(functools.partial(monitor.poll, 0), None):
+            for udev in iter(functools.partial(self.monitor.poll, 0), None):
                 if not udev.device_node:
                     break
                 if udev.action == 'add':
@@ -77,7 +79,7 @@ class KeyPad(threading.Thread):
                             if self.checkIfDevIsKeyboard(new_d):
                                 self.devices[udev.device_node] = new_d
                                 new_d.grab()
-                        except Exception as e:
+                        except Exception:
                             print('Error during add device ')
                             traceback.print_exc()
                 elif udev.action == 'remove':
@@ -86,9 +88,10 @@ class KeyPad(threading.Thread):
                             "Device removed (udev): %s" %
                             self.devices[udev.device_node])
                         del self.devices[udev.device_node]
+
             for r in rs:
                 # You can't read from a monitor
-                if r.fileno() == monitor.fileno():
+                if r.fileno() == self.monitor.fileno():
                     continue
                 if r.fn not in self.devices:
                     continue
@@ -96,6 +99,9 @@ class KeyPad(threading.Thread):
                 # ENODEV.  So be sure to handle that.
                 try:
                     for event in r.read():
+                        # event.value == 1 key down
+                        # event.value == 0 key up
+                        # event.value == 2 key hold
                         if event.type == evdev.ecodes.EV_KEY & \
                            event.value == 1:
                             # enter with mouse mode on airmouse
@@ -113,27 +119,6 @@ class KeyPad(threading.Thread):
                             del self.devices[r.fn]
                     logger.error('KeyPad: ' + str(e))
                     traceback.print_exc()
-
-        # for device in devices:
-        #     if "Microsoft" in device.name and self.dev is None:
-        #         print(device.fn, device.name, device.phys)
-        #         self.dev = InputDevice(device.fn)
-        #         self.dev.grab()
-
-        # devices = [InputDevice(fn) for fn in list_devices()]
-        # for device in devices:
-        #     print(device.fn, device.name, device.phys)
-        # self.dev = InputDevice('/dev/input/event4')
-        # self.dev.capabilities()
-        # self.dev.capabilities(verbose=True)
-
-        # while self.frontendActive:
-        #     for event in self.dev.read_loop():
-        #         if event.type == ecodes.EV_KEY & event.value == 1:
-        #             # event.value == 1 key down
-        #             # event.value == 0 key up
-        #             # event.value == 2 key hold
-        #             self.handle_event(ecodes.KEY[event.code])
 
     def handle_event(self, code):
         print('KeyPad -> handle_event -> ' + code)

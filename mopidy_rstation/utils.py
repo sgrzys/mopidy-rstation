@@ -9,7 +9,6 @@ from mopidy_rstation.finder import m3uparser
 from mopidy.models import Track
 from fuzzywuzzy import process
 from ConfigParser import ConfigParser
-import sys
 
 
 class Utils:

@@ -63,8 +63,10 @@ class RstationFrontend(pykka.ThreadingActor, core.CoreListener):
         try:
             logger.debug('Rstation starting')
             if self.enable_irda:
+                logger.debug('irda thread starting')
                 self.irda_thread.start()
             if self.enable_keypad:
+                logger.debug('keypad thread starting')
                 self.keypad_thread.start()
             logger.debug('Rstation started')
         except Exception as e:
@@ -72,13 +74,20 @@ class RstationFrontend(pykka.ThreadingActor, core.CoreListener):
             self.stop()
 
     def on_stop(self):
-        logger.info('Rstation stopped')
+        logger.info('Rstation stopping')
         if self.enable_irda:
+            logger.debug('irda thread stopping')
             self.irda_thread.frontendActive = False
             self.irda_thread.join()
+            logger.debug('irda thread stopped')
         if self.enable_keypad:
+            logger.debug('keypad thread stopping')
             self.keypad_thread.stop()
-            self.keypad_thread.join()
+            logger.debug('keypad thread stopping 1')
+            # self.keypad_thread.frontendActive = False
+            # self.keypad_thread.join()
+            logger.debug('keypad thread stopped')
+        logger.info('Rstation stopped')
 
     def on_failure(self):
         logger.warning('Rstation failing')
