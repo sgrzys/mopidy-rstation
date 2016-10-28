@@ -1,0 +1,711 @@
+
+<!DOCTYPE html>
+<html lang="en,pl,default">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="CHIPsters!">
+    <title>Single board computers - CHIPsters!</title>
+    <meta name="author" content="The radio that listens to you!">
+    
+        <meta name="keywords" content="Raspberry pi,C.H.I.P.,Orange Pi,IOT,iot,C.I.I.P.,RPI,Orange Pi">
+    
+    
+        <link rel="icon" href="https://www.chipsters.eu/assets/images/rstation_small.png">
+    
+    
+        <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <meta name="description" content="Currently (Oct 2016) there are more then 60 SBCs[1] with open-specification and this number is growing fast!
+this is our subjective rank on SBCs (Single Board Computers)">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Single board computers">
+<meta property="og:url" content="https://www.chipsters.eu/2016/10/26/Single-board-computers/index.html">
+<meta property="og:site_name" content="CHIPsters!">
+<meta property="og:description" content="Currently (Oct 2016) there are more then 60 SBCs[1] with open-specification and this number is growing fast!
+this is our subjective rank on SBCs (Single Board Computers)">
+<meta property="og:updated_time" content="2016-10-28T13:48:06.964Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Single board computers">
+<meta name="twitter:description" content="Currently (Oct 2016) there are more then 60 SBCs[1] with open-specification and this number is growing fast!
+this is our subjective rank on SBCs (Single Board Computers)">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://www.chipsters.eu/assets/images/rstation_small.png"/>
+    
+    
+        <meta property="og:image" content="//res.cloudinary.com/sviete/image/upload/c_thumb,h_220,w_750/v1477594863/chip_z1bgce.jpg"/>
+        <meta class="swiftype" name="image" data-type="enum" content="//res.cloudinary.com/sviete/image/upload/c_thumb,h_220,w_750/v1477594863/chip_z1bgce.jpg" />
+    
+    
+        <meta property="og:image" content="//res.cloudinary.com/sviete/image/upload/v1477597588/Orange_RPI_CHIP_t7vc88.jpg"/>
+        <meta class="swiftype" name="image" data-type="enum" content="//res.cloudinary.com/sviete/image/upload/v1477597588/Orange_RPI_CHIP_t7vc88.jpg" />
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-yrst5vo1nxaxbp2g3v9na2wg1lixlpr3ghbjdvskeixmu79deycecx3rh4bt.min.css">
+    <!--STYLES END-->
+    
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-86339957-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">CHIPsters!</a>
+    </div>
+    
+        
+            <a  class="header-right-icon "
+                href="/">
+        
+        
+            <i class="fa fa-lg fa-home"></i>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="/assets/images/rstation_small.png" alt="rSTATION picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">The radio that listens to you!</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p><sup>r</sup>STATION - an audio streamer and cloud player, which can be controlled by voice or via remote air mouse. <sup>r</sup>STATION is suitable for using without any touch screen or other additional devices, e.g. smartphones. Our goal is to build perfect audio streamer for people, who have vision problems (blind or with other kind of vision impairment).</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/ "
+                            
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-categories"
+                            
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+                        <span class="sidebar-button-desc">Categories</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-archives"
+                            
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+                        <span class="sidebar-button-desc">Archives</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/orgs/sviete/dashboard" target="_blank">
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://plus.google.com/103177643341111623906" target="_blank">
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-google-plus"></i>
+                        <span class="sidebar-button-desc">Google Plus</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://pl.linkedin.com/in/sviete" target="_blank">
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-linkedin"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto:info@sviete.pl" target="_blank">
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-envelope-o"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+        <div class="post-header-cover
+                    text-left
+                    "
+             style="background-image:url('//res.cloudinary.com/sviete/image/upload/v1477597588/Orange_RPI_CHIP_t7vc88.jpg');"
+             data-behavior="4">
+            
+                <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title" itemprop="headline">
+            Single board computers
+        </h1>
+    
+    <div class="post-meta">
+    <time itemprop="datePublished" datetime="2016-10-26T16:32:00+02:00">
+	
+		    Oct 26, 2016
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/story/">story</a>, <a class="category-link" href="/categories/story/rank/">rank</a>
+
+
+    
+</div>
+
+</div>
+            
+        </div>
+
+            <div id="main" data-behavior="4"
+                 class="hasCover
+                        hasCoverMetaIn
+                        hasCoverCaption">
+                
+<article class="post" itemscope itemType="http://schema.org/BlogPosting">
+    
+        <span class="post-header-cover-caption caption">Orange, Raspberry Pi and C.H.I.P.</span>
+    
+    
+    <div class="post-content markdown" itemprop="articleBody">
+        <div class="main-content-wrap">
+            <h3 id="currently-oct-2016-there-are-more-then-60-sbcs-with-open-specification-and-this-number-is-growing-fast">Currently (Oct 2016) there are more then 60 SBCs<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup> with open-specification and this number is growing fast!</h3>
+<p>this is our subjective rank on SBCs (Single Board Computers)</p>
+<a id="more"></a>
+<p>For our project’s needs, we have looked at almost all available for purchase single-board computers. We have checked if they were:</p>
+<ul>
+<li>hacker friendly</li>
+<li>Linux compatible</li>
+<li>open-spec</li>
+<li>low-cost</li>
+<li>effective</li>
+</ul>
+<p>According to our internal magic score algorithm, C.H.I.P., Raspberry Pi (especially model zero), and Orange Pi (especially model PC+) have the higher price-performance ratio.</p>
+<p>Right now we are testing the preselected devices (see in the table below) with additional hardware and our software.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">RPi 3</th>
+<th style="text-align:center">RPi Zero</th>
+<th style="text-align:center">C.H.I.P.</th>
+<th style="text-align:center">OPi PC+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">soc(cpu)</td>
+<td style="text-align:center">Broadcom BCM2837 (4x Cortex-A53 @ 1.2 GHz 64-bit; 4x ~2760 DMIPS)</td>
+<td style="text-align:center">Broadcom BCM2835 (1x ARM1176JZFS core @ 1GHz; ~1250 DMIPS)</td>
+<td style="text-align:center">Allwinner R8 (1x Cortex-A8 @ 1GHz; 2000 DMIPS)</td>
+<td style="text-align:center">Allwinner H3 (4x Cortex-A7 @ 1.6GHz; 4x 2280 DMIPS)</td>
+</tr>
+<tr>
+<td style="text-align:center">ram</td>
+<td style="text-align:center">1GB</td>
+<td style="text-align:center">512MB</td>
+<td style="text-align:center">512MB</td>
+<td style="text-align:center">1GB</td>
+</tr>
+<tr>
+<td style="text-align:center">hdd</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">4GB</td>
+<td style="text-align:center">8GB</td>
+</tr>
+<tr>
+<td style="text-align:center">net</td>
+<td style="text-align:center">100Mb + WiFi</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">WiFi</td>
+<td style="text-align:center">100Mb + WiFi</td>
+</tr>
+<tr>
+<td style="text-align:center">usb</td>
+<td style="text-align:center">4 x 2.0</td>
+<td style="text-align:center">1 x micro</td>
+<td style="text-align:center">1x USB 2.0, 1x micro OTG</td>
+<td style="text-align:center">3 x 2.0 + 1x micro OTG</td>
+</tr>
+<tr>
+<td style="text-align:center">bt</td>
+<td style="text-align:center">4.1 LE</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">4.0 LE</td>
+<td style="text-align:center">-</td>
+</tr>
+<tr>
+<td style="text-align:center">gpio</td>
+<td style="text-align:center">40</td>
+<td style="text-align:center">40</td>
+<td style="text-align:center">80</td>
+<td style="text-align:center">40</td>
+</tr>
+<tr>
+<td style="text-align:center">audio</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">mic</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">+</td>
+</tr>
+<tr>
+<td style="text-align:center">add</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">can be powered via LiPo battery</td>
+<td style="text-align:center">irda</td>
+</tr>
+<tr>
+<td style="text-align:center">$</td>
+<td style="text-align:center">$35</td>
+<td style="text-align:center">$5</td>
+<td style="text-align:center">$9</td>
+<td style="text-align:center">$19.99</td>
+</tr>
+<tr>
+<td style="text-align:center">risks</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">limited availability</td>
+<td style="text-align:center">limited availability</td>
+<td style="text-align:center">?</td>
+</tr>
+</tbody>
+</table>
+<hr class="footnotes-sep">
+<section class="footnotes">
+<ol class="footnotes-list">
+<li id="fn1" class="footnote-item"><p>source <a href="http://hackerboards.com/" target="_blank" rel="external">http://hackerboards.com/</a> <a href="#fnref1" class="footnote-backref">↩</a></p>
+</li>
+</ol>
+</section>
+
+            
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/C-H-I-P/">C.H.I.P.</a> <a class="tag tag--primary tag--small t-link" href="/tags/Orange-Pi/">Orange Pi</a> <a class="tag tag--primary tag--small t-link" href="/tags/Raspberry-Pi/">Raspberry Pi</a> <a class="tag tag--primary tag--small t-link" href="/tags/iot/">iot</a> <a class="tag tag--primary tag--small t-link" href="/tags/rstation/">rstation</a>
+
+            </div>
+        
+        <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2016/10/25/mopidy-server/" data-tooltip="Mopidy server">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://www.chipsters.eu/2016/10/26/Single-board-computers/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.chipsters.eu/2016/10/26/Single-board-computers/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.chipsters.eu/2016/10/26/Single-board-computers/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2016 The radio that listens to you!. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--disabled">
+                
+                    <i class="fa fa-angle-left"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2016/10/25/mopidy-server/" data-tooltip="Mopidy server">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions"  href="#btn-open-shareoptions">
+                <i class="fa fa-share-alt"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://www.chipsters.eu/2016/10/26/Single-board-computers/">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.chipsters.eu/2016/10/26/Single-board-computers/">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+        </li>
+        <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.chipsters.eu/2016/10/26/Single-board-computers/">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        
+            <li class="post-action">
+                <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </li>
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#">
+            
+                <i class="fa fa-list"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+    <ul class="share-options">
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=https://www.chipsters.eu/2016/10/26/Single-board-computers/">
+                <i class="fa fa-google-plus"></i><span>Share on Google Plus</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.chipsters.eu/2016/10/26/Single-board-computers/">
+                <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+            </a>
+        </li>
+        <li class="share-option">
+            <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https://www.chipsters.eu/2016/10/26/Single-board-computers/">
+                <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-remove"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/rstation_small.png" alt="rSTATION picture"/>
+        
+            <h4 id="about-card-name">The radio that listens to you!</h4>
+        
+            <div id="about-card-bio"><p><sup>r</sup>STATION - an audio streamer and cloud player, which can be controlled by voice or via remote air mouse. <sup>r</sup>STATION is suitable for using without any touch screen or other additional devices, e.g. smartphones. Our goal is to build perfect audio streamer for people, who have vision problems (blind or with other kind of vision impairment).</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>Development is in progress</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker"></i>
+                <br/>
+                Poland
+            </div>
+        
+    </div>
+</div>
+
+        <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-close"></i></span>
+            <a href="https://algolia.com" target="_blank" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="https://www.algolia.com/static_assets/images/press/downloads/algolia-light.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    autofocus="autofocus"/>
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">no post found</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a class="link-unstyled" href="https://www.chipsters.eu/2016/10/25/mopidy-server/">
+                            <img class="media-image" src="//res.cloudinary.com/sviete/image/upload/v1477598827/mopidy-as-server_cosm53.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.chipsters.eu/2016/10/25/mopidy-server/">
+                            <h3 class="media-heading">Mopidy server</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Oct 25, 2016
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="music-server-for-rstation">Music server for <sup>r</sup>STATION</h3>
+<p>all the reasons why we chose the Mopidy as a music server for our project +<br>
+how to install the Mopidy from the source on Debian in 3 steps</p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a class="link-unstyled" href="https://www.chipsters.eu/2016/10/26/Single-board-computers/">
+                            <img class="media-image" src="//res.cloudinary.com/sviete/image/upload/c_thumb,h_220,w_750/v1477594863/chip_z1bgce.jpg" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.chipsters.eu/2016/10/26/Single-board-computers/">
+                            <h3 class="media-heading">Single board computers</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Oct 26, 2016
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="currently-oct-2016-there-are-more-then-60-sbcs-with-open-specification-and-this-number-is-growing-fast">Currently (Oct 2016) there are more then 60 SBCs<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup> with open-specification and this number is growing fast!</h3>
+<p>this is our subjective rank on SBCs (Single Board Computers)</p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="no post found"
+                data-message-one="1 post found"
+                data-message-other="{n} posts found">
+                2 posts found
+            </p>
+        </div>
+    </div>
+</div>
+        
+<div id="cover" style="background-image:url('//res.cloudinary.com/sviete/image/upload/e_blur_region:100,o_100/v1477593471/k0_oy57zt.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-rt08quwts7iav5x0cfd2ym0gb5qkd1lvrsmwrakxtkhefmaaes4ywkmnjnwf.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://www.chipsters.eu/2016/10/26/Single-board-computers/';
+                 
+                    this.page.identifier = '2016/10/26/Single-board-computers/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'chipsters';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+
+    </body>
+</html>

@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>CHIPsters!</title>
+  <subtitle>The radio that listens to you!</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="https://www.chipsters.eu/"/>
+  <updated>2016-10-28T13:48:06.964Z</updated>
+  <id>https://www.chipsters.eu/</id>
+  
+  <author>
+    <name>The radio that listens to you!</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Single board computers</title>
+    <link href="https://www.chipsters.eu/2016/10/26/Single-board-computers/"/>
+    <id>https://www.chipsters.eu/2016/10/26/Single-board-computers/</id>
+    <published>2016-10-26T14:32:00.000Z</published>
+    <updated>2016-10-28T13:48:06.964Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="currently-oct-2016-there-are-more-then-60-sbcs-with-open-specification-and-this-number-is-growing-fast">Currently (Oct 2016) there are more then 60 SBCs<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup> with open-specification and this number is growing fast!</h3>
+<p>this is our subjective rank on SBCs (Single Board Computers)</p>
+<a id="more"></a>
+<p>For our project’s needs, we have looked at almost all available for purchase single-board computers. We have checked if they were:</p>
+<ul>
+<li>hacker friendly</li>
+<li>Linux compatible</li>
+<li>open-spec</li>
+<li>low-cost</li>
+<li>effective</li>
+</ul>
+<p>According to our internal magic score algorithm, C.H.I.P., Raspberry Pi (especially model zero), and Orange Pi (especially model PC+) have the higher price-performance ratio.</p>
+<p>Right now we are testing the preselected devices (see in the table below) with additional hardware and our software.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">RPi 3</th>
+<th style="text-align:center">RPi Zero</th>
+<th style="text-align:center">C.H.I.P.</th>
+<th style="text-align:center">OPi PC+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">soc(cpu)</td>
+<td style="text-align:center">Broadcom BCM2837 (4x Cortex-A53 @ 1.2 GHz 64-bit; 4x ~2760 DMIPS)</td>
+<td style="text-align:center">Broadcom BCM2835 (1x ARM1176JZFS core @ 1GHz; ~1250 DMIPS)</td>
+<td style="text-align:center">Allwinner R8 (1x Cortex-A8 @ 1GHz; 2000 DMIPS)</td>
+<td style="text-align:center">Allwinner H3 (4x Cortex-A7 @ 1.6GHz; 4x 2280 DMIPS)</td>
+</tr>
+<tr>
+<td style="text-align:center">ram</td>
+<td style="text-align:center">1GB</td>
+<td style="text-align:center">512MB</td>
+<td style="text-align:center">512MB</td>
+<td style="text-align:center">1GB</td>
+</tr>
+<tr>
+<td style="text-align:center">hdd</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">4GB</td>
+<td style="text-align:center">8GB</td>
+</tr>
+<tr>
+<td style="text-align:center">net</td>
+<td style="text-align:center">100Mb + WiFi</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">WiFi</td>
+<td style="text-align:center">100Mb + WiFi</td>
+</tr>
+<tr>
+<td style="text-align:center">usb</td>
+<td style="text-align:center">4 x 2.0</td>
+<td style="text-align:center">1 x micro</td>
+<td style="text-align:center">1x USB 2.0, 1x micro OTG</td>
+<td style="text-align:center">3 x 2.0 + 1x micro OTG</td>
+</tr>
+<tr>
+<td style="text-align:center">bt</td>
+<td style="text-align:center">4.1 LE</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">4.0 LE</td>
+<td style="text-align:center">-</td>
+</tr>
+<tr>
+<td style="text-align:center">gpio</td>
+<td style="text-align:center">40</td>
+<td style="text-align:center">40</td>
+<td style="text-align:center">80</td>
+<td style="text-align:center">40</td>
+</tr>
+<tr>
+<td style="text-align:center">audio</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">mic</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">+</td>
+</tr>
+<tr>
+<td style="text-align:center">add</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">can be powered via LiPo battery</td>
+<td style="text-align:center">irda</td>
+</tr>
+<tr>
+<td style="text-align:center">$</td>
+<td style="text-align:center">$35</td>
+<td style="text-align:center">$5</td>
+<td style="text-align:center">$9</td>
+<td style="text-align:center">$19.99</td>
+</tr>
+<tr>
+<td style="text-align:center">risks</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">limited availability</td>
+<td style="text-align:center">limited availability</td>
+<td style="text-align:center">?</td>
+</tr>
+</tbody>
+</table>
+<hr class="footnotes-sep">
+<section class="footnotes">
+<ol class="footnotes-list">
+<li id="fn1" class="footnote-item"><p>source <a href="http://hackerboards.com/" target="_blank" rel="external">http://hackerboards.com/</a> <a href="#fnref1" class="footnote-backref">↩</a></p>
+</li>
+</ol>
+</section>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;currently-oct-2016-there-are-more-then-60-sbcs-with-open-specification-and-this-number-is-growing-fast&quot;&gt;Currently (Oct 2016) there are more then 60 SBCs&lt;sup class=&quot;footnote-ref&quot;&gt;&lt;a href=&quot;#fn1&quot; id=&quot;fnref1&quot;&gt;[1]&lt;/a&gt;&lt;/sup&gt; with open-specification and this number is growing fast!&lt;/h3&gt;
+&lt;p&gt;this is our subjective rank on SBCs (Single Board Computers)&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="story" scheme="https://www.chipsters.eu/categories/story/"/>
+    
+      <category term="rank" scheme="https://www.chipsters.eu/categories/story/rank/"/>
+    
+    
+      <category term="rstation" scheme="https://www.chipsters.eu/tags/rstation/"/>
+    
+      <category term="iot" scheme="https://www.chipsters.eu/tags/iot/"/>
+    
+      <category term="Orange Pi" scheme="https://www.chipsters.eu/tags/Orange-Pi/"/>
+    
+      <category term="Raspberry Pi" scheme="https://www.chipsters.eu/tags/Raspberry-Pi/"/>
+    
+      <category term="C.H.I.P." scheme="https://www.chipsters.eu/tags/C-H-I-P/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Mopidy server</title>
+    <link href="https://www.chipsters.eu/2016/10/25/mopidy-server/"/>
+    <id>https://www.chipsters.eu/2016/10/25/mopidy-server/</id>
+    <published>2016-10-25T14:26:00.000Z</published>
+    <updated>2016-10-28T13:45:24.014Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="music-server-for-rstation">Music server for <sup>r</sup>STATION</h3>
+<p>all the reasons why we chose the Mopidy as a music server for our project +<br>
+how to install the Mopidy from the source on Debian in 3 steps</p>
+<a id="more"></a>
+<p>we decided to use <a href="https://www.mopidy.com/" target="_blank" rel="external">MOPIDY</a> for our <sup>r</sup>STATION because:</p>
+<ul>
+<li>Mopidy server works on devices with ARM Processors,</li>
+<li>it is an OpenSource software on business friendly <a href="https://github.com/mopidy/mopidy/blob/develop/LICENSE" target="_blank" rel="external">Apache License Version 2.0</a>,</li>
+<li>it is written in Python,</li>
+<li>it is very well <a href="https://docs.mopidy.com/en/latest/" target="_blank" rel="external">documented</a>,</li>
+<li>it has got a vibrant <a href="https://discuss.mopidy.com/" target="_blank" rel="external">community</a>,</li>
+<li>it has got  more then 3000 stars on <a href="https://github.com/mopidy/mopidy" target="_blank" rel="external">github</a>,</li>
+<li>it is extensible/hackable (Python, JSON-RPC and JavaScript APIs) -&gt; just perfect for our project!</li>
+</ul>
+<h3 id="install-the-mopidy-from-the-source-on-debian">Install the Mopidy from the source on Debian</h3>
+<ol>
+<li>Switch to root:</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo -i</div></pre></td></tr></table></figure>
+<ol start="2">
+<li>Install all the packages:</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">apt-get install build-essential python-dev python-pip \</div><div class="line">    python-gst-1.0 gir1.2-gstreamer-1.0 gir1.2-gst-plugins-base-1.0 \</div><div class="line">    gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly gstreamer1.0-tools</div></pre></td></tr></table></figure>
+<ol start="3">
+<li>Install the latest release of Mopidy:</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo pip install -U mopidy</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;music-server-for-rstation&quot;&gt;Music server for &lt;sup&gt;r&lt;/sup&gt;STATION&lt;/h3&gt;
+&lt;p&gt;all the reasons why we chose the Mopidy as a music server for our project +&lt;br&gt;
+how to install the Mopidy from the source on Debian in 3 steps&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="story" scheme="https://www.chipsters.eu/categories/story/"/>
+    
+      <category term="how to" scheme="https://www.chipsters.eu/categories/story/how-to/"/>
+    
+    
+      <category term="rstation" scheme="https://www.chipsters.eu/tags/rstation/"/>
+    
+      <category term="iot" scheme="https://www.chipsters.eu/tags/iot/"/>
+    
+      <category term="mopidy" scheme="https://www.chipsters.eu/tags/mopidy/"/>
+    
+  </entry>
+  
+</feed>
