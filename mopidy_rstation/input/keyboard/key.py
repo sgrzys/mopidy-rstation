@@ -51,7 +51,11 @@ class KeyPad(threading.Thread):
         self.frontendActive = False
         self._stop.set()
         logger.info('Stoping KeyPad end')
-        self.monitor.stop()
+        try:
+            self.monitor.stop()
+        except Exception:
+            print('Error in monitor.stop()')
+            traceback.print_exc()
 
     def startKeyPad(self):
         self.frontendActive = True
