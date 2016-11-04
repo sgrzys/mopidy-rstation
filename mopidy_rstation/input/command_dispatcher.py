@@ -332,6 +332,7 @@ class CommandDispatcher(object):
             self.change_lang()
 
         if cmd == 'ask_bot':
+            self.change_mode(C_MODE_PLAYER)
             try:
                 ai.ask_bot(self.config)
             except Exception:

@@ -20,6 +20,7 @@ class Utils:
     speak_on = True
     speak_time = None
     config = {}
+    channel = None
 
     @staticmethod
     def save_config(config, core):
@@ -488,6 +489,23 @@ class Utils:
 
     @staticmethod
     def forecast_weather(location=None):
+        def parse_text(text):
+            text = u' ' + text
+            text = text.replace("Min. temp.", u"Minimalna temperatura")
+            text = text.replace("Maks. temp.", u"Maksymalna temparatura")
+            text = text.replace("pd.pd.-wsch.", u"południowo-wschodni")
+            text = text.replace("pd.-wsch.", u"południowo-wschodni")
+            text = text.replace("pd.pd.-zach.", u"południowo-zachodni")
+            text = text.replace("pd.-zach.", u"południowo-zachodni")
+            text = text.replace("pn.-zach.", u"północno-zachodni")
+            text = text.replace("pn.-wsch.", u"północno-wschodni")
+            text = text.replace("pn.", u"północny")
+            text = text.replace("pd.", u"południowy")
+            text = text.replace("zach.", u"zachodni")
+            text = text.replace("wsch.", u"wschodni")
+            text = text.replace("op.", u"opady")
+            return text
+
         try:
             from mopidy_rstation.weather import forecast
         except ImportError:
@@ -520,17 +538,24 @@ class Utils:
 
         if Utils.config['language'] == 'pl-PL':
             Utils.speak_text(
-                'Prognoza pogody dla ' + weather.country_name +
+                'Trzydniowa prognoza pogody dla ' + weather.country_name +
                 ', ' + weather.location_name, False)
         else:
             Utils.speak_text(
                 'Weather forecast for ' + weather.country_name +
                 ', ' + weather.location_name, False)
         days = weather.read_txt_forecast()
-        Utils.speak_text(days[0]['title'] + ' ' + days[0]['text'], False)
-        Utils.speak_text(days[1]['title'] + ' ' + days[1]['text'], False)
-        # for day in days:
-        #     Utils.speak_text(day['title'] + ' ' + day['text'], False)
+        text = u""
+        for day in days:
+            text = text + u" " + day['title'] + ' ' + parse_text(day['text'])
+
+        v = pyvona.create_voice(Utils.config)
+        t = Thread(
+            target=v.speak,
+            kwargs={
+                'text_to_speak': text, 'use_cache': True, 'ret_channel': True})
+        t.start()
+
         try:
             Utils.core.playback.volume = Utils.prev_volume
         except Exception:

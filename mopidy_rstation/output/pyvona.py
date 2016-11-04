@@ -129,7 +129,7 @@ class Voice(object):
         else:
             fp.write(r.content)
 
-    def speak(self, text_to_speak, use_cache=False):
+    def speak(self, text_to_speak, use_cache=False, ret_channel=False):
         """Speak a given text
         """
         try:
@@ -173,8 +173,14 @@ class Voice(object):
             sound = pygame.mixer.Sound(f)
 
         channel.play(sound)
-        while channel.get_busy():
-            pass
+        if ret_channel is True:
+            # todo - it is not possible to return value from thread
+            # switch to processes!
+            from ..utils import Utils
+            Utils.channel = channel
+        else:
+            while channel.get_busy():
+                pass
 
     def list_voices(self):
         """Returns all the possible voices

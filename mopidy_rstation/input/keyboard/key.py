@@ -8,6 +8,7 @@ import select
 import functools
 import errno
 import traceback
+from mopidy_rstation.utils import Utils
 
 logger = logging.getLogger('mopidy_Rstation')
 
@@ -83,6 +84,7 @@ class KeyPad(threading.Thread):
                             if self.checkIfDevIsKeyboard(new_d):
                                 self.devices[udev.device_node] = new_d
                                 new_d.grab()
+                                Utils.aplay_thread("plugin")
                         except Exception:
                             print('Error during add device ')
                             traceback.print_exc()
@@ -92,6 +94,7 @@ class KeyPad(threading.Thread):
                             "Device removed (udev): %s" %
                             self.devices[udev.device_node])
                         del self.devices[udev.device_node]
+                        Utils.aplay_thread("plugout")
 
             for r in rs:
                 # You can't read from a monitor
@@ -126,6 +129,12 @@ class KeyPad(threading.Thread):
 
     def handle_event(self, code):
         print('KeyPad -> handle_event -> ' + code)
+        # workeround - kill the ivona - to stop the forecast
+        try:
+            if Utils.channel is not None:
+                Utils.channel.stop()
+        except Exception:
+            print('KeyPad -> handle_event -> ' + code)
         # main keys
         if code == 'KEY_COMPOSE':
             self.ButtonPressed('mode')
