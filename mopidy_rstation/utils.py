@@ -492,7 +492,7 @@ class Utils:
         def parse_text(text):
             text = u' ' + text
             text = text.replace("Min. temp.", u"Minimalna temperatura")
-            text = text.replace("Maks. temp.", u"Maksymalna temparatura")
+            text = text.replace("Maks. temp.", u"Maksymalna temperatura")
             text = text.replace("pd.pd.-wsch.", u"południowo-wschodni")
             text = text.replace("pd.-wsch.", u"południowo-wschodni")
             text = text.replace("pd.pd.-zach.", u"południowo-zachodni")
@@ -504,6 +504,7 @@ class Utils:
             text = text.replace("zach.", u"zachodni")
             text = text.replace("wsch.", u"wschodni")
             text = text.replace("op.", u"opady")
+            text = text.replace("100%", u"99%")
             return text
 
         try:
