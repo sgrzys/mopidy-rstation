@@ -23,9 +23,12 @@ fi
 sudo chmod 777 /sys/class/backlight/rpi_backlight/brightness
 sudo chmod 777 /sys/class/backlight/rpi_backlight/bl_power
 sudo chmod 666 /dev/tty1
-echo 0 > /sys/class/backlight/rpi_backlight/bl_power
-echo 100 > /sys/class/backlight/rpi_backlight/brightness
+# echo 0 > /sys/class/backlight/rpi_backlight/bl_power
+# echo 100 > /sys/class/backlight/rpi_backlight/brightness
+echo 1 > /sys/class/backlight/rpi_backlight/bl_power
 
+# Disable HDMI port on boot (save 30 mA)
+/usr/bin/tvservice -o
 
 #mopidy
 /home/pi/utils/network/network-monitor.sh &
