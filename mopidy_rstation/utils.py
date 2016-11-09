@@ -488,6 +488,34 @@ class Utils:
         return the_dict
 
     @staticmethod
+    def search_wikipedia(query):
+        try:
+            from mopidy_rstation.wikipedia import search
+        except ImportError:
+            print('wikipedia ImportError')
+            return
+        try:
+            Utils.prev_volume = Utils.core.playback.volume.get()
+            Utils.core.playback.volume = 5
+        except Exception:
+            Utils.prev_volume = 5
+
+        if Utils.config['language'] == 'pl-PL':
+            Utils.speak_text(u'Wikipedia mówi tak ')
+            lang = 'pl'
+        else:
+            Utils.speak_text(u'The Wikipedia has spoken ')
+            lang = 'en'
+
+        ret = u'' + search.do(query, lang)
+        v = pyvona.create_voice(Utils.config)
+        t = Thread(
+            target=v.speak,
+            kwargs={
+                'text_to_speak': ret, 'use_cache': True, 'ret_channel': True})
+        t.start()
+
+    @staticmethod
     def forecast_weather(location=None):
         def parse_text(text):
             text = u' ' + text
@@ -556,11 +584,11 @@ class Utils:
             kwargs={
                 'text_to_speak': text, 'use_cache': True, 'ret_channel': True})
         t.start()
-
-        try:
-            Utils.core.playback.volume = Utils.prev_volume
-        except Exception:
-            pass
+        # moved to handle_event in key.py
+        # try:
+        #     Utils.core.playback.volume = Utils.prev_volume
+        # except Exception:
+        #     pass
 
 
 # for now, just pull the track info and print it onscreen

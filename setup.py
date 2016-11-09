@@ -28,7 +28,8 @@ setup(
         'setuptools',
         'Mopidy >= 1.0',
         'Pykka >= 1.1',
-        'geopy'
+        'geopy',
+        'wikipedia'
     ],
     test_suite='nose.collector',
     tests_require=[

@@ -182,6 +182,19 @@ def ask_bot(config):
                     except Exception:
                         traceback.print_exc()
                     Utils.forecast_weather(location)
+                elif intent == 'search_wikipedia':
+                    query = None
+                    try:
+                        query = result['entities'][
+                            'wikipedia_search_query'][0]['value']
+                    except Exception:
+                        traceback.print_exc()
+                        v.speak(u'Usłyszałam ' + result['_text'] + u' \
+                            . Zrozumiałam, że intencją jest \
+                            szukanie informacji na Wikipedii ' + u'. Niestety \
+                            nie zrozumiałam co konkretnie mam szukać.')
+                        return
+                    Utils.search_wikipedia(query)
 
             else:
                 v.speak(u'Usłyszałam ' + result['_text'] + u' Niestety nie \

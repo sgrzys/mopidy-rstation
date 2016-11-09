@@ -133,6 +133,7 @@ class KeyPad(threading.Thread):
         try:
             if Utils.channel is not None:
                 Utils.channel.stop()
+            Utils.core.playback.volume = Utils.prev_volume
         except Exception:
             print('KeyPad -> handle_event -> ' + code)
         # main keys
