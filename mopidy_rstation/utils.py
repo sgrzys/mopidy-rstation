@@ -512,7 +512,7 @@ class Utils:
         t = Thread(
             target=v.speak,
             kwargs={
-                'text_to_speak': ret, 'use_cache': True, 'ret_channel': True})
+                'text_to_speak': ret, 'use_cache': False, 'ret_channel': True})
         t.start()
 
     @staticmethod
@@ -582,7 +582,9 @@ class Utils:
         t = Thread(
             target=v.speak,
             kwargs={
-                'text_to_speak': text, 'use_cache': True, 'ret_channel': True})
+                'text_to_speak': text,
+                'use_cache': False,
+                'ret_channel': True})
         t.start()
         # moved to handle_event in key.py
         # try:

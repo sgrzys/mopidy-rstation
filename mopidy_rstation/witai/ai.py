@@ -10,7 +10,8 @@ from StringIO import StringIO
 import traceback
 
 
-CHUNK = 8192
+CHUNK = 1024
+# CHUNK = 8192
 FORMAT = pyaudio.paInt16
 CHANNELS = 2
 RATE = 44100
