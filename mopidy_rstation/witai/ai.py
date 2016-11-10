@@ -65,6 +65,7 @@ def record_only():
     wf.writeframes(b''.join(all))
     wf.close()
 
+    Utils.speak('PROCESSING')
     return output_file
 
 
@@ -82,19 +83,17 @@ def record_and_stream():
     print('*********************************************')
     stream = p.open(
         format=FORMAT,
-        channels=CHANNELS,
+        channels=1,
         rate=RATE,
         input=True,
         frames_per_buffer=CHUNK,
         input_device_index=INPUT_DEVICE_INDEX)
 
     print("* recording and streaming")
-    Utils.start_rec_wav()
 
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
         yield stream.read(CHUNK, exception_on_overflow=False)
 
-    Utils.stop_rec_wav()
     print("* done recording and streaming")
 
     stream.stop_stream()
@@ -111,13 +110,16 @@ def ask_bot(config):
         # TODO switch to record_and_stream!!!
         # record_and_stream works fine on my laptop but not on raspberry pi
         # record_and_stream
-        # result = w.post_speech(record_and_stream(),content_type=CONTENT_TYPE)
+        Utils.start_rec_wav()
+        result = w.post_speech(record_and_stream(), content_type=CONTENT_TYPE)
+        Utils.stop_rec_wav()
+        Utils.speak('PROCESSING')
         #
         # record_only
-        output_file = StringIO()
-        output_file = record_only()
-        Utils.speak('PROCESSING')
-        result = w.post_speech(output_file.getvalue())
+        # output_file = StringIO()
+        # output_file = record_only()
+        # Utils.speak('PROCESSING')
+        # result = w.post_speech(output_file.getvalue())
     except Exception:
         str("Error in ai.ask_bot")
         traceback.print_exc()
