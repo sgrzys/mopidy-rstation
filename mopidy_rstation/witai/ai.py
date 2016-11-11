@@ -82,6 +82,7 @@ def record_and_stream():
     print('Selected device index: ' + str(INPUT_DEVICE_INDEX))
     print('device sample rate: ' + str(RATE))
     print('*********************************************')
+
     stream = p.open(
         format=FORMAT,
         channels=1,
@@ -91,11 +92,13 @@ def record_and_stream():
         input_device_index=INPUT_DEVICE_INDEX)
 
     print("* recording and streaming")
-
+    Utils.start_rec_wav()
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
         yield stream.read(CHUNK, exception_on_overflow=False)
 
     print("* done recording and streaming")
+    Utils.stop_rec_wav()
+    Utils.speak('PROCESSING')
 
     stream.stop_stream()
     stream.close()
@@ -111,10 +114,7 @@ def ask_bot(config):
         # TODO switch to record_and_stream!!!
         # record_and_stream works fine on my laptop but not on raspberry pi
         # record_and_stream
-        Utils.start_rec_wav()
         result = w.post_speech(record_and_stream(), content_type=CONTENT_TYPE)
-        Utils.stop_rec_wav()
-        Utils.speak('PROCESSING')
         #
         # record_only
         # output_file = StringIO()

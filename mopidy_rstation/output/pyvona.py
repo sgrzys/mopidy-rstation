@@ -289,7 +289,9 @@ class Voice(object):
         self.region = 'eu-west'
         self.language = language
         if language == 'pl-PL':
-            self.voice_name = 'Agnieszka'
+            # self.voice_name = 'Agnieszka'
+            self.voice_name = 'Ewa'
+            # Maja Ewa Jaccek Jan
         else:
             self.voice_name = 'Joey'
 
