@@ -5,10 +5,12 @@ import os
 
 
 class track():
-    def __init__(self, length, title, path):
+    def __init__(self, length, title, path, file, id):
         self.length = length
         self.title = title
         self.path = path
+        self.file = file
+        self.id = id
 
 """
     song info lines are formatted like:
@@ -31,7 +33,7 @@ def parseFolderForPlaylists(folder):
             if file.endswith(".m3u8"):
                 title = str(root[root.rfind('/')+1:]) + ' ' + str(file)
                 path = 'rstation:' + os.path.join(root, file)
-                playlist = track(None, title, path)
+                playlist = track(None, title, path, None, None)
                 titles.append(title)
                 playlists.append(playlist)
 
@@ -58,6 +60,7 @@ def parseFolderForTracks(folder):
 
 
 def parsem3u(infile):
+    filename = 'rstation:' + infile
     try:
         assert(type(infile) == '_io.TextIOWrapper')
     except AssertionError:
@@ -75,21 +78,22 @@ def parsem3u(infile):
 
     # initialize playlist variables before reading file
     playlist = []
-    song = track(None, None, None)
-
+    song = track(None, None, None, None, None)
+    i = 0
     for line in infile:
         line = line.strip()
         if line.startswith('#EXTINF:'):
             # pull length and title from #EXTINF line
             length, title = line.split('#EXTINF:')[1].split(',', 1)
-            song = track(length, title, None)
+            song = track(length, title, None, filename, i)
+            i = i + 1
         elif (len(line) != 0):
             # pull song path from all other, non-blank lines
             song.path = line
             playlist.append(song)
             # reset the song variable so it doesn't use the same EXTINF
             # more than once
-            song = track(None, None, None)
+            song = track(None, None, None, None, None)
 
     infile.close()
 

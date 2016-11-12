@@ -4,6 +4,7 @@ from pprint import pprint
 import wit
 from mopidy_rstation.utils import Utils
 from mopidy_rstation.output import pyvona
+from mopidy_rstation.player import control
 import pyaudio
 import wave
 from StringIO import StringIO
@@ -159,7 +160,7 @@ def ask_bot(config):
                             nie zrozumiałam co konkretnie mam włączyć.')
                         return
                     v.speak(u'OK, już włączam ' + item_type + ' ' + item)
-                    Utils.play_item(item, item_type)
+                    control.play_item(item, item_type)
 
                 elif intent == 'set_volume':
                     try:
