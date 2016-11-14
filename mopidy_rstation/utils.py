@@ -6,6 +6,7 @@ from threading import Thread
 import time
 from mopidy_rstation.output import pyvona
 from ConfigParser import ConfigParser
+import textwrap
 
 
 class Utils:
@@ -375,13 +376,15 @@ class Utils:
             Utils.prev_volume = 5
 
         Utils.aplay_thread("start_rec")
+        time.sleep(1)
         # t = Thread(target=Utils.aplay_thread, args=("start_rec",))
         # t.start()
 
     @staticmethod
     def stop_rec_wav():
-        t = Thread(target=Utils.aplay_thread, args=("stop_rec",))
-        t.start()
+        # t = Thread(target=Utils.aplay_thread, args=("stop_rec",))
+        # t.start()
+        Utils.aplay_thread("stop_rec")
         try:
             Utils.core.playback.volume = Utils.prev_volume
         except Exception:
@@ -425,6 +428,10 @@ class Utils:
 
         ret = u'' + search.do(query, lang)
         v = pyvona.create_voice(Utils.config)
+        # ret_list = textwrap.wrap(ret, width=8192)
+        # for text in ret_list:
+        ret = ret.replace('===', '')
+        ret = ret[0:8192]
         t = Thread(
             target=v.speak,
             kwargs={

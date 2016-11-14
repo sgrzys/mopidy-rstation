@@ -27,8 +27,10 @@ class MediaBackend(pykka.ThreadingActor, backend.Backend):
         pass
 
     def on_event(self, event, **kwargs):
+        logger.debug("------------------------- ")
         logger.debug("Event: " + str(event))
         logger.debug("Button pressed: " + str(kwargs))
+        logger.debug("------------------------- ")
         if event == "handleRemoteCommand":
             self.handle_remote_command(kwargs['cmd'])
         pass

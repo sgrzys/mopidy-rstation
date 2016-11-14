@@ -54,6 +54,8 @@ class RstationFrontend(pykka.ThreadingActor, core.CoreListener):
 
     def track_playback_started(self, tl_track):
         if tl_track is not None:
+            # set current track id
+            Utils.curr_track_id = tl_track.tlid - 1
             try:
                 Utils.speak('PLAYING', val=tl_track.track.name)
             except Exception as e:
