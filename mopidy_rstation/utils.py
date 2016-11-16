@@ -430,8 +430,12 @@ class Utils:
         else:
             Utils.speak_text(u'According to Wikipedia ')
             lang = 'en'
+        try:
+            ret = u'' + search.do(query, lang)
+        except Exception as e:
+            Utils.speak_text(e)
+            return
 
-        ret = u'' + search.do(query, lang)
         v = pyvona.create_voice(Utils.config)
         # ret_list = textwrap.wrap(ret, width=8192)
         # for text in ret_list:
