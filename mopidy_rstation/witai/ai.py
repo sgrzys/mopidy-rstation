@@ -9,7 +9,7 @@ import pyaudio
 import wave
 from StringIO import StringIO
 import traceback
-import time
+
 
 CHUNK = 1024
 # CHUNK = 8192
@@ -226,10 +226,7 @@ def ask_bot(config):
                         return
                     Utils.search_wikipedia(query)
                 elif intent == 'get_time':
-                    t = time.strftime("%H:%M", time.gmtime())
-                    # todo more info - date etc..
-                    v.speak('Jest godzina ' + t)
-
+                    Utils.get_time()
             else:
                 v.speak(u'Usłyszałam ' + result['_text'] + u' Niestety nie \
                 zrozumiałam twojej intencji.')

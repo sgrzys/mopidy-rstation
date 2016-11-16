@@ -5,7 +5,7 @@ import wikipedia
 def do(query, lang):
     wikipedia.set_lang(lang)
     # ret = wikipedia.page(query).summary
-    ret = wikipedia.page(query).summary + ' ' + wikipedia.page(query).content
+    ret = wikipedia.page(query).content
     # print(ret.original_title)
     return ret
 

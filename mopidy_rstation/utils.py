@@ -6,7 +6,11 @@ from threading import Thread
 import time
 from mopidy_rstation.output import pyvona
 from ConfigParser import ConfigParser
-import textwrap
+import locale
+import sys
+# to avoid the UnicodeDecodeError: 'ascii' codec can't decode byte
+reload(sys)
+sys.setdefaultencoding("utf-8")
 
 
 class Utils:
@@ -408,6 +412,7 @@ class Utils:
 
     @staticmethod
     def search_wikipedia(query):
+        print('pytam wikipedie o: ' + query)
         try:
             from mopidy_rstation.wikipedia import search
         except ImportError:
@@ -430,7 +435,7 @@ class Utils:
         v = pyvona.create_voice(Utils.config)
         # ret_list = textwrap.wrap(ret, width=8192)
         # for text in ret_list:
-        ret = ret.replace('===', '')
+        ret = ret.replace('=', '')
         ret = ret[0:8192]
         t = Thread(
             target=v.speak,
@@ -516,6 +521,48 @@ class Utils:
         #     Utils.core.playback.volume = Utils.prev_volume
         # except Exception:
         #     pass
+
+    @staticmethod
+    def get_time():
+        if Utils.config['language'] == 'pl-PL':
+            locale.setlocale(locale.LC_TIME, 'pl_PL.utf8')
+        curr_time = time.gmtime()
+        t = time.strftime("%H:%M", curr_time)
+        m = time.strftime("%m", curr_time)
+        dm = time.strftime("%e_%B", curr_time)
+        d = time.strftime("%e", curr_time)
+        dd = time.strftime("%A %e %B %Y", curr_time)
+        v = pyvona.create_voice(Utils.config)
+        v.speak(u'Godzina ' + t + u' dzisiaj jest ' + dd + u' rok')
+        if Utils.config['language'] == 'pl-PL':
+            mm = m
+            if m == '01':
+                mm = 'Stycznia'
+            elif m == '02':
+                mm = 'Lutego'
+            elif m == '03':
+                mm = 'Marca'
+            elif m == '04':
+                mm = 'Kwietnia'
+            elif m == '05':
+                mm = 'Maja'
+            elif m == '06':
+                mm = 'Czerwca'
+            elif m == '07':
+                mm = 'Lipca'
+            elif m == '08':
+                mm = 'Sierpnia'
+            elif m == '09':
+                mm = 'Września'
+            elif m == '10':
+                mm = 'Października'
+            elif m == '11':
+                mm = 'Listopada'
+            elif m == '12':
+                mm = 'Grudnia'
+            Utils.search_wikipedia(d + ' ' + mm)
+        else:
+            Utils.search_wikipedia(dm)
 
 
 # for now, just pull the track info and print it onscreen
