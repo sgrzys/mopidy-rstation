@@ -16,7 +16,7 @@ CHUNK = 1024
 FORMAT = pyaudio.paInt16
 CHANNELS = 2
 RATE = 44100
-RECORD_SECONDS = 5
+RECORD_SECONDS = 3.5
 INPUT_DEVICE_INDEX = 0
 # Change this based on your OSes settings. This should work for OSX, though.
 ENDIAN = 'little'
