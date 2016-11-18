@@ -2,12 +2,12 @@ import pyaudio
 import wave
 
 
-CHUNK = 8192
+CHUNK = 2000
 FORMAT = pyaudio.paInt16
-CHANNELS = 2
-RATE = 44100
+CHANNELS = 1
+RATE = 8000
 RECORD_SECONDS = 5
-WAVE_OUTPUT_FILENAME = "/home/pi/output.wav"
+WAVE_OUTPUT_FILENAME = "/home/pi/mopidy-rstation/tests/output.wav"
 INPUT_DEVICE_INDEX = 0
 
 p = pyaudio.PyAudio()

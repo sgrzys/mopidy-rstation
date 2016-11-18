@@ -11,11 +11,14 @@ from StringIO import StringIO
 import traceback
 
 
-CHUNK = 1024
+CHUNK = 2000
 # CHUNK = 8192
 FORMAT = pyaudio.paInt16
-CHANNELS = 2
-RATE = 44100
+# FORMAT = pyaudio.paUInt8
+CHANNELS = 1
+# CHANNELS = 2
+RATE = 8000
+# RATE = 44100
 RECORD_SECONDS = 3.5
 INPUT_DEVICE_INDEX = 0
 # Change this based on your OSes settings. This should work for OSX, though.
@@ -104,10 +107,9 @@ def record_and_stream():
         if info['maxInputChannels'] > 0:
             print(str(x) + str(info))
             INPUT_DEVICE_INDEX = info['index']
-            RATE = int(info['defaultSampleRate'])
+            # RATE = int(info['defaultSampleRate'])
     print('*********************************************')
     print('Selected device index: ' + str(INPUT_DEVICE_INDEX))
-    print('device sample rate: ' + str(RATE))
     print('*********************************************')
 
     stream = p.open(

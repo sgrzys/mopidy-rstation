@@ -156,7 +156,7 @@ class KeyPad(threading.Thread):
             self.ButtonPressed('vol_down')
         if code == 'KEY_PLUS' or code == 'KEY_VOLUMEUP':
             self.ButtonPressed('vol_up')
-        if code == 'KEY_POWER':
+        if code == 'KEY_POWER' or code == 'KEY_F24':
             self.ButtonPressed('ask_bot')
         #
         if code == 'KEY_PREVIOUSSONG':
