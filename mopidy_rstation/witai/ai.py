@@ -11,11 +11,11 @@ from StringIO import StringIO
 import traceback
 
 
-CHUNK = 2000
+CHUNK = 8000
 # CHUNK = 8192
 FORMAT = pyaudio.paInt16
 # FORMAT = pyaudio.paUInt8
-CHANNELS = 2
+CHANNELS = 1
 # CHANNELS = 2
 RATE = 8000
 # RATE = 44100
