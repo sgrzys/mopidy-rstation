@@ -11,20 +11,20 @@ from StringIO import StringIO
 import traceback
 
 
-CHUNK = 8000
+CHUNK = 2000
 # CHUNK = 8192
-FORMAT = pyaudio.paInt16
+FORMAT = pyaudio.paUInt8
 # FORMAT = pyaudio.paUInt8
 CHANNELS = 1
 # CHANNELS = 2
 RATE = 8000
 # RATE = 44100
-RECORD_SECONDS = 4
+RECORD_SECONDS = 5
 INPUT_DEVICE_INDEX = 0
 # Change this based on your OSes settings. This should work for OSX, though.
 ENDIAN = 'little'
 CONTENT_TYPE = \
-    'raw;encoding=signed-integer;bits=16;rate={0};endian={1}'.format(
+    'raw;encod512ing=signed-integer;bits=16;rate={0};endian={1}'.format(
         RATE, ENDIAN)
 
 
@@ -114,24 +114,24 @@ def record_and_stream():
 
     stream = p.open(
         format=FORMAT,
-        channels=1,
+        channels=CHANNELS,
         rate=RATE,
         input=True,
         frames_per_buffer=CHUNK,
         input_device_index=INPUT_DEVICE_INDEX)
 
     print("* recording and streaming")
-    Utils.start_rec_wav()
+    # Utils.start_rec_wav()
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
         yield stream.read(CHUNK, exception_on_overflow=False)
 
     print("* done recording and streaming")
-    Utils.stop_rec_wav()
-    Utils.speak('PROCESSING')
 
     stream.stop_stream()
     stream.close()
     p.terminate()
+    # Utils.stop_rec_wav()
+    Utils.speak('PROCESSING')
 
 
 def ask_bot(config):

@@ -3,8 +3,8 @@ import wave
 
 
 CHUNK = 2000
-FORMAT = pyaudio.paInt16
-CHANNELS = 2
+FORMAT = pyaudio.paUInt8
+CHANNELS = 1
 RATE = 8000
 RECORD_SECONDS = 5
 WAVE_OUTPUT_FILENAME = "/home/pi/mopidy-rstation/tests/output.wav"
