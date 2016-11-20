@@ -23,6 +23,7 @@ class Extension(ext.Extension):
         schema['language'] = config.String(optional=True)
         schema['location_gps'] = config.String()
         schema['weather_api_key'] = config.String()
+        schema['audio_in_name'] = config.String()
         # optional
         schema['enable_irda'] = config.Boolean(optional=True)
         schema['enable_keypad'] = config.Boolean(optional=True)

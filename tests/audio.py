@@ -2,8 +2,8 @@ import pyaudio
 import wave
 
 
-CHUNK = 2000
-FORMAT = pyaudio.paUInt8
+CHUNK = 128
+FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 8000
 RECORD_SECONDS = 5
@@ -15,11 +15,17 @@ p = pyaudio.PyAudio()
 for x in range(p.get_device_count()):
     info = p.get_device_info_by_index(x)
     if info['maxInputChannels'] > 0:
+        print('---------------------------------')
         print(str(x) + str(info))
-        INPUT_DEVICE_INDEX = info['index']
-        # name USB Audio Device: - (hw:1,0)
+        print('---------------------------------')
+        # if info['name'].startswith( 'USB Audio Device'):
+        if info['name'].startswith( 'Airmouse: USB Audio'):
+            INPUT_DEVICE_INDEX = info['index']
+            RATE = int(info['defaultSampleRate'])
+            # name USB Audio Device: - (hw:1,0)
 
 print('selected device index: ' + str(INPUT_DEVICE_INDEX))
+print('selected device rate: ' + str(RATE))
 stream = p.open(
     format=FORMAT,
     channels=CHANNELS,

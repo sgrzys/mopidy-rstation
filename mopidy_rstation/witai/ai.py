@@ -9,23 +9,22 @@ import pyaudio
 import wave
 from StringIO import StringIO
 import traceback
+from struct import pack
 
 
-CHUNK = 2000
-# CHUNK = 8192
-FORMAT = pyaudio.paUInt8
-# FORMAT = pyaudio.paUInt8
+CHUNK = 128
+FORMAT = pyaudio.paInt16
 CHANNELS = 1
-# CHANNELS = 2
-RATE = 8000
-# RATE = 44100
+RATE = 44100
 RECORD_SECONDS = 5
 INPUT_DEVICE_INDEX = 0
-# Change this based on your OSes settings. This should work for OSX, though.
-ENDIAN = 'little'
+if pack('@h', 1) == pack('<h', 1):
+    ENDIAN = 'little'
+else:
+    ENDIAN = 'big'
 CONTENT_TYPE = \
-    'raw;encod512ing=signed-integer;bits=16;rate={0};endian={1}'.format(
-        RATE, ENDIAN)
+    'raw;encoding=signed-integer;bits=16;rate={0};endian={1}' \
+    .format(RATE, ENDIAN)
 
 
 def play_wav(file):
@@ -54,21 +53,36 @@ def play_wav(file):
     p.terminate()
 
 
+def set_in_device(audio_in_name):
+    p = pyaudio.PyAudio()
+    print('We have devices: ' + str(p.get_device_count()))
+    print('searching input with name: ' + audio_in_name)
+    for x in range(p.get_device_count()):
+        try:
+            info = p.get_device_info_by_index(x)
+            if info['maxInputChannels'] > 0:
+                # 'USB Audio Device' or 'Airmouse: USB Audio'
+                if info['name'].startswith(audio_in_name):
+                    INPUT_DEVICE_INDEX = info['index']
+                    RATE = int(info['defaultSampleRate'])
+                    CONTENT_TYPE = \
+                        'raw;encoding=signed-integer;bits=16;' + \
+                        'rate={0};endian={1}' \
+                        .format(RATE, ENDIAN)
+                    print('*********************************************')
+                    print('Selected device index: ' + str(INPUT_DEVICE_INDEX))
+                    print('Selected device rate: ' + str(RATE))
+                    print('Content type: ' + str(CONTENT_TYPE))
+                    print('*********************************************')
+        except Exception as e:
+            print(x + '. Error: ' + e)
+            info = None
+    p.terminate()
+
+
 def record_only():
     output_file = StringIO()
     p = pyaudio.PyAudio()
-    for x in range(p.get_device_count()):
-        info = p.get_device_info_by_index(x)
-        if info['maxInputChannels'] > 0:
-            print(str(x) + str(info))
-            INPUT_DEVICE_INDEX = info['index']
-            RATE = int(info['defaultSampleRate'])
-
-    print('*********************************************')
-    print('Selected device index: ' + str(INPUT_DEVICE_INDEX))
-    print('device sample rate: ' + str(RATE))
-    print('*********************************************')
-    print("* recording")
     Utils.start_rec_wav()
     stream = p.open(
         format=FORMAT,
@@ -81,37 +95,23 @@ def record_only():
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
         data = stream.read(CHUNK, exception_on_overflow=False)
         all.append(data)
-
     Utils.stop_rec_wav()
     print("* done recording")
-
     stream.stop_stream()
     stream.close()
     p.terminate()
-
     wf = wave.open(output_file, 'wb')
     wf.setnchannels(CHANNELS)
     wf.setsampwidth(p.get_sample_size(FORMAT))
     wf.setframerate(RATE)
     wf.writeframes(b''.join(all))
     wf.close()
-
     Utils.speak('PROCESSING')
     return output_file
 
 
 def record_and_stream():
     p = pyaudio.PyAudio()
-    for x in range(p.get_device_count()):
-        info = p.get_device_info_by_index(x)
-        if info['maxInputChannels'] > 0:
-            print(str(x) + str(info))
-            INPUT_DEVICE_INDEX = info['index']
-            # RATE = int(info['defaultSampleRate'])
-    print('*********************************************')
-    print('Selected device index: ' + str(INPUT_DEVICE_INDEX))
-    print('*********************************************')
-
     stream = p.open(
         format=FORMAT,
         channels=CHANNELS,
@@ -119,18 +119,15 @@ def record_and_stream():
         input=True,
         frames_per_buffer=CHUNK,
         input_device_index=INPUT_DEVICE_INDEX)
-
     print("* recording and streaming")
-    # Utils.start_rec_wav()
+    Utils.start_rec_wav()
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
         yield stream.read(CHUNK, exception_on_overflow=False)
-
     print("* done recording and streaming")
-
+    Utils.stop_rec_wav()
     stream.stop_stream()
     stream.close()
     p.terminate()
-    # Utils.stop_rec_wav()
     Utils.speak('PROCESSING')
 
 
@@ -140,12 +137,12 @@ def ask_bot(config):
 
     try:
         w = wit.Wit(config['wit_token'])
-        # TODO switch to record_and_stream!!!
-        # record_and_stream works fine on my laptop but not on raspberry pi
-        # record_and_stream
-        result = w.post_speech(record_and_stream(), content_type=CONTENT_TYPE)
+        audio_in_name = config['audio_in_name']
+        set_in_device(audio_in_name)
+        result = w.post_speech(
+            record_and_stream(), content_type=CONTENT_TYPE)
         #
-        # record_only
+        # record_only - slow version
         # output_file = StringIO()
         # output_file = record_only()
         # Utils.speak('PROCESSING')
@@ -171,13 +168,7 @@ def ask_bot(config):
                         item_type = result['entities']['type'][0]['value']
                     except Exception:
                         traceback.print_exc()
-                        # v.speak(u'Usłyszałam ' + result['_text'] + u' \
-                        #     . Zrozumiałam, że intencją jest dtwarzanie. \
-                        #     Niestety nie zrozumiałam co mam włączyć.')
-                        # return
-                        # continue without item type
                         item_type = ''
-
                     try:
                         item = result['entities']['item'][0]['value']
                     except Exception:
