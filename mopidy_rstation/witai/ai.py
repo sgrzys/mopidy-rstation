@@ -12,11 +12,11 @@ import traceback
 from struct import pack
 
 
-CHUNK = 128
+CHUNK = 256
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
-RECORD_SECONDS = 5
+RECORD_SECONDS = 10
 INPUT_DEVICE_INDEX = 0
 if pack('@h', 1) == pack('<h', 1):
     ENDIAN = 'little'
@@ -54,7 +54,7 @@ def play_wav(file):
 
 
 def record_only(audio_in_name):
-    CHUNK = 128
+    CHUNK = 256
     CHANNELS = 1
     RATE = 44100
     INPUT_DEVICE_INDEX = 0
@@ -68,13 +68,14 @@ def record_only(audio_in_name):
                 if info['name'].startswith(audio_in_name):
                     INPUT_DEVICE_INDEX = info['index']
                     RATE = int(info['defaultSampleRate'])
+                    CHANNELS = int(info['maxInputChannels'])
                     print('*********************************************')
                     print('Selected device index: ' + str(INPUT_DEVICE_INDEX))
                     print('Selected device rate: ' + str(RATE))
+                    print('Selected device chanels: ' + str(CHANNELS))
                     print('*********************************************')
         except Exception as e:
             print(x + '. Error: ' + e)
-    Utils.start_rec_wav()
     stream = p.open(
         format=FORMAT,
         channels=CHANNELS,
@@ -83,12 +84,14 @@ def record_only(audio_in_name):
         frames_per_buffer=CHUNK,
         input_device_index=INPUT_DEVICE_INDEX)
     all = []
+    Utils.start_rec_wav()
+    Utils.recording = True
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
         data = stream.read(CHUNK, exception_on_overflow=False)
         all.append(data)
-        # todo stop recording when the button mic is up
-        # if Utils.recording is False:
-        #     break
+        # stop recording after RECORD_SECONDS or when the button is up
+        if Utils.recording is False:
+            break
     Utils.stop_rec_wav()
     print("* done recording")
     stream.stop_stream()

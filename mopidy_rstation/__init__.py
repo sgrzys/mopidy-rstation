@@ -20,11 +20,11 @@ class Extension(ext.Extension):
         schema['wit_token'] = config.String()
         schema['ivona_access_key'] = config.String()
         schema['ivona_secret_key'] = config.String()
-        schema['language'] = config.String(optional=True)
         schema['location_gps'] = config.String()
         schema['weather_api_key'] = config.String()
-        schema['audio_in_name'] = config.String()
         # optional
+        schema['audio_in_name'] = config.String(optional=True)
+        schema['language'] = config.String(optional=True)
         schema['enable_irda'] = config.Boolean(optional=True)
         schema['enable_keypad'] = config.Boolean(optional=True)
         schema['debug_irda_simulate'] = config.Boolean(optional=True)

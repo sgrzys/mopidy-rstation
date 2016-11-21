@@ -538,7 +538,16 @@ class Utils:
         d = time.strftime("%e", curr_time)
         dd = time.strftime("%A %e %B %Y", curr_time)
         v = pyvona.create_voice(Utils.config)
+        try:
+            Utils.prev_volume = Utils.core.playback.volume.get()
+            Utils.core.playback.volume = 5
+        except Exception:
+            Utils.prev_volume = 5
         v.speak(u'Godzina ' + t + u' dzisiaj jest ' + dd + u' rok')
+        try:
+            Utils.core.playback.volume = Utils.prev_volume
+        except Exception:
+            pass
         if Utils.config['language'] == 'pl-PL':
             mm = m
             if m == '01':
