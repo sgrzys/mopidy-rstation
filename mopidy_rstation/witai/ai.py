@@ -53,36 +53,27 @@ def play_wav(file):
     p.terminate()
 
 
-def set_in_device(audio_in_name):
+def record_only(audio_in_name):
+    CHUNK = 128
+    CHANNELS = 1
+    RATE = 44100
+    INPUT_DEVICE_INDEX = 0
+    output_file = StringIO()
     p = pyaudio.PyAudio()
-    print('We have devices: ' + str(p.get_device_count()))
-    print('searching input with name: ' + audio_in_name)
     for x in range(p.get_device_count()):
         try:
             info = p.get_device_info_by_index(x)
             if info['maxInputChannels'] > 0:
-                # 'USB Audio Device' or 'Airmouse: USB Audio'
+                # USB Audio Device or Airmouse: USB Audio
                 if info['name'].startswith(audio_in_name):
                     INPUT_DEVICE_INDEX = info['index']
                     RATE = int(info['defaultSampleRate'])
-                    CONTENT_TYPE = \
-                        'raw;encoding=signed-integer;bits=16;' + \
-                        'rate={0};endian={1}' \
-                        .format(RATE, ENDIAN)
                     print('*********************************************')
                     print('Selected device index: ' + str(INPUT_DEVICE_INDEX))
                     print('Selected device rate: ' + str(RATE))
-                    print('Content type: ' + str(CONTENT_TYPE))
                     print('*********************************************')
         except Exception as e:
             print(x + '. Error: ' + e)
-            info = None
-    p.terminate()
-
-
-def record_only():
-    output_file = StringIO()
-    p = pyaudio.PyAudio()
     Utils.start_rec_wav()
     stream = p.open(
         format=FORMAT,
@@ -95,6 +86,9 @@ def record_only():
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
         data = stream.read(CHUNK, exception_on_overflow=False)
         all.append(data)
+        # todo stop recording when the button mic is up
+        # if Utils.recording is False:
+        #     break
     Utils.stop_rec_wav()
     print("* done recording")
     stream.stop_stream()
@@ -110,8 +104,29 @@ def record_only():
     return output_file
 
 
-def record_and_stream():
+def record_and_stream(audio_in_name):
     p = pyaudio.PyAudio()
+    for x in range(p.get_device_count()):
+        try:
+            info = p.get_device_info_by_index(x)
+            if info['maxInputChannels'] > 0:
+                # USB Audio Device or Airmouse: USB Audio
+                if info['name'].startswith(audio_in_name):
+                    INPUT_DEVICE_INDEX = info['index']
+                    RATE = int(info['defaultSampleRate'])
+                    # CHANNELS = int(info['maxInputChannels'])
+                    CONTENT_TYPE = \
+                        'raw;encoding=signed-integer;bits=16;' + \
+                        'rate={0};endian={1}' \
+                        .format(RATE, ENDIAN)
+                    print('*********************************************')
+                    print('Selected device index: ' + str(INPUT_DEVICE_INDEX))
+                    print('Selected device rate: ' + str(RATE))
+                    print('Content type: ' + str(CONTENT_TYPE))
+                    print('*********************************************')
+        except Exception as e:
+            print(x + '. Error: ' + e)
+
     stream = p.open(
         format=FORMAT,
         channels=CHANNELS,
@@ -119,8 +134,9 @@ def record_and_stream():
         input=True,
         frames_per_buffer=CHUNK,
         input_device_index=INPUT_DEVICE_INDEX)
-    print("* recording and streaming")
+
     Utils.start_rec_wav()
+    print("* recording and streaming")
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
         yield stream.read(CHUNK, exception_on_overflow=False)
     print("* done recording and streaming")
@@ -138,15 +154,14 @@ def ask_bot(config):
     try:
         w = wit.Wit(config['wit_token'])
         audio_in_name = config['audio_in_name']
-        set_in_device(audio_in_name)
-        result = w.post_speech(
-            record_and_stream(), content_type=CONTENT_TYPE)
+        # TODO this is a faster version but the qualitty have to be improved
+        # result = w.post_speech(
+        #     record_and_stream(audio_in_name), content_type=CONTENT_TYPE)
         #
-        # record_only - slow version
-        # output_file = StringIO()
-        # output_file = record_only()
-        # Utils.speak('PROCESSING')
-        # result = w.post_speech(output_file.getvalue())
+        # slow version
+        output_file = StringIO()
+        output_file = record_only(audio_in_name)
+        result = w.post_speech(output_file.getvalue())
     except Exception:
         str("Error in ai.ask_bot")
         traceback.print_exc()

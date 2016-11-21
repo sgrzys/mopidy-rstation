@@ -119,6 +119,15 @@ class KeyPad(threading.Thread):
                                 self.handle_event('KEY_ESC')
                             else:
                                 self.handle_event(evdev.ecodes.KEY[event.code])
+                        # if event.type == evdev.ecodes.EV_KEY & \
+                        #    event.value == 0:
+                        #     # key up on microphone
+                        #     print('Key UP: ' + evdev.ecodes.KEY[event.code])
+                        #     if evdev.ecodes.KEY[event.code] == 'KEY_F24' or \
+                        #        evdev.ecodes.KEY[event.code] == 'KEY_POWER':
+                        #         print('!!!Stop recording!!!')
+                        #         Utils.recording = False
+
                 except Exception as e:
                     if hasattr(e, 'errno'):
                         if e.errno == errno.ENODEV:
@@ -157,6 +166,7 @@ class KeyPad(threading.Thread):
         if code == 'KEY_PLUS' or code == 'KEY_VOLUMEUP':
             self.ButtonPressed('vol_up')
         if code == 'KEY_POWER' or code == 'KEY_F24':
+            # Utils.recording = True
             self.ButtonPressed('ask_bot')
         #
         if code == 'KEY_PREVIOUSSONG':

@@ -23,6 +23,7 @@ class Utils:
     speak_time = None
     config = {}
     channel = None
+    recording = False
 
     @staticmethod
     def save_config(config, core):

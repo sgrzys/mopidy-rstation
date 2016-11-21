@@ -10,6 +10,7 @@ RECORD_SECONDS = 5
 WAVE_OUTPUT_FILENAME = "/home/pi/mopidy-rstation/tests/output.wav"
 INPUT_DEVICE_INDEX = 0
 
+
 p = pyaudio.PyAudio()
 # TODO check input_device_index
 for x in range(p.get_device_count()):
@@ -18,10 +19,11 @@ for x in range(p.get_device_count()):
         print('---------------------------------')
         print(str(x) + str(info))
         print('---------------------------------')
-        # if info['name'].startswith( 'USB Audio Device'):
-        if info['name'].startswith( 'Airmouse: USB Audio'):
+        # USB Audio Device / Airmouse: USB Audio
+        if info['name'].startswith('USB Audio Device'):
             INPUT_DEVICE_INDEX = info['index']
             RATE = int(info['defaultSampleRate'])
+            CHANNELS = int(info['maxInputChannels'])
             # name USB Audio Device: - (hw:1,0)
 
 print('selected device index: ' + str(INPUT_DEVICE_INDEX))
