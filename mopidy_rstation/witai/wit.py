@@ -82,7 +82,6 @@ class Wit(object):
 
         content_type = helpers.process_content_type(content_type)
         headers = {'Content-Type': content_type}
-
         response = self._connector.post(data, 'speech', params, headers)
         return self._handle_response(response)
 

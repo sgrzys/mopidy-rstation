@@ -17,7 +17,7 @@ FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
 RECORD_SECONDS = 10
-INPUT_DEVICE_INDEX = 0
+INPUT_DEVICE_INDEX = None
 if pack('@h', 1) == pack('<h', 1):
     ENDIAN = 'little'
 else:
@@ -28,7 +28,6 @@ CONTENT_TYPE = \
 
 
 def play_wav(file):
-    # open the file for reading.
     wf = wave.open(file, 'rb')
     # create an audio object
     p = pyaudio.PyAudio()
@@ -53,12 +52,13 @@ def play_wav(file):
     p.terminate()
 
 
-def record_only(audio_in_name):
-    CHUNK = 256
-    CHANNELS = 1
-    RATE = 44100
-    INPUT_DEVICE_INDEX = 0
-    output_file = StringIO()
+def set_audio_in(audio_in_name):
+    if INPUT_DEVICE_INDEX is not None:
+        return
+    global CHANNELS
+    global RATE
+    global INPUT_DEVICE_INDEX
+    global CONTENT_TYPE
     p = pyaudio.PyAudio()
     for x in range(p.get_device_count()):
         try:
@@ -69,13 +69,23 @@ def record_only(audio_in_name):
                     INPUT_DEVICE_INDEX = info['index']
                     RATE = int(info['defaultSampleRate'])
                     CHANNELS = int(info['maxInputChannels'])
+                    CONTENT_TYPE = \
+                        'raw;encoding=signed-integer;bits=16;' + \
+                        'rate={0};endian={1}' \
+                        .format(RATE, ENDIAN)
                     print('*********************************************')
                     print('Selected device index: ' + str(INPUT_DEVICE_INDEX))
                     print('Selected device rate: ' + str(RATE))
-                    print('Selected device chanels: ' + str(CHANNELS))
+                    print('Content type: ' + str(CONTENT_TYPE))
                     print('*********************************************')
         except Exception as e:
             print(x + '. Error: ' + e)
+    p.terminate()
+
+
+def record_only():
+    p = pyaudio.PyAudio()
+    output_file = StringIO()
     stream = p.open(
         format=FORMAT,
         channels=CHANNELS,
@@ -107,29 +117,8 @@ def record_only(audio_in_name):
     return output_file
 
 
-def record_and_stream(audio_in_name):
+def record_and_stream():
     p = pyaudio.PyAudio()
-    for x in range(p.get_device_count()):
-        try:
-            info = p.get_device_info_by_index(x)
-            if info['maxInputChannels'] > 0:
-                # USB Audio Device or Airmouse: USB Audio
-                if info['name'].startswith(audio_in_name):
-                    INPUT_DEVICE_INDEX = info['index']
-                    RATE = int(info['defaultSampleRate'])
-                    # CHANNELS = int(info['maxInputChannels'])
-                    CONTENT_TYPE = \
-                        'raw;encoding=signed-integer;bits=16;' + \
-                        'rate={0};endian={1}' \
-                        .format(RATE, ENDIAN)
-                    print('*********************************************')
-                    print('Selected device index: ' + str(INPUT_DEVICE_INDEX))
-                    print('Selected device rate: ' + str(RATE))
-                    print('Content type: ' + str(CONTENT_TYPE))
-                    print('*********************************************')
-        except Exception as e:
-            print(x + '. Error: ' + e)
-
     stream = p.open(
         format=FORMAT,
         channels=CHANNELS,
@@ -137,11 +126,13 @@ def record_and_stream(audio_in_name):
         input=True,
         frames_per_buffer=CHUNK,
         input_device_index=INPUT_DEVICE_INDEX)
-
     Utils.start_rec_wav()
     print("* recording and streaming")
+    Utils.recording = True
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
         yield stream.read(CHUNK, exception_on_overflow=False)
+        if Utils.recording is False:
+            break
     print("* done recording and streaming")
     Utils.stop_rec_wav()
     stream.stop_stream()
@@ -151,20 +142,18 @@ def record_and_stream(audio_in_name):
 
 
 def ask_bot(config):
-
     v = pyvona.create_voice(config)
-
     try:
         w = wit.Wit(config['wit_token'])
         audio_in_name = config['audio_in_name']
+        set_audio_in(audio_in_name)
         # TODO this is a faster version but the qualitty have to be improved
-        # result = w.post_speech(
-        #     record_and_stream(audio_in_name), content_type=CONTENT_TYPE)
-        #
+        result = w.post_speech(
+            record_and_stream(), content_type=CONTENT_TYPE)
         # slow version
-        output_file = StringIO()
-        output_file = record_only(audio_in_name)
-        result = w.post_speech(output_file.getvalue())
+        # output_file = StringIO()
+        # output_file = record_only()
+        # result = w.post_speech(output_file.getvalue())
     except Exception:
         str("Error in ai.ask_bot")
         traceback.print_exc()

@@ -19,7 +19,7 @@ for x in range(p.get_device_count()):
         print(str(x) + str(info))
         print('---------------------------------')
         # USB Audio Device / Airmouse: USB Audio
-        if info['name'].startswith('default'):
+        if info['name'].startswith('Airmouse: USB Audio'):
             INPUT_DEVICE_INDEX = info['index']
             RATE = int(info['defaultSampleRate'])
             CHANNELS = int(info['maxInputChannels'])

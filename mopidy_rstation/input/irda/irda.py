@@ -1,5 +1,4 @@
 # This Python file uses the following encoding: utf-8
-import pylirc
 import logging
 import threading
 import select
@@ -13,6 +12,10 @@ url = u'rstation:/home/pi/mopidy-rstation/media'
 
 class LircThread(threading.Thread):
     def __init__(self, config):
+        try:
+            import pylirc
+        except Exception:
+            logger.error('No pylirc!!!')
         threading.Thread.__init__(self)
         self.name = 'Lirc worker thread'
         self.frontendActive = True

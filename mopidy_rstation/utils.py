@@ -379,16 +379,10 @@ class Utils:
             Utils.core.playback.volume = 5
         except Exception:
             Utils.prev_volume = 5
-
         Utils.aplay_thread("start_rec")
-        time.sleep(1)
-        # t = Thread(target=Utils.aplay_thread, args=("start_rec",))
-        # t.start()
 
     @staticmethod
     def stop_rec_wav():
-        # t = Thread(target=Utils.aplay_thread, args=("stop_rec",))
-        # t.start()
         Utils.aplay_thread("stop_rec")
         try:
             Utils.core.playback.volume = Utils.prev_volume
