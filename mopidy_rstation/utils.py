@@ -531,7 +531,7 @@ class Utils:
     def get_time():
         if Utils.config['language'] == 'pl-PL':
             locale.setlocale(locale.LC_TIME, 'pl_PL.utf8')
-        curr_time = time.gmtime()
+        curr_time = time.localtime()
         t = time.strftime("%H:%M", curr_time)
         m = time.strftime("%m", curr_time)
         dm = time.strftime("%e_%B", curr_time)
