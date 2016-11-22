@@ -160,17 +160,30 @@ class CommandDispatcher(object):
         print('lib_prev')
         # prev in library
         if len(Utils.lib_items) == 0:
-            pass
+            return
+        if Utils.curr_lib_item_id == 0:
+            Utils.curr_lib_item_id = len(Utils.lib_items) - 1
         else:
-            if Utils.curr_lib_item_id == 0:
-                Utils.curr_lib_item_id = len(Utils.lib_items) - 1
-            else:
-                Utils.curr_lib_item_id -= 1
-            try:
-                item = Utils.lib_items[Utils.curr_lib_item_id]
-                Utils.speak_text(Utils.convert_text(item.name))
-            except Exception as e:
-                print(str(e))
+            Utils.curr_lib_item_id -= 1
+        try:
+            item = Utils.lib_items[Utils.curr_lib_item_id]
+            Utils.speak_text(Utils.convert_text(item.name))
+        except Exception as e:
+            print(str(e))
+
+    def lib_up(self):
+        print('lib_up')
+        if len(Utils.lib_items) == 0:
+            pass
+        item = Utils.lib_items[Utils.curr_lib_item_id]
+        uri = item.uri.rsplit('/', 2)[0]
+        name = item.uri.rsplit('/', 2)[1]
+        self.core.library.browse(uri)
+        Utils.speak('UP_DIR', val=name)
+
+    def lib_down(self):
+        print('lib_down')
+        self.lib_enter()
 
     def lib_next_dir(self):
         print('lib_next_dir')
@@ -284,13 +297,13 @@ class CommandDispatcher(object):
             if self.current_mode != C_MODE_LIBRARY:
                 self.track_list_prev()
             elif self.current_mode == C_MODE_LIBRARY:
-                self.lib_prev()
+                self.lib_up()
 
         if cmd == 'down':
             if self.current_mode != C_MODE_LIBRARY:
                 self.track_list_next()
             elif self.current_mode == C_MODE_LIBRARY:
-                self.lib_next()
+                self.lib_down()
 
         if cmd == 'enter':
             if self.current_mode == C_MODE_PLAYER:
@@ -350,6 +363,12 @@ class CommandDispatcher(object):
 
         if cmd == 'lib_prev':
             self.lib_prev()
+
+        if cmd == 'lib_up':
+            self.lib_up()
+
+        if cmd == 'lib_down':
+            self.lib_down()
 
         if cmd == 'lib_enter':
             self.lib_enter()

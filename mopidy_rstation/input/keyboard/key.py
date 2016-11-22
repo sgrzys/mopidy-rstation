@@ -138,7 +138,7 @@ class KeyPad(threading.Thread):
 
     def handle_event_thread(self, code):
         # main keys
-        if code == 'KEY_COMPOSE':
+        if code == 'KEY_POWER':
             self.ButtonPressed('mode')
         if code == 'KEY_LEFT':
             self.ButtonPressed('left')
@@ -156,7 +156,7 @@ class KeyPad(threading.Thread):
             self.ButtonPressed('vol_down')
         if code == 'KEY_PLUS' or code == 'KEY_VOLUMEUP':
             self.ButtonPressed('vol_up')
-        if code == 'KEY_POWER' or code == 'KEY_F24':
+        if code == 'KEY_F24':
             self.ButtonPressed('ask_bot')
         if code == 'KEY_PREVIOUSSONG':
             self.ButtonPressed('player_prev')

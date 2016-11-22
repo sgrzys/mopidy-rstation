@@ -247,16 +247,11 @@ class Utils:
                 Utils.speak_text(u"Włączam " + val)
             elif Utils.config['language'] == 'en-US':
                 Utils.speak_text(u"Playing " + val)
-        if code == 'GO_UP_DIR':
-            if Utils.config['language'] == 'pl-PL':
-                Utils.speak_text(u"Idz do góry")
-            elif Utils.config['language'] == 'en-US':
-                Utils.speak_text(u"Go up")
         if code == 'UP_DIR':
             if Utils.config['language'] == 'pl-PL':
                 Utils.speak_text(u"Do góry")
             elif Utils.config['language'] == 'en-US':
-                Utils.speak_text(u"Up")
+                Utils.speak_text(u"Go up")
         if code == 'NO_TRACK':
             if Utils.config['language'] == 'pl-PL':
                 Utils.speak_text(u"Aktualnie nie jest odtwarzany żaden utwór")
