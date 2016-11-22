@@ -373,23 +373,6 @@ class Utils:
         t.start()
 
     @staticmethod
-    def start_rec_wav():
-        try:
-            Utils.prev_volume = Utils.core.playback.volume.get()
-            Utils.core.playback.volume = 5
-        except Exception:
-            Utils.prev_volume = 5
-        Utils.aplay_thread("start_rec")
-
-    @staticmethod
-    def stop_rec_wav():
-        Utils.aplay_thread("stop_rec")
-        try:
-            Utils.core.playback.volume = Utils.prev_volume
-        except Exception:
-            None
-
-    @staticmethod
     def set_volume(volume):
         Utils.speak('VOL', val=volume)
         Utils.core.playback.volume = volume

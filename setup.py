@@ -30,7 +30,8 @@ setup(
         'Pykka >= 1.1',
         'geopy',
         'wikipedia',
-        'fuzzywuzzy'
+        'fuzzywuzzy',
+        'pyaudio'
     ],
     test_suite='nose.collector',
     tests_require=[

@@ -94,7 +94,10 @@ def record_only():
         frames_per_buffer=CHUNK,
         input_device_index=INPUT_DEVICE_INDEX)
     all = []
-    Utils.start_rec_wav()
+    Utils.prev_volume = Utils.core.playback.volume.get()
+    Utils.core.playback.volume = 5
+    Utils.recording = True
+    play_wav('/home/pi/mopidy-rstation/audio/start_rec.wav')
     Utils.recording = True
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
         data = stream.read(CHUNK, exception_on_overflow=False)
@@ -102,8 +105,8 @@ def record_only():
         # stop recording after RECORD_SECONDS or when the button is up
         if Utils.recording is False:
             break
-    Utils.stop_rec_wav()
-    print("* done recording")
+    play_wav('/home/pi/mopidy-rstation/audio/stop_rec.wav')
+    Utils.core.playback.volume = Utils.prev_volume
     stream.stop_stream()
     stream.close()
     p.terminate()
@@ -126,15 +129,16 @@ def record_and_stream():
         input=True,
         frames_per_buffer=CHUNK,
         input_device_index=INPUT_DEVICE_INDEX)
-    Utils.start_rec_wav()
-    print("* recording and streaming")
+    Utils.prev_volume = Utils.core.playback.volume.get()
+    Utils.core.playback.volume = 5
     Utils.recording = True
+    play_wav('/home/pi/mopidy-rstation/audio/start_rec.wav')
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
         yield stream.read(CHUNK, exception_on_overflow=False)
         if Utils.recording is False:
             break
-    print("* done recording and streaming")
-    Utils.stop_rec_wav()
+    play_wav('/home/pi/mopidy-rstation/audio/stop_rec.wav')
+    Utils.core.playback.volume = Utils.prev_volume
     stream.stop_stream()
     stream.close()
     p.terminate()
