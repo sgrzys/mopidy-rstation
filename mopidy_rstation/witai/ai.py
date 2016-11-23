@@ -152,12 +152,12 @@ def ask_bot(config):
         audio_in_name = config['audio_in_name']
         set_audio_in(audio_in_name)
         # TODO this is a faster version but the qualitty have to be improved
-        result = w.post_speech(
-            record_and_stream(), content_type=CONTENT_TYPE)
+        # result = w.post_speech(
+        #     record_and_stream(), content_type=CONTENT_TYPE)
         # slow version
-        # output_file = StringIO()
-        # output_file = record_only()
-        # result = w.post_speech(output_file.getvalue())
+        output_file = StringIO()
+        output_file = record_only()
+        result = w.post_speech(output_file.getvalue())
     except Exception:
         str("Error in ai.ask_bot")
         traceback.print_exc()
