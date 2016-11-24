@@ -10,6 +10,7 @@ import wave
 from StringIO import StringIO
 import traceback
 from struct import pack
+from ..audio import sounds
 
 
 CHUNK = 256
@@ -25,31 +26,6 @@ else:
 CONTENT_TYPE = \
     'raw;encoding=signed-integer;bits=16;rate={0};endian={1}' \
     .format(RATE, ENDIAN)
-
-
-def play_wav(file):
-    wf = wave.open(file, 'rb')
-    # create an audio object
-    p = pyaudio.PyAudio()
-
-    # open stream based on the wave object which has been input.
-    stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
-                    channels=wf.getnchannels(),
-                    rate=wf.getframerate(),
-                    output=True)
-
-    # read data (based on the chunk size)
-    data = wf.readframes(1024)
-
-    # play stream (looping from beginning of file to the end)
-    while data != '':
-        # writing to the stream is what *actually* plays the sound.
-        stream.write(data)
-        data = wf.readframes(1024)
-
-    # cleanup stuff.
-    stream.close()
-    p.terminate()
 
 
 def set_audio_in(audio_in_name):
@@ -97,7 +73,7 @@ def record_only():
     Utils.prev_volume = Utils.core.playback.volume.get()
     Utils.core.playback.volume = 5
     Utils.recording = True
-    play_wav('/home/pi/mopidy-rstation/audio/start_rec.wav')
+    sounds.play(sounds.C_SOUND_REC_START)
     Utils.recording = True
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
         data = stream.read(CHUNK, exception_on_overflow=False)
@@ -105,7 +81,7 @@ def record_only():
         # stop recording after RECORD_SECONDS or when the button is up
         if Utils.recording is False:
             break
-    play_wav('/home/pi/mopidy-rstation/audio/stop_rec.wav')
+    sounds.play(sounds.C_SOUND_REC_END)
     Utils.core.playback.volume = Utils.prev_volume
     stream.stop_stream()
     stream.close()
@@ -132,12 +108,12 @@ def record_and_stream():
     Utils.prev_volume = Utils.core.playback.volume.get()
     Utils.core.playback.volume = 5
     Utils.recording = True
-    play_wav('/home/pi/mopidy-rstation/audio/start_rec.wav')
+    sounds.play(sounds.C_SOUND_REC_START)
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
         yield stream.read(CHUNK, exception_on_overflow=False)
         if Utils.recording is False:
             break
-    play_wav('/home/pi/mopidy-rstation/audio/stop_rec.wav')
+    sounds.play(sounds.C_SOUND_REC_END)
     Utils.core.playback.volume = Utils.prev_volume
     stream.stop_stream()
     stream.close()
@@ -159,7 +135,6 @@ def ask_bot(config):
         output_file = record_only()
         result = w.post_speech(output_file.getvalue())
     except Exception:
-        str("Error in ai.ask_bot")
         traceback.print_exc()
         return
     pprint(result)
