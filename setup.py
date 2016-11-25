@@ -31,7 +31,8 @@ setup(
         'geopy',
         'wikipedia',
         'fuzzywuzzy',
-        'pyaudio'
+        'pyaudio',
+	'evdev'
     ],
     test_suite='nose.collector',
     tests_require=[
