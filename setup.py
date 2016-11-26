@@ -31,7 +31,9 @@ setup(
         'geopy',
         'wikipedia',
         'fuzzywuzzy',
-        'pyaudio'
+        'pyaudio',
+	'evdev',
+	'python-Levenshtein'
     ],
     test_suite='nose.collector',
     tests_require=[
