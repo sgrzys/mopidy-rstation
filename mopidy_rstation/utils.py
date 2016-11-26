@@ -385,7 +385,6 @@ class Utils:
 
     @staticmethod
     def search_wikipedia(query):
-        print('pytam wikipedie o: ' + query)
         try:
             from mopidy_rstation.wikipedia import search
         except ImportError:
@@ -405,8 +404,8 @@ class Utils:
             lang = 'en'
         try:
             ret = u'' + search.do(query, lang)
-        except Exception as e:
-            Utils.speak_text(e)
+        except Exception:
+            Utils.speak_text('Błąd podczas pytania Wikipedii o ' + query)
             return
 
         v = pyvona.create_voice(Utils.config)
