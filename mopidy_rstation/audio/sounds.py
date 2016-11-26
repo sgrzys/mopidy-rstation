@@ -5,7 +5,8 @@ import logging
 C_SOUNDS_DIR = '/home/pi/mopidy-rstation/audio/'
 C_SOUND_REC_START = C_SOUNDS_DIR + 'start_rec.wav'
 C_SOUND_REC_END = C_SOUNDS_DIR + 'stop_rec.wav'
-C_START_UP = C_SOUNDS_DIR + 'newbuntu.wav'
+C_SOUND_START_UP = C_SOUNDS_DIR + 'newbuntu.wav'
+C_SOUND_BEEP = C_SOUNDS_DIR + 'alert.wav'
 logger = logging.getLogger('mopidy_Rstation')
 logger = logging.getLogger(__name__)
 

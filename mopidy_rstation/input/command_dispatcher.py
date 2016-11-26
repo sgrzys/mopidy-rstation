@@ -3,6 +3,7 @@ from mopidy.core import PlaybackState
 from ..witai import ai
 import traceback
 import time
+from ..audio import sounds
 
 LIRC_PROG_NAME = "mopidyRstation"
 C_MODE_PLAYER = 'PLAYER'
@@ -34,7 +35,7 @@ class CommandDispatcher(object):
         buttonPressEvent.append(self.handleCommand)
 
     def handleCommand(self, cmd):
-        Utils.beep()
+        sounds.play(sounds.C_SOUND_BEEP)
         # send the command to all the
         # CoreListener.send("handleRemoteCommand", cmd=cmd)
         self.onCommand(cmd)

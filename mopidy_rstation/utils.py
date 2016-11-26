@@ -363,11 +363,6 @@ class Utils:
         os.system(cmd)
 
     @staticmethod
-    def beep():
-        t = Thread(target=Utils.aplay_thread, args=("alert",))
-        t.start()
-
-    @staticmethod
     def set_volume(volume):
         Utils.speak('VOL', val=volume)
         Utils.core.playback.volume = volume

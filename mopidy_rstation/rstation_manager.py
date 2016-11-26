@@ -72,7 +72,7 @@ class RstationFrontend(pykka.ThreadingActor, core.CoreListener):
                 logger.debug('keypad thread starting')
                 self.keypad_thread.start()
             logger.debug('Rstation started')
-            sounds.play(sounds.C_START_UP)
+            sounds.play(sounds.C_SOUND_START_UP)
 
         except Exception as e:
             logger.warning('Rstation has not started: ' + str(e))
