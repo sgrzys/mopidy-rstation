@@ -11,6 +11,10 @@ logger = logging.getLogger('mopidy_Rstation')
 logger = logging.getLogger(__name__)
 
 
+def beep():
+    print('\a')
+
+
 def play(sound):
     play_wav(sound)
 

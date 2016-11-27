@@ -17,7 +17,7 @@ CHUNK = 256
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
-RECORD_SECONDS = 6
+RECORD_SECONDS = 5
 INPUT_DEVICE_INDEX = None
 if pack('@h', 1) == pack('<h', 1):
     ENDIAN = 'little'
@@ -79,8 +79,8 @@ def record_only():
         data = stream.read(CHUNK, exception_on_overflow=False)
         all.append(data)
         # stop recording after RECORD_SECONDS or when the button is up
-        if Utils.recording is False:
-            break
+        # if Utils.recording is False:
+        #     break
     sounds.play(sounds.C_SOUND_REC_END)
     Utils.core.playback.volume = Utils.prev_volume
     stream.stop_stream()

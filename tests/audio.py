@@ -18,12 +18,13 @@ for x in range(p.get_device_count()):
         print('---------------------------------')
         print(str(x) + str(info))
         print('---------------------------------')
-        # USB Audio Device / Airmouse: USB Audio
-        if info['name'].startswith('Airmouse: USB Audio'):
+        # USB Audio Device / Airmouse: USB Audio / HDA Intel
+        if info['name'].startswith('HDA Intel'):
             INPUT_DEVICE_INDEX = info['index']
             RATE = int(info['defaultSampleRate'])
             CHANNELS = int(info['maxInputChannels'])
             # name USB Audio Device: - (hw:1,0)
+            # HDA Intel
 
 print('selected device index: ' + str(INPUT_DEVICE_INDEX))
 print('selected device rate: ' + str(RATE))
