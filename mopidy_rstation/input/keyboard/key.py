@@ -10,6 +10,7 @@ import errno
 import traceback
 from mopidy_rstation.utils import Utils
 from threading import Thread
+from mopidy_rstation.audio import sounds
 
 logger = logging.getLogger('mopidy_Rstation')
 
@@ -85,7 +86,7 @@ class KeyPad(threading.Thread):
                             if self.checkIfDevIsKeyboard(new_d):
                                 self.devices[udev.device_node] = new_d
                                 new_d.grab()
-                                Utils.aplay_thread("plugin")
+                                sounds.play_file(sounds.C_SOUND_PLUG_IN)
                         except Exception:
                             print('Error during add device ')
                             traceback.print_exc()
@@ -95,7 +96,7 @@ class KeyPad(threading.Thread):
                             "Device removed (udev): %s" %
                             self.devices[udev.device_node])
                         del self.devices[udev.device_node]
-                        Utils.aplay_thread("plugout")
+                        sounds.play_file(sounds.C_SOUND_PLUG_OUT)
 
             for r in rs:
                 # You can't read from a monitor
@@ -187,10 +188,8 @@ class KeyPad(threading.Thread):
         print('KeyPad -> handle_event -> ' + code)
         # workeround - kill the ivona - to stop the forecast
         try:
-            if Utils.channel is not None:
-                Utils.channel.stop()
-                Utils.channel = None
-                Utils.core.playback.volume = Utils.prev_volume
+            if sounds.channel.get_busy():
+                sounds.channel.stop()
         except Exception:
             traceback.print_exc()
 

@@ -1,44 +1,46 @@
 # encoding=utf8
-import pyaudio
-import wave
 import logging
+import pygame
 C_SOUNDS_DIR = '/home/pi/mopidy-rstation/audio/'
 C_SOUND_REC_START = C_SOUNDS_DIR + 'start_rec.wav'
 C_SOUND_REC_END = C_SOUNDS_DIR + 'stop_rec.wav'
 C_SOUND_START_UP = C_SOUNDS_DIR + 'newbuntu.wav'
 C_SOUND_BEEP = C_SOUNDS_DIR + 'alert.wav'
+C_SOUND_PLUG_IN = C_SOUNDS_DIR + 'plugin.wav'
+C_SOUND_PLUG_OUT = C_SOUNDS_DIR + 'plugout.wav'
+
 logger = logging.getLogger('mopidy_Rstation')
 logger = logging.getLogger(__name__)
+channel = None
 
 
 def beep():
-    print('\a')
+    # print('\a')
+    play_file(C_SOUND_BEEP)
 
 
-def play(sound):
-    play_wav(sound)
+def start_up():
+    play_file(C_SOUND_START_UP)
 
 
-def play_wav(file):
-    wf = wave.open(file, 'rb')
-    # create an audio object
-    p = pyaudio.PyAudio()
+def play_file(f, async=False):
+    global channel
+    if not pygame.mixer.get_init():
+        pygame.mixer.init()
+        channel = pygame.mixer.Channel(5)
+    else:
+        channel = pygame.mixer.find_channel()
+        if channel is None:
+            pygame.mixer.set_num_channels(
+                pygame.mixer.get_num_channels()+1)
+            channel = pygame.mixer.find_channel()
 
-    # open stream based on the wave object which has been input.
-    stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
-                    channels=wf.getnchannels(),
-                    rate=wf.getframerate(),
-                    output=True)
+    if type(f) is str:
+        sound = pygame.mixer.Sound(file=f)
+    else:
+        sound = pygame.mixer.Sound(file=f.name)
+    channel.play(sound)
 
-    # read data (based on the chunk size)
-    data = wf.readframes(1024)
-
-    # play stream (looping from beginning of file to the end)
-    while data != '':
-        # writing to the stream is what *actually* plays the sound.
-        stream.write(data)
-        data = wf.readframes(1024)
-
-    # cleanup stuff.
-    stream.close()
-    p.terminate()
+    if async is False:
+        while channel.get_busy():
+            pass

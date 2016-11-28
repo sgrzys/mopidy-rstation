@@ -35,7 +35,6 @@ class CommandDispatcher(object):
         buttonPressEvent.append(self.handleCommand)
 
     def handleCommand(self, cmd):
-        # sounds.play(sounds.C_SOUND_BEEP)
         sounds.beep()
         # send the command to all the
         # CoreListener.send("handleRemoteCommand", cmd=cmd)

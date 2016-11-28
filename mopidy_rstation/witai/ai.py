@@ -70,19 +70,15 @@ def record_only():
         frames_per_buffer=CHUNK,
         input_device_index=INPUT_DEVICE_INDEX)
     all = []
-    Utils.prev_volume = Utils.core.playback.volume.get()
-    Utils.core.playback.volume = 5
-    Utils.recording = True
-    sounds.play(sounds.C_SOUND_REC_START)
+    sounds.play_file(sounds.C_SOUND_REC_START)
     Utils.recording = True
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
         data = stream.read(CHUNK, exception_on_overflow=False)
         all.append(data)
         # stop recording after RECORD_SECONDS or when the button is up
-        # if Utils.recording is False:
-        #     break
-    sounds.play(sounds.C_SOUND_REC_END)
-    Utils.core.playback.volume = Utils.prev_volume
+        if Utils.recording is False:
+            break
+    sounds.play_file(sounds.C_SOUND_REC_END)
     stream.stop_stream()
     stream.close()
     p.terminate()
@@ -105,16 +101,13 @@ def record_and_stream():
         input=True,
         frames_per_buffer=CHUNK,
         input_device_index=INPUT_DEVICE_INDEX)
-    Utils.prev_volume = Utils.core.playback.volume.get()
-    Utils.core.playback.volume = 5
     Utils.recording = True
-    sounds.play(sounds.C_SOUND_REC_START)
+    sounds.play_file(sounds.C_SOUND_REC_START)
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
         yield stream.read(CHUNK, exception_on_overflow=False)
         if Utils.recording is False:
             break
-    sounds.play(sounds.C_SOUND_REC_END)
-    Utils.core.playback.volume = Utils.prev_volume
+    sounds.play_file(sounds.C_SOUND_REC_END)
     stream.stop_stream()
     stream.close()
     p.terminate()

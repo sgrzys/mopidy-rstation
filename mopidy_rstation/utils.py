@@ -17,12 +17,10 @@ class Utils:
     lib_items = []
     curr_lib_item_id = 0
     curr_track_id = 0
-    prev_volume = 100
     core = None
     speak_on = True
     speak_time = None
     config = {}
-    channel = None
     recording = False
 
     @staticmethod
@@ -96,13 +94,6 @@ class Utils:
     def convert_text(text):
         t = u''
         t = t + text
-        # try:
-        #     t = text.decode("utf8", "ignore")
-        # except Exception as e:
-        #     print('Error in convert_text ' + str(e))
-        #     # t = 'Error ' + e.message
-        #     traceback.print_exc()
-
         t = t.replace('_', ' ')
         t = t.replace('-', ' ')
         # remove the file extension
@@ -117,24 +108,17 @@ class Utils:
             t = Thread(target=Utils.speak_text_thread, args=(t,))
             t.start()
         else:
-            # os.system(
-            #     ' echo "' + t + '" | espeak -v ' +
-            #     Utils.config['language'] + ' -a 160 > /dev/null 2>&1')
             v = pyvona.create_voice(Utils.config)
-            v.speak(t, use_cache=True)
+            v.speak(t)
 
     @staticmethod
     def speak_text_thread(text):
             # wait a little
-            time.sleep(0.6)
+            time.sleep(0.4)
             # check if no next button was pressed
-            if time.time() - Utils.speak_time > 0.6:
-                # os.system('pkill espeak')
-                # os.system(
-                #     ' echo "' + text + '" | espeak -v ' +
-                #     Utils.config['language'] + ' -a 160 > /dev/null 2>&1')
+            if time.time() - Utils.speak_time > 0.4:
                 v = pyvona.create_voice(Utils.config)
-                v.speak(text, use_cache=True)
+                v.speak(text)
             else:
                 pass
 
@@ -145,8 +129,6 @@ class Utils:
         val = ''
         if ('val' in key):
             val = key['val']
-            # if not isinstance(val, str) and not isinstance(val, unicode):
-            #     val = str(val)
             if isinstance(val, int):
                 val = str(val)
             val = Utils.convert_text(val)
@@ -322,7 +304,6 @@ class Utils:
 
     @staticmethod
     def set_actual_brightness(ab):
-        # Utils.speak('BRIGHTNESS', val=str(ab))
         os.system(
             'echo ' + str(ab) +
             ' > /sys/class/backlight/rpi_backlight/brightness')
@@ -357,12 +338,6 @@ class Utils:
             print(str(e))
 
     @staticmethod
-    def aplay_thread(wav):
-        cmd = "aplay /home/pi/mopidy-rstation/audio/"
-        cmd += wav + ".wav > /dev/null 2>&1"
-        os.system(cmd)
-
-    @staticmethod
     def set_volume(volume):
         Utils.speak('VOL', val=volume)
         Utils.core.playback.volume = volume
@@ -380,16 +355,7 @@ class Utils:
 
     @staticmethod
     def search_wikipedia(query):
-        try:
-            from mopidy_rstation.wikipedia import search
-        except ImportError:
-            print('wikipedia ImportError')
-            return
-        try:
-            Utils.prev_volume = Utils.core.playback.volume.get()
-            Utils.core.playback.volume = 5
-        except Exception:
-            Utils.prev_volume = 5
+        from mopidy_rstation.wikipedia import search
 
         if Utils.config['language'] == 'pl-PL':
             Utils.speak_text(u'Pytamy wikipedie ')
@@ -404,8 +370,6 @@ class Utils:
             return
 
         v = pyvona.create_voice(Utils.config)
-        # ret_list = textwrap.wrap(ret, width=8192)
-        # for text in ret_list:
         ret = ret.replace('=', '')
         ret = ret[0:8192]
         t = Thread(
@@ -413,7 +377,7 @@ class Utils:
             kwargs={
                 'text_to_speak': ret,
                 'use_cache': False,
-                'ret_channel': True})
+                'async': True})
         t.start()
 
     @staticmethod
@@ -436,23 +400,13 @@ class Utils:
             text = text.replace("100%", u"99%")
             return text
 
-        try:
-            from mopidy_rstation.weather import forecast
-        except ImportError:
-            print('forecast ImportError')
-            return
-
         # to test from cmd
         # conf = Utils.get_config()
         # Utils.config = conf['rstation']
         # Utils.config['language'] = 'en-US'
-
+        from mopidy_rstation.weather import forecast
         if location is not None:
-            try:
-                from geopy.geocoders import Nominatim
-            except ImportError:
-                print('geopy ImportError')
-                return
+            from geopy.geocoders import Nominatim
             geolocator = Nominatim()
             location = geolocator.geocode(location)
             Utils.config['location_gps'] = str(location.latitude) + \
@@ -460,11 +414,6 @@ class Utils:
 
         weather = forecast.ForecastData(Utils.config)
         weather.verbose = True
-        try:
-            Utils.prev_volume = Utils.core.playback.volume.get()
-            Utils.core.playback.volume = 5
-        except Exception:
-            Utils.prev_volume = 5
 
         if Utils.config['language'] == 'pl-PL':
             Utils.speak_text(
@@ -485,13 +434,8 @@ class Utils:
             kwargs={
                 'text_to_speak': text,
                 'use_cache': False,
-                'ret_channel': True})
+                'async': True})
         t.start()
-        # moved to handle_event in key.py
-        # try:
-        #     Utils.core.playback.volume = Utils.prev_volume
-        # except Exception:
-        #     pass
 
     @staticmethod
     def get_time():
@@ -504,16 +448,7 @@ class Utils:
         d = time.strftime("%e", curr_time)
         dd = time.strftime("%A %e %B %Y", curr_time)
         v = pyvona.create_voice(Utils.config)
-        try:
-            Utils.prev_volume = Utils.core.playback.volume.get()
-            Utils.core.playback.volume = 5
-        except Exception:
-            Utils.prev_volume = 5
         v.speak(u'Godzina ' + t + u' dzisiaj jest ' + dd + u' rok')
-        try:
-            Utils.core.playback.volume = Utils.prev_volume
-        except Exception:
-            pass
         if Utils.config['language'] == 'pl-PL':
             mm = m
             if m == '01':
