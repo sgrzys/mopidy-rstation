@@ -6,6 +6,7 @@ from input.keyboard.key import KeyPad
 from input.command_dispatcher import CommandDispatcher
 from utils import Utils
 from audio import sounds
+import traceback
 
 logger = logging.getLogger('mopidy_Rstation')
 LIRC_PROG_NAME = "mopidyRstation"
@@ -72,10 +73,11 @@ class RstationFrontend(pykka.ThreadingActor, core.CoreListener):
                 logger.debug('keypad thread starting')
                 self.keypad_thread.start()
             logger.debug('Rstation started')
-            sounds.start_up()
+            sounds.play_file(sounds.C_SOUND_START_UP)
 
         except Exception as e:
             logger.warning('Rstation has not started: ' + str(e))
+            traceback.print_exc()
             self.stop()
 
     def on_stop(self):

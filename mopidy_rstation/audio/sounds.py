@@ -19,10 +19,6 @@ def beep():
     play_file(C_SOUND_BEEP)
 
 
-def start_up():
-    play_file(C_SOUND_START_UP)
-
-
 def play_file(f, async=False):
     global channel
     if not pygame.mixer.get_init():
