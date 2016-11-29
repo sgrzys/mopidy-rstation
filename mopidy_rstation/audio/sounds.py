@@ -32,9 +32,9 @@ def play_file(f, async=False):
             channel = pygame.mixer.find_channel()
 
     if type(f) is str:
-        sound = pygame.mixer.Sound(file=f)
+        sound = pygame.mixer.Sound(f)
     else:
-        sound = pygame.mixer.Sound(file=f.name)
+        sound = pygame.mixer.Sound(f.name)
     channel.play(sound)
 
     if async is False:
