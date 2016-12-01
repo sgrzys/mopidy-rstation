@@ -146,7 +146,7 @@ class Voice(object):
 
             if not os.path.isfile(speech_cache_dir + cache_f):
                 with self.use_ogg_codec():
-                    self.fetch_voice(text_to_speak, 'speech_cache/' + cache_f)
+                    self.fetch_voice(text_to_speak, speech_cache_dir + cache_f)
 
             f = speech_cache_dir + cache_f
         sounds.play_file(f, async)
