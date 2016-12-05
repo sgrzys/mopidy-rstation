@@ -23,29 +23,13 @@ def load_best_track(tracks, titles, item):
     title = process.extractOne(item, titles)
     for track in tracks:
         if track.title == title[0]:
-            print('Title: ' + track.title + ' Uri: ' + str(track.path))
-            print('file: ' + track.file)
-            print('ID: ' + str(track.id))
             if Utils.core is None:
                 return
-            # tracks_to_add = []
-            # tracks_to_add.append(Track(
-            #     name=track.title, uri=track.path))
-            # Utils.core.tracklist.clear()
-            # Utils.core.tracklist.add(tracks=tracks_to_add)
             Utils.core.tracklist.clear()
             Utils.core.tracklist.add(uri=track.file)
-            Utils.curr_track_id = track.id
-            Utils.track_items = Utils.core.tracklist.tl_tracks.get()
-            if len(tracks) == 0:
-                pass
-            else:
-                item = Utils.track_items[Utils.curr_track_id]
-                voices.speak('PLAY_URI', val=item.track.name)
-                Utils.core.playback.play(tlid=item.tlid)
-
-            # voices.speak('PLAY_URI', val=track.title)
-            # Utils.track_items = Utils.core.tracklist.get_tracks()
+            item = Utils.core.tracklist.get_tracks()[0]
+            voices.speak('PLAY_URI', val=item.track.name)
+            Utils.core.playback.play(tlid=item.tlid)
 
 
 def start_player():

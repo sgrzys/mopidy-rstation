@@ -10,6 +10,7 @@ LIRC_PROG_NAME = "mopidyRstation"
 C_MODE_PLAYER = 'PLAYER'
 C_MODE_LIBRARY = 'LIBRARY'
 C_MODE_TRACKLIST = 'TRACKLIST'
+current_tl_track = None
 url = u'rstation:/home/pi/mopidy-rstation/media'
 
 
@@ -43,53 +44,50 @@ class CommandDispatcher(object):
 
     def track_list_prev(self):
         print('track_list_prev')
+        global current_tl_track
         # prev on track list
         self.change_mode(C_MODE_TRACKLIST)
-        tracks = self.core.tracklist.tl_tracks.get()
-        if len(tracks) == 0:
-            pass
-        else:
-            if Utils.curr_track_id == 0:
-                Utils.curr_track_id = len(tracks) - 1
-            else:
-                Utils.curr_track_id -= 1
-            try:
-                item = tracks[Utils.curr_track_id]
-                voices.speak_text(voices.convert_text(item.track.name))
-            except Exception as e:
-                print(str(e))
+        try:
+            if current_tl_track is None:
+                current_tl_track = \
+                    self.core.playback.get_current_tl_track().get()
+            current_tl_track = self.core.tracklist.previous_track(
+                current_tl_track).get()
+            track = current_tl_track.track
+            if track is not None:
+                voices.speak_text(voices.convert_text(track.name))
+        except Exception:
+            current_tl_track = Utils.core.tracklist.tl_tracks.get()[-1]
 
     def track_list_next(self):
+        global current_tl_track
         print('track_list_next')
         # next on track list
         self.change_mode(C_MODE_TRACKLIST)
-        tracks = self.core.tracklist.tl_tracks.get()
-        if len(tracks) == 0:
-            pass
-        else:
-            if len(tracks) == Utils.curr_track_id + 1:
-                Utils.curr_track_id = 0
-            else:
-                Utils.curr_track_id += 1
-            try:
-                item = tracks[Utils.curr_track_id]
-                voices.speak_text(voices.convert_text(item.track.name))
-
-            except Exception as e:
-                print(str(e))
+        try:
+            if current_tl_track is None:
+                current_tl_track = \
+                    self.core.playback.get_current_tl_track().get()
+            current_tl_track = self.core.tracklist.next_track(
+                current_tl_track).get()
+            track = current_tl_track.track
+            if track is not None:
+                voices.speak_text(voices.convert_text(track.name))
+        except Exception:
+            current_tl_track = Utils.core.tracklist.tl_tracks.get()[0]
 
     def track_list_enter(self):
+        global current_tl_track
         print('track_list_enter')
         # enter on track list
         # switch to player mode
+        if current_tl_track is None:
+            current_tl_track = \
+                self.core.playback.get_current_tl_track().get()
+        track = current_tl_track.track
+        voices.speak('PLAY_URI', val=track.name)
+        self.core.playback.play(tlid=current_tl_track.tlid)
         self.change_mode(C_MODE_PLAYER)
-        tracks = self.core.tracklist.tl_tracks.get()
-        if len(tracks) == 0:
-            pass
-        else:
-            item = tracks[Utils.curr_track_id]
-            voices.speak('PLAY_URI', val=item.track.name)
-            self.core.playback.play(tlid=item.tlid)
 
     def player_play_pause(self):
         print('player_play_pause')
@@ -105,7 +103,7 @@ class CommandDispatcher(object):
         # go up in library
         voices.speak('LIBRARY')
         self.core.library.browse(url)
-        self.change_mode(C_MODE_LIBRARY)
+        self.change_mode()
 
     def go_to_player(self):
         print('go_to_player')
@@ -132,13 +130,9 @@ class CommandDispatcher(object):
                 # switch to player mode
                 self.change_mode(C_MODE_PLAYER)
                 self.core.tracklist.clear()
-                print('#########' + current_item.uri + '#########')
                 self.core.tracklist.add(uri=current_item.uri)
                 self.core.playback.play()
                 voices.speak('PLAY_URI', val=current_item.name)
-                # get info about tracklist
-                Utils.curr_track_id = 0
-                Utils.track_items = self.core.tracklist.get_tracks()
             else:
                 self.core.library.browse(current_item.uri)
                 voices.speak('ENTER_DIR', val=current_item.name)
@@ -231,9 +225,12 @@ class CommandDispatcher(object):
         self.core.library.browse(uri)
 
     def change_mode(self, mode):
+        global current_tl_track
         print('change_mode to ' + mode)
         self.change_mode_time = time.time()
         self.current_mode = mode
+        if mode != C_MODE_TRACKLIST:
+            current_tl_track = None
 
     def check_mode(self):
         # after start switch to PLAYER mode
@@ -251,23 +248,6 @@ class CommandDispatcher(object):
             print('check_mode sec_left: ' + str(sec_left))
             if sec_left > 10:
                 self.change_mode(C_MODE_PLAYER)
-                # revert Utils.curr_track_id
-                try:
-                    tl_track = self.core.playback.get_current_tl_track().get()
-                    track = tl_track.track
-                    print(track.name)
-
-                    tracks = self.core.tracklist.tl_tracks.get()
-                    if len(tracks) == 0:
-                        Utils.curr_track_id = 0
-                    else:
-                        for i, val in enumerate(tracks):
-                            if val.track.name == track.name:
-                                print(
-                                    'Utils.curr_track_id rested to ' + str(i))
-                                Utils.curr_track_id = i
-                except Exception as e:
-                    print(e)
 
     def onCommand(self, cmd):
         print(cmd + ': on Command started, mode: ' + str(self.current_mode))

@@ -16,7 +16,6 @@ sys.setdefaultencoding("utf-8")
 class Utils:
     lib_items = []
     curr_lib_item_id = 0
-    curr_track_id = 0
     core = None
     config = {}
 

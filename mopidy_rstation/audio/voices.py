@@ -72,11 +72,9 @@ def speak(code, *param, **key):
             speak_text(u"Play", False)
     if code == 'PLAYING':
         if language == 'pl-PL':
-            speak_text(u"Gramy ")
-            speak_text(val)
+            speak_text(u"Gramy " + val)
         elif language == 'en-US':
-            speak_text(u"Now playing ")
-            speak_text(val)
+            speak_text(u"Now playing " + val)
     if code == 'PAUSE':
         if language == 'pl-PL':
             speak_text(u"Pauza", False)
@@ -94,11 +92,9 @@ def speak(code, *param, **key):
             speak_text(u"Hints off")
     if code == 'VOL':
         if language == 'pl-PL':
-            speak_text(u"Głośność ")
-            speak_text(val)
+            speak_text(u"Głośność " + val)
         elif language == 'en-US':
-            speak_text(u"Volume ")
-            speak_text(val)
+            speak_text(u"Volume " + val)
     if code == 'MUTE':
         if language == 'pl-PL':
             speak_text(u"Wycisz")
@@ -153,18 +149,14 @@ def speak(code, *param, **key):
             speak_text(val)
     if code == 'ENTER_DIR':
         if language == 'pl-PL':
-            speak_text(u"Wybieram ")
-            speak_text(val)
+            speak_text(u"Wybieram " + val)
         elif language == 'en-US':
-            speak_text(u"Going to ")
-            speak_text(val)
+            speak_text(u"Going to " + val)
     if code == 'PLAY_URI':
         if language == 'pl-PL':
-            speak_text(u"Włączam ")
-            speak_text(val)
+            speak_text(u"Włączam " + val)
         elif language == 'en-US':
-            speak_text(u"Playing ")
-            speak_text(val)
+            speak_text(u"Playing " + val)
     if code == 'UP_DIR':
         if language == 'pl-PL':
             speak_text(u"Do góry")
@@ -212,11 +204,9 @@ def speak(code, *param, **key):
             speak_text(u"There is nothing in the library")
     if code == 'LIB_SCREAN_INFO':
         if language == 'pl-PL':
-            speak_text(u"Jesteś w bibliotece, mamy tu ")
-            speak_text(val)
+            speak_text(u"Jesteś w bibliotece, mamy tu " + val)
         elif language == 'en-US':
-            speak_text(u"You are in library, we have here ")
-            speak_text(val)
+            speak_text(u"You are in library, we have here " + val)
     if code == 'PL_SCREAN_INFO':
         if language == 'pl-PL':
             speak_text(u"Listy odtwarzania")
