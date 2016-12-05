@@ -11,6 +11,7 @@ import traceback
 from mopidy_rstation.utils import Utils
 from threading import Thread
 from mopidy_rstation.audio import sounds
+from mopidy_rstation.witai import ai
 
 logger = logging.getLogger('mopidy_Rstation')
 
@@ -124,7 +125,7 @@ class KeyPad(threading.Thread):
                         if event.type == evdev.ecodes.EV_KEY & \
                            event.value == 0:
                             # key up
-                            Utils.recording = False
+                            ai.RECORDING = False
                             # if evdev.ecodes.KEY[event.code] == 'KEY_F24' or \
                             #    evdev.ecodes.KEY[event.code] == 'KEY_POWER':
                             #     print('!!!Stop recording!!!')

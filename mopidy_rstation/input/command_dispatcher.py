@@ -4,6 +4,7 @@ from ..witai import ai
 import traceback
 import time
 from ..audio import sounds
+from ..audio import voices
 
 LIRC_PROG_NAME = "mopidyRstation"
 C_MODE_PLAYER = 'PLAYER'
@@ -54,7 +55,7 @@ class CommandDispatcher(object):
                 Utils.curr_track_id -= 1
             try:
                 item = tracks[Utils.curr_track_id]
-                Utils.speak_text(Utils.convert_text(item.track.name))
+                voices.speak_text(voices.convert_text(item.track.name))
             except Exception as e:
                 print(str(e))
 
@@ -72,7 +73,7 @@ class CommandDispatcher(object):
                 Utils.curr_track_id += 1
             try:
                 item = tracks[Utils.curr_track_id]
-                Utils.speak_text(Utils.convert_text(item.track.name))
+                voices.speak_text(voices.convert_text(item.track.name))
 
             except Exception as e:
                 print(str(e))
@@ -87,37 +88,39 @@ class CommandDispatcher(object):
             pass
         else:
             item = tracks[Utils.curr_track_id]
-            Utils.speak('PLAY_URI', val=item.track.name)
+            voices.speak('PLAY_URI', val=item.track.name)
             self.core.playback.play(tlid=item.tlid)
 
     def player_play_pause(self):
         print('player_play_pause')
         if self.core.playback.state.get() == PlaybackState.PLAYING:
             self.core.playback.pause()
-            Utils.speak('PAUSE')
+            voices.speak('PAUSE')
         else:
-            Utils.speak('PLAY')
+            voices.speak('PLAY')
             self.core.playback.play()
 
     def go_to_library(self):
         print('go_to_library')
         # go up in library
-        Utils.speak('LIBRARY')
+        voices.speak('LIBRARY')
         self.core.library.browse(url)
         self.change_mode(C_MODE_LIBRARY)
 
     def go_to_player(self):
         print('go_to_player')
         # go to player mode
-        Utils.speak('PLAYER')
+        voices.speak('PLAYER')
         self.change_mode(C_MODE_PLAYER)
 
     def change_lang(self):
         print('change_lang from: ' + Utils.config['language'])
         if Utils.config['language'] == 'pl-PL':
-            Utils.change_lang('en-US')
-        else:
-            Utils.change_lang('pl-PL')
+            Utils.config['language'] = 'en-US'
+            voices.speak_text('English')
+        elif Utils.config['language'] == 'en-US':
+            Utils.config['language'] = 'pl-PL'
+            voices.speak_text('Polski')
         print('change_lang to: ' + Utils.config['language'])
 
     def lib_enter(self):
@@ -132,13 +135,13 @@ class CommandDispatcher(object):
                 print('#########' + current_item.uri + '#########')
                 self.core.tracklist.add(uri=current_item.uri)
                 self.core.playback.play()
-                Utils.speak('PLAY_URI', val=current_item.name)
+                voices.speak('PLAY_URI', val=current_item.name)
                 # get info about tracklist
                 Utils.curr_track_id = 0
                 Utils.track_items = self.core.tracklist.get_tracks()
             else:
                 self.core.library.browse(current_item.uri)
-                Utils.speak('ENTER_DIR', val=current_item.name)
+                voices.speak('ENTER_DIR', val=current_item.name)
 
     def lib_next(self):
         print('lib_next')
@@ -152,7 +155,7 @@ class CommandDispatcher(object):
                 Utils.curr_lib_item_id += 1
             try:
                 item = Utils.lib_items[Utils.curr_lib_item_id]
-                Utils.speak_text(Utils.convert_text(item.name))
+                voices.speak_text(voices.convert_text(item.name))
 
             except Exception as e:
                 print(str(e))
@@ -168,7 +171,7 @@ class CommandDispatcher(object):
             Utils.curr_lib_item_id -= 1
         try:
             item = Utils.lib_items[Utils.curr_lib_item_id]
-            Utils.speak_text(Utils.convert_text(item.name))
+            voices.speak_text(voices.convert_text(item.name))
         except Exception as e:
             print(str(e))
 
@@ -180,7 +183,7 @@ class CommandDispatcher(object):
         uri = item.uri.rsplit('/', 2)[0]
         name = item.uri.rsplit('/', 2)[1]
         self.core.library.browse(uri)
-        Utils.speak('UP_DIR', val=name)
+        voices.speak('UP_DIR', val=name)
 
     def lib_down(self):
         print('lib_down')
@@ -213,17 +216,17 @@ class CommandDispatcher(object):
             self.lib_music()
 
     def lib_audiobook(self):
-        Utils.speak('AUDIOBOOKS_DIR')
+        voices.speak('AUDIOBOOKS_DIR')
         uri = url + '/Audiobuki'
         self.core.library.browse(uri)
 
     def lib_radio(self):
-        Utils.speak('RADIO_DIR')
+        voices.speak('RADIO_DIR')
         uri = url + '/Radia'
         self.core.library.browse(uri)
 
     def lib_music(self):
-        Utils.speak('MUSIC_DIR')
+        voices.speak('MUSIC_DIR')
         uri = url + '/Muzyka'
         self.core.library.browse(uri)
 

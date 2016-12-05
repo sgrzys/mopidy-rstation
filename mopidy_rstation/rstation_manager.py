@@ -6,6 +6,7 @@ from input.keyboard.key import KeyPad
 from input.command_dispatcher import CommandDispatcher
 from utils import Utils
 from audio import sounds
+from audio import voices
 import traceback
 
 logger = logging.getLogger('mopidy_Rstation')
@@ -59,7 +60,7 @@ class RstationFrontend(pykka.ThreadingActor, core.CoreListener):
             # set current track id
             Utils.curr_track_id = tl_track.tlid - 1
             try:
-                Utils.speak('PLAYING', val=tl_track.track.name)
+                voices.speak('PLAYING', val=tl_track.track.name)
             except Exception as e:
                 print(str(e))
 

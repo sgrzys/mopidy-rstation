@@ -3,7 +3,7 @@ from pprint import pprint
 # from StringIO import StringIO
 import wit
 from mopidy_rstation.utils import Utils
-from mopidy_rstation.output import pyvona
+from mopidy_rstation.audio import pyvona
 from mopidy_rstation.player import control
 import pyaudio
 import wave
@@ -11,8 +11,10 @@ from StringIO import StringIO
 import traceback
 from struct import pack
 from ..audio import sounds
+from ..audio import voices
 
 
+RECORDING = False
 CHUNK = 256
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
@@ -60,6 +62,7 @@ def set_audio_in(audio_in_name):
 
 
 def record_only():
+    global RECORDING
     p = pyaudio.PyAudio()
     output_file = StringIO()
     stream = p.open(
@@ -71,12 +74,12 @@ def record_only():
         input_device_index=INPUT_DEVICE_INDEX)
     all = []
     sounds.play_file(sounds.C_SOUND_REC_START)
-    Utils.recording = True
+    RECORDING = True
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
         data = stream.read(CHUNK, exception_on_overflow=False)
         all.append(data)
         # stop recording after RECORD_SECONDS or when the button is up
-        if Utils.recording is False:
+        if RECORDING is False:
             break
     sounds.play_file(sounds.C_SOUND_REC_END)
     stream.stop_stream()
@@ -88,11 +91,12 @@ def record_only():
     wf.setframerate(RATE)
     wf.writeframes(b''.join(all))
     wf.close()
-    Utils.speak('PROCESSING')
+    voices.speak('PROCESSING')
     return output_file
 
 
 def record_and_stream():
+    global RECORDING
     p = pyaudio.PyAudio()
     stream = p.open(
         format=FORMAT,
@@ -101,11 +105,11 @@ def record_and_stream():
         input=True,
         frames_per_buffer=CHUNK,
         input_device_index=INPUT_DEVICE_INDEX)
-    Utils.recording = True
+    RECORDING = True
     sounds.play_file(sounds.C_SOUND_REC_START)
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
         yield stream.read(CHUNK, exception_on_overflow=False)
-        if Utils.recording is False:
+        if RECORDING is False:
             break
     sounds.play_file(sounds.C_SOUND_REC_END)
     stream.stop_stream()

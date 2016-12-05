@@ -3,6 +3,7 @@ from fuzzywuzzy import process
 from mopidy_rstation.finder import m3uparser
 # from mopidy.models import Track
 from mopidy_rstation.utils import Utils
+from mopidy_rstation.audio import voices
 import sys
 
 
@@ -15,7 +16,7 @@ def load_best_playlist(albums, names, item):
             Utils.core.tracklist.clear()
             Utils.core.tracklist.add(uri=album.path)
             Utils.core.playback.play()
-            Utils.speak('PLAY_URI', val=album.title)
+            voices.speak('PLAY_URI', val=album.title)
 
 
 def load_best_track(tracks, titles, item):
@@ -40,10 +41,10 @@ def load_best_track(tracks, titles, item):
                 pass
             else:
                 item = Utils.track_items[Utils.curr_track_id]
-                Utils.speak('PLAY_URI', val=item.track.name)
+                voices.speak('PLAY_URI', val=item.track.name)
                 Utils.core.playback.play(tlid=item.tlid)
 
-            # Utils.speak('PLAY_URI', val=track.title)
+            # voices.speak('PLAY_URI', val=track.title)
             # Utils.track_items = Utils.core.tracklist.get_tracks()
 
 
@@ -52,7 +53,7 @@ def start_player():
         return
     Utils.core.playback.play()
     # TODO
-    # Utils.speak('PLAY_URI', val=album.title)
+    # voices.speak('PLAY_URI', val=album.title)
 
 
 def play_item(item, item_type=None):
