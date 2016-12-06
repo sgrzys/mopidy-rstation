@@ -112,23 +112,16 @@ class KeyPad(threading.Thread):
                         # event.value == 1 key down
                         # event.value == 0 key up
                         # event.value == 2 key hold
-                        if event.type == evdev.ecodes.EV_KEY & \
-                           event.value == 1:
+                        if event.type == evdev.ecodes.EV_KEY:
                             # enter with mouse mode on airmouse
                             if event.code == 272:
-                                self.handle_event('KEY_ENTER')
+                                self.handle_event('KEY_ENTER', 1)
                             # esc with mouse mode on airmouse
                             elif event.code == 273:
-                                self.handle_event('KEY_ESC')
+                                self.handle_event('KEY_ESC', 1)
                             else:
-                                self.handle_event(evdev.ecodes.KEY[event.code])
-                        if event.type == evdev.ecodes.EV_KEY & \
-                           event.value == 0:
-                            # key up
-                            ai.RECORDING = False
-                            # if evdev.ecodes.KEY[event.code] == 'KEY_F24' or \
-                            #    evdev.ecodes.KEY[event.code] == 'KEY_POWER':
-                            #     print('!!!Stop recording!!!')
+                                self.handle_event(
+                                    evdev.ecodes.KEY[event.code], event.value)
 
                 except Exception as e:
                     if hasattr(e, 'errno'):
@@ -138,54 +131,63 @@ class KeyPad(threading.Thread):
                     logger.error('KeyPad: ' + str(e))
                     traceback.print_exc()
 
-    def handle_event_thread(self, code):
-        # main keys
-        if code == 'KEY_POWER':
-            self.ButtonPressed('mode')
-        if code == 'KEY_LEFT':
-            self.ButtonPressed('left')
-        if code == 'KEY_RIGHT':
-            self.ButtonPressed('right')
-        if code == 'KEY_DOWN':
-            self.ButtonPressed('down')
-        if code == 'KEY_UP':
-            self.ButtonPressed('up')
-        if code == 'KEY_ENTER':
-            self.ButtonPressed('enter')
-        if code == 'KEY_ESC' or code == 'KEY_BACK':
-            self.ButtonPressed('change_lang')
-        if code == 'KEY_MINUS' or code == 'KEY_VOLUMEDOWN':
-            self.ButtonPressed('vol_down')
-        if code == 'KEY_PLUS' or code == 'KEY_VOLUMEUP':
-            self.ButtonPressed('vol_up')
-        if code == 'KEY_F24' or code == 'KEY_COMPOSE':
-            self.ButtonPressed('ask_bot')
-        if code == 'KEY_PREVIOUSSONG':
-            self.ButtonPressed('player_prev')
-        if code == 'KEY_SPACE' or code == 'KEY_PLAYPAUSE':
-            self.ButtonPressed('player_play_pause')
-        if code == 'KEY_NEXTSONG':
-            self.ButtonPressed('player_next')
-        if code == 'KEY_L':
-            self.ButtonPressed('change_lang')
-        if code == 'KEY_0':
-            self.ButtonPressed('ask_bot')
-        if code == 'KEY_2':
-            self.ButtonPressed('lib_root_dir')
-        if code == 'KEY_4':
-            self.ButtonPressed('lib_prev')
-        if code == 'KEY_5':
-            self.ButtonPressed('lib_enter')
-        if code == 'KEY_6':
-            self.ButtonPressed('lib_next')
-        if code == 'KEY_7':
-            self.ButtonPressed('lib_audiobook')
-        if code == 'KEY_8':
-            self.ButtonPressed('lib_radio')
-        if code == 'KEY_9':
-            self.ButtonPressed('lib_music')
+    def handle_event_thread(self, code, mode):
+        if mode == 1:
+            # main keys
+            if code == 'KEY_POWER':
+                self.ButtonPressed('mode')
+            if code == 'KEY_LEFT':
+                self.ButtonPressed('left')
+            if code == 'KEY_RIGHT':
+                self.ButtonPressed('right')
+            if code == 'KEY_DOWN':
+                self.ButtonPressed('down')
+            if code == 'KEY_UP':
+                self.ButtonPressed('up')
+            if code == 'KEY_ENTER':
+                self.ButtonPressed('enter')
+            if code == 'KEY_ESC' or code == 'KEY_BACK':
+                self.ButtonPressed('change_lang')
+            if code == 'KEY_MINUS' or code == 'KEY_VOLUMEDOWN':
+                self.ButtonPressed('vol_down')
+            if code == 'KEY_PLUS' or code == 'KEY_VOLUMEUP':
+                self.ButtonPressed('vol_up')
+            if code == 'KEY_F24' or code == 'KEY_COMPOSE':
+                self.ButtonPressed('ask_bot')
+            if code == 'KEY_PREVIOUSSONG':
+                self.ButtonPressed('player_prev')
+            if code == 'KEY_SPACE' or code == 'KEY_PLAYPAUSE':
+                self.ButtonPressed('player_play_pause')
+            if code == 'KEY_NEXTSONG':
+                self.ButtonPressed('player_next')
+            if code == 'KEY_L':
+                self.ButtonPressed('change_lang')
+            if code == 'KEY_0':
+                self.ButtonPressed('ask_bot')
+            if code == 'KEY_2':
+                self.ButtonPressed('lib_root_dir')
+            if code == 'KEY_4':
+                self.ButtonPressed('lib_prev')
+            if code == 'KEY_5':
+                self.ButtonPressed('lib_enter')
+            if code == 'KEY_6':
+                self.ButtonPressed('lib_next')
+            if code == 'KEY_7':
+                self.ButtonPressed('lib_audiobook')
+            if code == 'KEY_8':
+                self.ButtonPressed('lib_radio')
+            if code == 'KEY_9':
+                self.ButtonPressed('lib_music')
+        elif mode == 0:
+            # key up
+            ai.RECORDING = False
+        elif mode == 2:
+            # key hold
+            # TODO
+            if code == 'KEY_POWER':
+                self.ButtonPressed('mode_settings')
 
-    def handle_event(self, code):
+    def handle_event(self, code, mode):
         print('KeyPad -> handle_event -> ' + code)
         # workeround - kill the ivona - to stop the forecast
         try:
@@ -194,6 +196,6 @@ class KeyPad(threading.Thread):
         except Exception:
             traceback.print_exc()
 
-        t = Thread(target=self.handle_event_thread, args=(code,))
+        t = Thread(target=self.handle_event_thread, args=(code, mode))
         t.start()
         return

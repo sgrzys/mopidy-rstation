@@ -10,6 +10,7 @@ LIRC_PROG_NAME = "mopidyRstation"
 C_MODE_PLAYER = 'PLAYER'
 C_MODE_LIBRARY = 'LIBRARY'
 C_MODE_TRACKLIST = 'TRACKLIST'
+C_MODE_SETTINGS = 'SETTINGS'
 current_tl_track = None
 url = u'rstation:/home/pi/mopidy-rstation/media'
 
@@ -106,14 +107,18 @@ class CommandDispatcher(object):
 
     def go_to_library(self):
         print('go_to_library')
-        # go up in library
         voices.speak('LIBRARY')
+        # go up in library
         self.core.library.browse(url)
         self.change_mode(C_MODE_LIBRARY)
 
+    def go_to_settings(self):
+        print('go_to_settings')
+        voices.speak('SETTINGS')
+        self.change_mode(C_MODE_SETTINGS)
+
     def go_to_player(self):
         print('go_to_player')
-        # go to player mode
         voices.speak('PLAYER')
         self.change_mode(C_MODE_PLAYER)
 
@@ -243,12 +248,16 @@ class CommandDispatcher(object):
     def check_mode(self):
         # after start switch to PLAYER mode
         if self.current_mode is None:
-            self.change_mode(C_MODE_PLAYER)
+            self.change_mode(C_MODE_LIBRARY)
+
+        # in settings mode we will wait until user change the mode
+        if self.current_mode == C_MODE_SETTINGS:
+            return
 
         # if nothing to play switch to LIBRARY mode
-        tracks = self.core.tracklist.tl_tracks.get()
-        if self.current_mode != C_MODE_LIBRARY and len(tracks) == 0:
-            self.change_mode(C_MODE_LIBRARY)
+        # tracks = self.core.tracklist.tl_tracks.get()
+        # if self.current_mode == C_MODE_PLAYER and len(tracks) == 0:
+        #     self.change_mode(C_MODE_LIBRARY)
         # if nothing was pressed after 10 seconds in mode TRACKLIST
         # switch back to PLAYER mode
         if self.current_mode == C_MODE_TRACKLIST:
@@ -263,13 +272,21 @@ class CommandDispatcher(object):
         print('mode after check_mode: ' + self.current_mode)
         # main commands - avalible on each remote
         if cmd == 'mode':
-            if len(self.core.tracklist.tl_tracks.get()) == 0:
-                self.go_to_library()
-            else:
-                if self.current_mode == C_MODE_PLAYER:
+            # if len(self.core.tracklist.tl_tracks.get()) == 0:
+            #     self.go_to_library()
+            # else:
+            if self.current_mode == C_MODE_PLAYER or \
+               self.current_mode == C_MODE_TRACKLIST:
                     self.go_to_library()
-                else:
-                    self.go_to_player()
+                    return
+            if self.current_mode == C_MODE_LIBRARY:
+                self.go_to_settings()
+                return
+            if self.current_mode == C_MODE_SETTINGS:
+                self.go_to_player()
+                return
+        if cmd == 'mode_settings':
+            self.go_to_settings()
 
         if cmd == 'left':
             if self.current_mode != C_MODE_LIBRARY:
@@ -339,6 +356,7 @@ class CommandDispatcher(object):
         if cmd == 'ask_bot':
             self.change_mode(C_MODE_PLAYER)
             try:
+                self.core.playback.pause()
                 ai.ask_bot(self.config)
             except Exception:
                 str("Error in ai.ask_bot")

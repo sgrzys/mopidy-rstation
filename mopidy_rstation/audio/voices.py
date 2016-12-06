@@ -121,6 +121,11 @@ def speak(code, *param, **key):
             speak_text(u"Biblioteka")
         elif language == 'en-US':
             speak_text(u"library")
+    if code == 'SETTINGS':
+        if language == 'pl-PL':
+            speak_text(u"Ustawienia")
+        elif language == 'en-US':
+            speak_text(u"Settings")
     if code == 'PLAYER':
         if language == 'pl-PL':
             speak_text(u"Odtwarzacz")
