@@ -37,7 +37,7 @@ def play_file(f, async=False):
                 pygame.mixer.get_num_channels()+1)
             channel = pygame.mixer.find_channel()
 
-    if type(f) is str:
+    if type(f) is str or isinstance(f, unicode):
         sound = pygame.mixer.Sound(f)
     else:
         sound = pygame.mixer.Sound(f.name)

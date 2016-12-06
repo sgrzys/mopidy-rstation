@@ -58,6 +58,9 @@ class CommandDispatcher(object):
                 voices.speak_text(voices.convert_text(track.name))
         except Exception:
             current_tl_track = Utils.core.tracklist.tl_tracks.get()[-1]
+            track = current_tl_track.track
+            if track is not None:
+                voices.speak_text(voices.convert_text(track.name))
 
     def track_list_next(self):
         global current_tl_track
@@ -75,6 +78,9 @@ class CommandDispatcher(object):
                 voices.speak_text(voices.convert_text(track.name))
         except Exception:
             current_tl_track = Utils.core.tracklist.tl_tracks.get()[0]
+            track = current_tl_track.track
+            if track is not None:
+                voices.speak_text(voices.convert_text(track.name))
 
     def track_list_enter(self):
         global current_tl_track
@@ -103,7 +109,7 @@ class CommandDispatcher(object):
         # go up in library
         voices.speak('LIBRARY')
         self.core.library.browse(url)
-        self.change_mode()
+        self.change_mode(C_MODE_LIBRARY)
 
     def go_to_player(self):
         print('go_to_player')
@@ -115,9 +121,11 @@ class CommandDispatcher(object):
         print('change_lang from: ' + Utils.config['language'])
         if Utils.config['language'] == 'pl-PL':
             Utils.config['language'] = 'en-US'
+            voices.set_voice()
             voices.speak_text('English')
         elif Utils.config['language'] == 'en-US':
             Utils.config['language'] = 'pl-PL'
+            voices.set_voice()
             voices.speak_text('Polski')
         print('change_lang to: ' + Utils.config['language'])
 

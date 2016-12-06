@@ -13,6 +13,12 @@ reload(sys)
 sys.setdefaultencoding("utf-8")
 
 
+def set_voice():
+    global voice
+    voice = pyvona.create_voice(Utils.config)
+    print("set_voice")
+
+
 def convert_text(text):
     t = u''
     t = t + text
@@ -27,7 +33,7 @@ def speak_text(text, thread=True):
     global speak_time
     global voice
     if voice is None:
-        voice = pyvona.create_voice(Utils.config)
+        set_voice()
     t = convert_text(text)
 
     if thread:
@@ -42,7 +48,7 @@ def speak_text_thread(text):
     global speak_time
     global voice
     if voice is None:
-        voice = pyvona.create_voice(Utils.config)
+        set_voice()
     # wait a little
     time.sleep(0.4)
     # check if no next button was pressed

@@ -27,9 +27,11 @@ def load_best_track(tracks, titles, item):
                 return
             Utils.core.tracklist.clear()
             Utils.core.tracklist.add(uri=track.file)
-            item = Utils.core.tracklist.get_tracks()[0]
-            voices.speak('PLAY_URI', val=item.track.name)
-            Utils.core.playback.play(tlid=item.tlid)
+            tl_tracks = Utils.core.tracklist.tl_tracks.get()
+            for tl_track in tl_tracks:
+                if tl_track.track.name == title[0]:
+                    voices.speak('PLAY_URI', val=tl_track.track.name)
+                    Utils.core.playback.play(tlid=tl_track.tlid)
 
 
 def start_player():

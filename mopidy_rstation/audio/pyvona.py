@@ -35,6 +35,11 @@ _date_format = '%Y%m%d'
 def create_voice(config):
     """Creates and returns a voice object to interact with
     """
+    # self.__init__(
+    #     config['ivona_access_key'],
+    #     config['ivona_secret_key'],
+    #     config['language'])
+    print('create_voice ' + config['language'])
     return Voice(
         config['ivona_access_key'],
         config['ivona_secret_key'],
@@ -138,17 +143,16 @@ class Voice(object):
                 f.seek(0)
         else:
             cache_f = hashlib.md5(text_to_speak).hexdigest() + '.ogg'
-            # speech_cache_dir = os.getcwd() + '/speech_cache/'
-            speech_cache_dir = '/home/pi/mopidy-rstation/speech_cache/'
 
-            if not os.path.isdir(speech_cache_dir):
-                os.makedirs(speech_cache_dir)
+            if not os.path.isdir(self.speech_cache_dir):
+                os.makedirs(self.speech_cache_dir)
 
-            if not os.path.isfile(speech_cache_dir + cache_f):
+            if not os.path.isfile(self.speech_cache_dir + cache_f):
                 with self.use_ogg_codec():
-                    self.fetch_voice(text_to_speak, speech_cache_dir + cache_f)
+                    self.fetch_voice(
+                        text_to_speak, self.speech_cache_dir + cache_f)
 
-            f = speech_cache_dir + cache_f
+            f = self.speech_cache_dir + cache_f
         sounds.play_file(f, async)
 
     def list_voices(self):
@@ -252,12 +256,12 @@ class Voice(object):
         k_signing = self._sign(k_service, 'aws4_request')
         return k_signing
 
-    def __init__(self, access_key, secret_key, language):
+    def __init__(self, access_key, secret_key, lang):
         """Set initial voice object parameters
         """
         self.region = 'eu-west'
-        self.language = language
-        if language == 'pl-PL':
+        self.language = lang
+        if lang == 'pl-PL':
             # self.voice_name = 'Agnieszka'
             self.voice_name = 'Ewa'
             # Maja Ewa Jaccek Jan
@@ -276,3 +280,6 @@ class Voice(object):
         self.speech_rate = 'medium'
         self.sentence_break = 400
         self.paragraph_break = 650
+        # speech_cache_dir = os.getcwd() + '/speech_cache/'
+        self.speech_cache_dir = '/home/pi/mopidy-rstation/speech_cache/' + \
+            lang + '/' + self.voice_name + '/'
