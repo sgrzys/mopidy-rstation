@@ -46,19 +46,19 @@ def play_item(item, item_type=None):
 
     if item_type == 'muzyka':
         albums, names = m3uparser.parseFolderForPlaylists(
-            '/home/pi/mopidy-rstation/media/Muzyka')
+            '/home/pi/mopidy-rstation/media/Music')
         load_best_playlist(albums, names, item)
     elif item_type == 'audiobook':
         albums, names = m3uparser.parseFolderForPlaylists(
-            '/home/pi/mopidy-rstation/media/Audiobuki')
+            '/home/pi/mopidy-rstation/media/Audiobooks')
         load_best_playlist(albums, names, item)
     elif item_type == 'podcast':
         albums, names = m3uparser.parseFolderForPlaylists(
-            '/home/pi/mopidy-rstation/media/Podkasty')
+            '/home/pi/mopidy-rstation/media/Podcasts')
         load_best_playlist(albums, names, item)
     elif item_type == 'radio':
         tracks, titles = m3uparser.parseFolderForTracks(
-            '/home/pi/mopidy-rstation/media/Radia')
+            '/home/pi/mopidy-rstation/media/Radio')
         load_best_track(tracks, titles, item)
     else:
         # try to play without a type

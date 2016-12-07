@@ -35,15 +35,11 @@ _date_format = '%Y%m%d'
 def create_voice(config):
     """Creates and returns a voice object to interact with
     """
-    # self.__init__(
-    #     config['ivona_access_key'],
-    #     config['ivona_secret_key'],
-    #     config['language'])
-    print('create_voice ' + config['language'])
-    return Voice(
+    voice = Voice(
         config['ivona_access_key'],
         config['ivona_secret_key'],
         config['language'])
+    return voice
 
 
 class Voice(object):
@@ -259,14 +255,25 @@ class Voice(object):
     def __init__(self, access_key, secret_key, lang):
         """Set initial voice object parameters
         """
+        from ..utils import Utils
+        config = Utils.config
+        print(str(config))
+        self.access_key = config['ivona_access_key']
+        self.secret_key = config['ivona_secret_key']
+        self.language = config['language']
         self.region = 'eu-west'
-        self.language = lang
-        if lang == 'pl-PL':
-            # self.voice_name = 'Agnieszka'
+        if self.language == 'pl-PL':
+            # self.voice_name = 'Agnieszka' Maja Ewa Jaccek Jan
             self.voice_name = 'Ewa'
-            # Maja Ewa Jaccek Jan
-        else:
+        elif self.language == 'ru-RU':
+            self.voice_name = 'Maxim'
+        elif self.language == 'en-US':
             self.voice_name = 'Joey'
+        else:
+            print('----------------------------------------')
+            print('the language is: ' + lang + ' ----------')
+            print('----------------------------------------')
+
 
         # [Nicole, Enrique, Agnieszka, Tatyana, Russell,
         # Lotte, Geraint, Carmen, Mads, Penelope, Jennifer,
@@ -275,8 +282,6 @@ class Voice(object):
         # Ewa, Conchita, Karl, Miguel, Mathieu, Justin, Chipmunk,
         # Jacek, Ines, Gwyneth, Cristiano, Celine, Jan, Liv,
         # Joey, Raveena, Filiz, Dora, Salli, Vitoria, Emma, Hans, Kendra]
-        self.access_key = access_key
-        self.secret_key = secret_key
         self.speech_rate = 'medium'
         self.sentence_break = 400
         self.paragraph_break = 650

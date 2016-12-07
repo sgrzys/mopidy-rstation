@@ -123,16 +123,9 @@ class CommandDispatcher(object):
         self.change_mode(C_MODE_PLAYER)
 
     def change_lang(self):
-        print('change_lang from: ' + Utils.config['language'])
-        if Utils.config['language'] == 'pl-PL':
-            Utils.config['language'] = 'en-US'
-            voices.set_voice()
-            voices.speak_text('English')
-        elif Utils.config['language'] == 'en-US':
-            Utils.config['language'] = 'pl-PL'
-            voices.set_voice()
-            voices.speak_text('Polski')
-        print('change_lang to: ' + Utils.config['language'])
+        Utils.switch_current_lang()
+        voices.voice = None
+        voices.speak("LANGUAGE")
 
     def lib_enter(self):
         print('lib_enter')
@@ -162,7 +155,7 @@ class CommandDispatcher(object):
                 Utils.curr_lib_item_id += 1
             try:
                 item = Utils.lib_items[Utils.curr_lib_item_id]
-                voices.speak_text(voices.convert_text(item.name))
+                self.speak_lib_item(voices.convert_text(item.name))
 
             except Exception as e:
                 print(str(e))
@@ -178,9 +171,21 @@ class CommandDispatcher(object):
             Utils.curr_lib_item_id -= 1
         try:
             item = Utils.lib_items[Utils.curr_lib_item_id]
-            voices.speak_text(voices.convert_text(item.name))
+            self.speak_lib_item(voices.convert_text(item.name))
         except Exception as e:
             print(str(e))
+
+    def speak_lib_item(self, name):
+        if name == 'Audiobooks':
+            voices.speak('AUDIOBOOKS_DIR')
+        elif name == 'Music':
+            voices.speak('MUSIC_DIR')
+        elif name == 'Podcasts':
+            voices.speak('PODCAST_DIR')
+        elif name == 'Radio':
+            voices.speak('RADIO_DIR')
+        else:
+            voices.speak_text(voices.convert_text(name))
 
     def lib_up(self):
         print('lib_up')
@@ -200,11 +205,11 @@ class CommandDispatcher(object):
         print('lib_next_dir')
         # next dir in library
         u = Utils.lib_items[Utils.curr_lib_item_id].uri
-        if u.startswith(url + '/Radia'):
+        if u.startswith(url + '/Radio'):
             self.lib_audiobook()
-        elif u.startswith(url + '/Audiobuki'):
+        elif u.startswith(url + '/Audiobooks'):
             self.lib_music()
-        elif u.startswith(url + '/Muzyka'):
+        elif u.startswith(url + '/Music'):
             self.lib_radio()
         else:
             self.lib_radio()
@@ -213,28 +218,28 @@ class CommandDispatcher(object):
         print('lib_prev_dir')
         # prev dir in library
         u = Utils.lib_items[Utils.curr_lib_item_id].uri
-        if u.startswith(url + url + '/Radia'):
+        if u.startswith(url + url + '/Radio'):
             self.lib_music()
-        elif u.startswith(url + '/Audiobuki'):
+        elif u.startswith(url + '/Audiobooks'):
             self.lib_radio()
-        elif u.startswith(url + '/Muzyka'):
+        elif u.startswith(url + '/Music'):
             self.lib_audiobook()
         else:
             self.lib_music()
 
     def lib_audiobook(self):
         voices.speak('AUDIOBOOKS_DIR')
-        uri = url + '/Audiobuki'
+        uri = url + '/Audiobooks'
         self.core.library.browse(uri)
 
     def lib_radio(self):
         voices.speak('RADIO_DIR')
-        uri = url + '/Radia'
+        uri = url + '/Radio'
         self.core.library.browse(uri)
 
     def lib_music(self):
         voices.speak('MUSIC_DIR')
-        uri = url + '/Muzyka'
+        uri = url + '/Music'
         self.core.library.browse(uri)
 
     def change_mode(self, mode):

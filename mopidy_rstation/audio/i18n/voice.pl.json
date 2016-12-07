@@ -1,0 +1,27 @@
+{
+    "pl": {
+        "LANGUAGE": "Polski",
+        "PROCESSING": "Przetwarzam",
+        "PLAY": "Graj",
+        "PLAYING": "Gramy",
+        "PAUSE": "Pauza",
+        "SPEAK_ON": "Podpowiedzi",
+        "SPEAK_OFF": "Bez podpowiedzi",
+        "VOL": "Głośność",
+        "MUTE": "Wycisz",
+        "NEXT": "Następny",
+        "PREV": "Poprzedni",
+        "LIBRARY": "Biblioteka",
+        "SETTINGS": "Ustawienia",
+        "PLAYER": "Odtwarzacz",
+        "ENTER_DIR": "Wybieram",
+        "PLAY_URI": "Włączam",
+        "UP_DIR": "Do góry",
+        "AUDIOBOOKS_DIR": "Audiobuki",
+        "MUSIC_DIR": "Muzyka",
+        "PODCAST_DIR": "Podkasty",
+        "RADIO_DIR": "Radio",
+        "WEATHER_INFO": "Prognoza pogody dla",
+        "ASKING_WIKIPEDIA": "Pytamy Wikipedie"
+    }
+}

@@ -141,16 +141,12 @@ class Utils:
     def search_wikipedia(query):
         from mopidy_rstation.wikipedia import search
         from mopidy_rstation.audio import voices
-        if Utils.config['language'] == 'pl-PL':
-            voices.speak_text(u'Pytamy wikipedie ')
-            lang = 'pl'
-        else:
-            voices.speak_text(u'According to Wikipedia ')
-            lang = 'en'
+        voices.speak('ASKING_WIKIPEDIA')
+        lang = Utils.get_current_lang(short=True)
         try:
             ret = u'' + search.do(query, lang)
         except Exception:
-            voices.speak_text('Błąd podczas pytania Wikipedii o ' + query)
+            voices.speak_text('Wikipedia Error ' + query)
             return
 
         v = pyvona.create_voice(Utils.config)
@@ -163,6 +159,30 @@ class Utils:
                 'use_cache': False,
                 'async': True})
         t.start()
+
+    @staticmethod
+    def get_current_lang(short=None):
+        if short:
+            return Utils.config['language'][:2]
+
+        return Utils.config['language']
+
+    @staticmethod
+    def switch_current_lang(lang=None):
+        new_lang = ''
+        cur_lang = Utils.get_current_lang()
+        if lang is not None:
+            new_lang = lang
+        else:
+            if cur_lang == 'pl-PL':
+                new_lang = 'en-US'
+            elif cur_lang == 'en-US':
+                new_lang = 'ru-RU'
+            elif cur_lang == 'ru-RU':
+                new_lang = 'pl-PL'
+
+        Utils.config['language'] = new_lang
+        print('languate changed to ' + str(new_lang))
 
     @staticmethod
     def forecast_weather(location=None):
@@ -200,15 +220,10 @@ class Utils:
         weather = forecast.ForecastData(Utils.config)
         weather.verbose = True
 
-        if Utils.config['language'] == 'pl-PL':
+        voices.speak(
+            'WEATHER_INFO',
+            val=weather.country_name + ', ' + weather.location_name)
 
-            voices.speak_text(
-                'Trzydniowa prognoza pogody dla ' + weather.country_name +
-                ', ' + weather.location_name, False)
-        else:
-            voices.speak_text(
-                'Weather forecast for ' + weather.country_name +
-                ', ' + weather.location_name, False)
         days = weather.read_txt_forecast()
         text = u""
         for day in days:
@@ -225,7 +240,7 @@ class Utils:
 
     @staticmethod
     def get_time():
-        if Utils.config['language'] == 'pl-PL':
+        if Utils.get_current_lang == 'pl-PL':
             locale.setlocale(locale.LC_TIME, 'pl_PL.utf8')
         curr_time = time.localtime()
         t = time.strftime("%H:%M", curr_time)
@@ -235,7 +250,7 @@ class Utils:
         dd = time.strftime("%A %e %B %Y", curr_time)
         v = pyvona.create_voice(Utils.config)
         v.speak(u'Godzina ' + t + u' dzisiaj jest ' + dd + u' rok')
-        if Utils.config['language'] == 'pl-PL':
+        if Utils.get_current_lang == 'pl-PL':
             mm = m
             if m == '01':
                 mm = 'Stycznia'

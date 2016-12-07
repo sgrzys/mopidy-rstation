@@ -1,0 +1,27 @@
+{
+    "en": {
+        "LANGUAGE": "English",
+        "PROCESSING": "Processing",
+        "PLAY": "Play",
+        "PLAYPROCESSINGING": "Now playing",
+        "PAUSE": "Pause",
+        "SPEAK_ON": "Hints on",
+        "SPEAK_OFF": "Hints off",
+        "VOL": "Volume",
+        "MUTE": "Mute",
+        "NEXT": "Next",
+        "PREV": "Previous",
+        "LIBRARY": "Library",
+        "SETTINGS": "Settings",
+        "PLAYER": "Player",
+        "ENTER_DIR": "Going to",
+        "PLAY_URI": "Playing",
+        "UP_DIR": "Go up",
+        "AUDIOBOOKS_DIR": "Audiobooks",
+        "MUSIC_DIR": "Music",
+        "PODCAST_DIR": "Podcasts",
+        "RADIO_DIR": "Radio",
+        "WEATHER_INFO": "Weather forecast for",
+        "ASKING_WIKIPEDIA": "We ask Wikipedia"
+    }
+}

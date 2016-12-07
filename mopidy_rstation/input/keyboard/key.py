@@ -8,7 +8,6 @@ import select
 import functools
 import errno
 import traceback
-from mopidy_rstation.utils import Utils
 from threading import Thread
 from mopidy_rstation.audio import sounds
 from mopidy_rstation.witai import ai
