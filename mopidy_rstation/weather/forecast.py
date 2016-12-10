@@ -4,7 +4,7 @@ import json
 import os
 import time
 import codecs
-from mopidy_rstation.utils import Utils
+from mopidy_rstation.config.settings import Config
 
 
 class ForecastData:
@@ -15,8 +15,8 @@ class ForecastData:
     country_name = None
     temp_file = None
 
-    def __init__(self, conf):
-        self.conf = conf
+    def __init__(self):
+        self.conf = Config.get_config()
         self.temp_file = "/tmp/rstation.weather.cache" + \
             self.conf['location_gps']
         geo = self.geolookup()
@@ -247,13 +247,13 @@ class ForecastData:
 
 
 def main():
-    conf = Utils.get_config()
+    conf = Config.get_config()
 
     # if the location is passed we will try to take geolookup the gps first
     # if len(sys.argv) > 1:
     #     .location = sys.argv[1]
 
-    forecast = ForecastData(conf['rstation'])
+    forecast = ForecastData(conf)
     forecast.verbose = True
     print(forecast.location_name)
     print('----------------------------------')

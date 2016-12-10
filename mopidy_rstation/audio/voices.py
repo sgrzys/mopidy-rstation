@@ -1,5 +1,5 @@
 # encoding=utf8
-from ..utils import Utils
+from mopidy_rstation.config.settings import Config
 import os
 import sys
 from threading import Thread
@@ -16,7 +16,7 @@ sys.setdefaultencoding("utf-8")
 def set_voice():
     global voice
     import pyvona
-    voice = pyvona.create_voice(Utils.config)
+    voice = pyvona.create_voice()
 
 
 def convert_text(text):
@@ -59,7 +59,7 @@ def speak_text_thread(text):
 
 
 def speak(code, *param, **key):
-    lang = Utils.get_current_lang(short=True)
+    lang = Config.get_current_lang(short=True)
     i18n.config.set(
         'load_path', ['/home/pi/mopidy-rstation/mopidy_rstation/audio/i18n'])
     prefix = 'voice.'

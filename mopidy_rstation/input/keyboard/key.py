@@ -111,16 +111,20 @@ class KeyPad(threading.Thread):
                         # event.value == 1 key down
                         # event.value == 0 key up
                         # event.value == 2 key hold
-                        if event.type == evdev.ecodes.EV_KEY:
+                        if event.type == evdev.ecodes.EV_KEY & \
+                           event.value == 1:
                             # enter with mouse mode on airmouse
                             if event.code == 272:
-                                self.handle_event('KEY_ENTER', 1)
+                                self.handle_event('KEY_ENTER')
                             # esc with mouse mode on airmouse
                             elif event.code == 273:
-                                self.handle_event('KEY_ESC', 1)
+                                self.handle_event('KEY_ESC')
                             else:
-                                self.handle_event(
-                                    evdev.ecodes.KEY[event.code], event.value)
+                                self.handle_event(evdev.ecodes.KEY[event.code])
+                        if event.type == evdev.ecodes.EV_KEY & \
+                           event.value == 0:
+                            # key up
+                            ai.RECORDING = False
 
                 except Exception as e:
                     if hasattr(e, 'errno'):
@@ -130,8 +134,7 @@ class KeyPad(threading.Thread):
                     logger.error('KeyPad: ' + str(e))
                     traceback.print_exc()
 
-    def handle_event_thread(self, code, mode):
-        if mode == 1:
+    def handle_event_thread(self, code):
             # main keys
             if code == 'KEY_POWER':
                 self.ButtonPressed('mode')
@@ -177,16 +180,8 @@ class KeyPad(threading.Thread):
                 self.ButtonPressed('lib_radio')
             if code == 'KEY_9':
                 self.ButtonPressed('lib_music')
-        elif mode == 0:
-            # key up
-            ai.RECORDING = False
-        elif mode == 2:
-            # key hold
-            # TODO
-            if code == 'KEY_POWER':
-                self.ButtonPressed('mode_settings')
 
-    def handle_event(self, code, mode):
+    def handle_event(self, code):
         print('KeyPad -> handle_event -> ' + code)
         # workeround - kill the ivona - to stop the forecast
         try:
@@ -195,6 +190,6 @@ class KeyPad(threading.Thread):
         except Exception:
             traceback.print_exc()
 
-        t = Thread(target=self.handle_event_thread, args=(code, mode))
+        t = Thread(target=self.handle_event_thread, args=(code,))
         t.start()
         return

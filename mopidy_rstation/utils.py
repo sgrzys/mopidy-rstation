@@ -5,7 +5,6 @@ import subprocess
 from threading import Thread
 import time
 from mopidy_rstation.audio import pyvona
-from ConfigParser import ConfigParser
 import locale
 import sys
 # to avoid the UnicodeDecodeError: 'ascii' codec can't decode byte
@@ -17,13 +16,10 @@ class Utils:
     lib_items = []
     curr_lib_item_id = 0
     core = None
-    config = {}
 
     @staticmethod
-    def save_config(config, core):
+    def save_core(core):
         Utils.core = core
-        for k, v in config.iteritems():
-            Utils.config[k] = v
 
     @staticmethod
     def format_time_to_string(seconds_total):
@@ -127,29 +123,19 @@ class Utils:
         Utils.core.playback.volume = volume
 
     @staticmethod
-    def get_config():
-        conf = ConfigParser()
-        conf.read('/etc/mopidy/mopidy.conf')
-        the_dict = {}
-        for section in conf.sections():
-            the_dict[section] = {}
-            for key, val in conf.items(section):
-                the_dict[section][key] = val
-        return the_dict
-
-    @staticmethod
     def search_wikipedia(query):
         from mopidy_rstation.wikipedia import search
         from mopidy_rstation.audio import voices
+        from mopidy_rstation.config import Config
         voices.speak('ASKING_WIKIPEDIA')
-        lang = Utils.get_current_lang(short=True)
+        lang = Config.get_current_lang(short=True)
         try:
             ret = u'' + search.do(query, lang)
         except Exception:
             voices.speak_text('Wikipedia Error ' + query)
             return
 
-        v = pyvona.create_voice(Utils.config)
+        v = pyvona.create_voice()
         ret = ret.replace('=', '')
         ret = ret[0:8192]
         t = Thread(
@@ -159,30 +145,6 @@ class Utils:
                 'use_cache': False,
                 'async': True})
         t.start()
-
-    @staticmethod
-    def get_current_lang(short=None):
-        if short:
-            return Utils.config['language'][:2]
-
-        return Utils.config['language']
-
-    @staticmethod
-    def switch_current_lang(lang=None):
-        new_lang = ''
-        cur_lang = Utils.get_current_lang()
-        if lang is not None:
-            new_lang = lang
-        else:
-            if cur_lang == 'pl-PL':
-                new_lang = 'en-US'
-            elif cur_lang == 'en-US':
-                new_lang = 'ru-RU'
-            elif cur_lang == 'ru-RU':
-                new_lang = 'pl-PL'
-
-        Utils.config['language'] = new_lang
-        print('languate changed to ' + str(new_lang))
 
     @staticmethod
     def forecast_weather(location=None):
@@ -204,20 +166,17 @@ class Utils:
             text = text.replace("100%", u"99%")
             return text
 
-        # to test from cmd
-        # conf = Utils.get_config()
-        # Utils.config = conf['rstation']
-        # language = 'en-US'
         from mopidy_rstation.weather import forecast
         from mopidy_rstation.audio import voices
+        from mopidy_rstation.config import Config
         if location is not None:
             from geopy.geocoders import Nominatim
             geolocator = Nominatim()
             location = geolocator.geocode(location)
-            Utils.config['location_gps'] = str(location.latitude) + \
+            Config.get_config()['location_gps'] = str(location.latitude) + \
                 ',' + str(location.longitude)
 
-        weather = forecast.ForecastData(Utils.config)
+        weather = forecast.ForecastData()
         weather.verbose = True
 
         voices.speak(
@@ -229,7 +188,7 @@ class Utils:
         for day in days:
             text = text + u" " + day['title'] + ' ' + parse_text(day['text'])
 
-        v = pyvona.create_voice(Utils.config)
+        v = pyvona.create_voice()
         t = Thread(
             target=v.speak,
             kwargs={
@@ -240,7 +199,8 @@ class Utils:
 
     @staticmethod
     def get_time():
-        if Utils.get_current_lang == 'pl-PL':
+        from mopidy_rstation.config import Config
+        if Config.get_current_lang() == 'pl-PL':
             locale.setlocale(locale.LC_TIME, 'pl_PL.utf8')
         curr_time = time.localtime()
         t = time.strftime("%H:%M", curr_time)
@@ -248,7 +208,7 @@ class Utils:
         dm = time.strftime("%e_%B", curr_time)
         d = time.strftime("%e", curr_time)
         dd = time.strftime("%A %e %B %Y", curr_time)
-        v = pyvona.create_voice(Utils.config)
+        v = pyvona.create_voice()
         v.speak(u'Godzina ' + t + u' dzisiaj jest ' + dd + u' rok')
         if Utils.get_current_lang == 'pl-PL':
             mm = m
@@ -281,13 +241,9 @@ class Utils:
             Utils.search_wikipedia(dm)
 
 
-# for now, just pull the track info and print it onscreen
-# get the M3U file path from the first command line argument
+# TODO
 def main():
-    conf = Utils.get_config()
-    Utils.config = conf['rstation']
     Utils.forecast_weather()
-
     # item = sys.argv[1]
     # print('item to precess: ' + item)
 

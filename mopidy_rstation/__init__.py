@@ -25,6 +25,7 @@ class Extension(ext.Extension):
         # optional
         schema['audio_in_name'] = config.String(optional=True)
         schema['language'] = config.String(optional=True)
+        schema['voice_name'] = config.String(optional=True)
         schema['enable_irda'] = config.Boolean(optional=True)
         schema['enable_keypad'] = config.Boolean(optional=True)
         schema['debug_irda_simulate'] = config.Boolean(optional=True)

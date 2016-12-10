@@ -1,6 +1,9 @@
 {
     "en": {
         "LANGUAGE": "English",
+        "MENU_LANGUAGE": "Language",
+        "MENU_VOICES": "Voice",
+        "MENU_HELP": "Help",
         "PROCESSING": "Processing",
         "PLAY": "Play",
         "PLAYPROCESSINGING": "Now playing",

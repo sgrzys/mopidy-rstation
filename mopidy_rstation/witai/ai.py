@@ -5,6 +5,7 @@ import wit
 from mopidy_rstation.utils import Utils
 from mopidy_rstation.audio import pyvona
 from mopidy_rstation.player import control
+from mopidy_rstation.config.settings import Config
 import pyaudio
 import wave
 from StringIO import StringIO
@@ -118,9 +119,10 @@ def record_and_stream():
     Utils.speak('PROCESSING')
 
 
-def ask_bot(config):
-    v = pyvona.create_voice(config)
+def ask_bot():
+    v = pyvona.create_voice()
     try:
+        config = Config.get_config()
         w = wit.Wit(config['wit_token'])
         audio_in_name = config['audio_in_name']
         set_audio_in(audio_in_name)
@@ -211,6 +213,4 @@ def ask_bot(config):
 
 
 if __name__ == '__main__':
-    conf = Utils.get_config()
-    Utils.config = conf['rstation']
-    ask_bot(conf['rstation'])
+    ask_bot()

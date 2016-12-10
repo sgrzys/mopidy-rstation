@@ -5,6 +5,8 @@ import traceback
 import time
 from ..audio import sounds
 from ..audio import voices
+from mopidy_rstation.config.settings import Config
+from mopidy_rstation.config.settings import Settings
 
 LIRC_PROG_NAME = "mopidyRstation"
 C_MODE_PLAYER = 'PLAYER'
@@ -123,7 +125,7 @@ class CommandDispatcher(object):
         self.change_mode(C_MODE_PLAYER)
 
     def change_lang(self):
-        Utils.switch_current_lang()
+        Config.switch_current_lang()
         voices.voice = None
         voices.speak("LANGUAGE")
 
@@ -265,7 +267,8 @@ class CommandDispatcher(object):
         #     self.change_mode(C_MODE_LIBRARY)
         # if nothing was pressed after 10 seconds in mode TRACKLIST
         # switch back to PLAYER mode
-        if self.current_mode == C_MODE_TRACKLIST:
+        if self.current_mode == C_MODE_TRACKLIST or \
+           self.current_mode == C_MODE_SETTINGS:
             sec_left = time.time() - self.change_mode_time
             print('check_mode sec_left: ' + str(sec_left))
             if sec_left > 10:
@@ -290,8 +293,10 @@ class CommandDispatcher(object):
             if self.current_mode == C_MODE_SETTINGS:
                 self.go_to_player()
                 return
-        if cmd == 'mode_settings':
-            self.go_to_settings()
+
+        if self.current_mode == C_MODE_SETTINGS:
+            return Settings.onCommand(cmd)
+            # TODO the same for all modes should be done
 
         if cmd == 'left':
             if self.current_mode != C_MODE_LIBRARY:
@@ -362,7 +367,7 @@ class CommandDispatcher(object):
             self.change_mode(C_MODE_PLAYER)
             try:
                 self.core.playback.pause()
-                ai.ask_bot(self.config)
+                ai.ask_bot()
             except Exception:
                 str("Error in ai.ask_bot")
                 traceback.print_exc()

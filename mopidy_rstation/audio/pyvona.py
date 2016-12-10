@@ -32,14 +32,10 @@ _amazon_date_format = '%Y%m%dT%H%M%SZ'
 _date_format = '%Y%m%d'
 
 
-def create_voice(config):
+def create_voice():
     """Creates and returns a voice object to interact with
     """
-    voice = Voice(
-        config['ivona_access_key'],
-        config['ivona_secret_key'],
-        config['language'])
-    return voice
+    return Voice()
 
 
 class Voice(object):
@@ -252,11 +248,11 @@ class Voice(object):
         k_signing = self._sign(k_service, 'aws4_request')
         return k_signing
 
-    def __init__(self, access_key, secret_key, lang):
+    def __init__(self):
         """Set initial voice object parameters
         """
-        from ..utils import Utils
-        config = Utils.config
+        from mopidy_rstation.config.settings import Config
+        config = Config.get_config()
         print(str(config))
         self.access_key = config['ivona_access_key']
         self.secret_key = config['ivona_secret_key']
@@ -269,9 +265,11 @@ class Voice(object):
             self.voice_name = 'Maxim'
         elif self.language == 'en-US':
             self.voice_name = 'Joey'
+        elif self.language == 'fr-FR':
+            self.voice_name = 'Celine'
         else:
             print('----------------------------------------')
-            print('the language is: ' + lang + ' ----------')
+            print('the language is: ' + self.language + ' ----')
             print('----------------------------------------')
 
 
@@ -287,4 +285,4 @@ class Voice(object):
         self.paragraph_break = 650
         # speech_cache_dir = os.getcwd() + '/speech_cache/'
         self.speech_cache_dir = '/home/pi/mopidy-rstation/speech_cache/' + \
-            lang + '/' + self.voice_name + '/'
+            self.language + '/' + self.voice_name + '/'

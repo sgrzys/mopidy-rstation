@@ -1,6 +1,9 @@
 {
     "pl": {
         "LANGUAGE": "Polski",
+        "MENU_LANGUAGE": "Język",
+        "MENU_VOICES": "Głos",
+        "MENU_HELP": "Pomoc",
         "PROCESSING": "Przetwarzam",
         "PLAY": "Graj",
         "PLAYING": "Gramy",
