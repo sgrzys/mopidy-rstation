@@ -5,8 +5,8 @@ from ConfigParser import RawConfigParser
 
 class Config:
     config = None
-    config_file = '/home/pi/mopidy.conf'
-    # '/etc/mopidy/mopidy.conf'
+    # config_file = '/home/pi/mopidy.conf'
+    config_file = '/etc/mopidy/mopidy.conf'
 
     @staticmethod
     def change_config(key, value, section="rstation"):
@@ -66,7 +66,7 @@ class Settings:
         voices.speak(text)
 
     @staticmethod
-    def main_menu_right():
+    def main_menu_right ():
         if Settings.current_menu is None:
             Settings.current_menu = "MENU_LANGUAGE"
         if Settings.current_menu == "MENU_LANGUAGE":
