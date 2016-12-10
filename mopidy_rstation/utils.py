@@ -168,12 +168,13 @@ class Utils:
 
         from mopidy_rstation.weather import forecast
         from mopidy_rstation.audio import voices
-        from mopidy_rstation.config import Config
+        from mopidy_rstation.config import settings
         if location is not None:
             from geopy.geocoders import Nominatim
             geolocator = Nominatim()
             location = geolocator.geocode(location)
-            Config.get_config()['location_gps'] = str(location.latitude) + \
+            settings.Config.get_config()['location_gps'] = \
+                str(location.latitude) + \
                 ',' + str(location.longitude)
 
         weather = forecast.ForecastData()
