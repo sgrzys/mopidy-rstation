@@ -19,13 +19,14 @@ def set_voice():
     voice = pyvona.create_voice()
 
 
-def convert_text(text):
+def convert_text(text, remove_file_extension=False):
     t = u''
     t = t + text
     t = t.replace('_', ' ')
     t = t.replace('-', ' ')
-    # remove the file extension
-    t = os.path.splitext(t)[0]
+    if remove_file_extension:
+        # remove the file extension
+        t = os.path.splitext(t)[0]
     return t
 
 

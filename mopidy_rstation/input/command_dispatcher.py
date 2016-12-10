@@ -157,7 +157,8 @@ class CommandDispatcher(object):
                 Utils.curr_lib_item_id += 1
             try:
                 item = Utils.lib_items[Utils.curr_lib_item_id]
-                self.speak_lib_item(voices.convert_text(item.name))
+                self.speak_lib_item(
+                    voices.convert_text(item.name, remove_file_extension=True))
 
             except Exception as e:
                 print(str(e))
@@ -173,7 +174,8 @@ class CommandDispatcher(object):
             Utils.curr_lib_item_id -= 1
         try:
             item = Utils.lib_items[Utils.curr_lib_item_id]
-            self.speak_lib_item(voices.convert_text(item.name))
+            self.speak_lib_item(
+                voices.convert_text(item.name, remove_file_extension=True))
         except Exception as e:
             print(str(e))
 
