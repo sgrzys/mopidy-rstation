@@ -126,9 +126,9 @@ class Utils:
     def search_wikipedia(query):
         from mopidy_rstation.wikipedia import search
         from mopidy_rstation.audio import voices
-        from mopidy_rstation.config import Config
+        from mopidy_rstation.config import settings
         voices.speak('ASKING_WIKIPEDIA')
-        lang = Config.get_current_lang(short=True)
+        lang = settings.Config.get_current_lang(short=True)
         try:
             ret = u'' + search.do(query, lang)
         except Exception:
@@ -200,8 +200,8 @@ class Utils:
 
     @staticmethod
     def get_time():
-        from mopidy_rstation.config import Config
-        if Config.get_current_lang() == 'pl-PL':
+        from mopidy_rstation.config import settings
+        if settings.Config.get_current_lang() == 'pl-PL':
             locale.setlocale(locale.LC_TIME, 'pl_PL.utf8')
         curr_time = time.localtime()
         t = time.strftime("%H:%M", curr_time)
