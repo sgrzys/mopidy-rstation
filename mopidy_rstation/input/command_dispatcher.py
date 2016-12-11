@@ -189,7 +189,8 @@ class CommandDispatcher(object):
         elif name == 'Radio':
             voices.speak('RADIO_DIR')
         else:
-            voices.speak_text(voices.convert_text(name))
+            voices.speak_text(
+                voices.convert_text(name, remove_file_extension=True))
 
     def lib_up(self):
         print('lib_up')
