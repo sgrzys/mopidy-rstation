@@ -66,7 +66,7 @@ class Settings:
         voices.speak(text)
 
     @staticmethod
-    def main_menu_right ():
+    def main_menu_right():
         if Settings.current_menu is None:
             Settings.current_menu = "MENU_LANGUAGE"
         if Settings.current_menu == "MENU_LANGUAGE":

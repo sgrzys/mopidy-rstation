@@ -124,6 +124,7 @@ class Utils:
 
     @staticmethod
     def search_wikipedia(query):
+        print(query)
         from mopidy_rstation.wikipedia import search
         from mopidy_rstation.audio import voices
         from mopidy_rstation.config import settings
@@ -212,40 +213,43 @@ class Utils:
         dd = time.strftime("%A %e %B %Y", curr_time)
         v = pyvona.create_voice()
         v.speak(u'Godzina ' + t + u' dzisiaj jest ' + dd + u' rok')
-        if settings.Config.get_current_lang == 'pl-PL':
+        if settings.Config.get_current_lang() == 'pl-PL':
             mm = m
             if m == '01':
-                mm = 'Stycznia'
+                mm = 'stycznia'
             elif m == '02':
-                mm = 'Lutego'
+                mm = 'lutego'
             elif m == '03':
-                mm = 'Marca'
+                mm = 'marca'
             elif m == '04':
-                mm = 'Kwietnia'
+                mm = 'kwietnia'
             elif m == '05':
-                mm = 'Maja'
+                mm = 'maja'
             elif m == '06':
-                mm = 'Czerwca'
+                mm = 'czerwca'
             elif m == '07':
-                mm = 'Lipca'
+                mm = 'lipca'
             elif m == '08':
-                mm = 'Sierpnia'
+                mm = 'sierpnia'
             elif m == '09':
-                mm = 'Września'
+                mm = 'września'
             elif m == '10':
-                mm = 'Października'
+                mm = 'października'
             elif m == '11':
-                mm = 'Listopada'
+                mm = 'listopada'
             elif m == '12':
-                mm = 'Grudnia'
-            Utils.search_wikipedia(d + ' ' + mm)
+                mm = 'grudnia'
+            Utils.search_wikipedia(d + '_' + mm)
         else:
             Utils.search_wikipedia(dm)
 
 
 # TODO
 def main():
-    Utils.forecast_weather()
+    from mopidy_rstation.config import settings
+    settings.Config.get_config()
+    Utils.get_time()
+    # Utils.forecast_weather()
     # item = sys.argv[1]
     # print('item to precess: ' + item)
 
