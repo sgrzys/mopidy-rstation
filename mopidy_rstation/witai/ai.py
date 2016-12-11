@@ -20,7 +20,7 @@ CHUNK = 256
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
-RECORD_SECONDS = 5
+RECORD_SECONDS = 10
 INPUT_DEVICE_INDEX = None
 if pack('@h', 1) == pack('<h', 1):
     ENDIAN = 'little'

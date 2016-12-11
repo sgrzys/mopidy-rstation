@@ -40,7 +40,10 @@ class CommandDispatcher(object):
         buttonPressEvent.append(self.handleCommand)
 
     def handleCommand(self, cmd):
-        sounds.beep()
+        if cmd == 'vol_down' or cmd == 'vol_up':
+            None
+        else:
+            sounds.beep()
         # send the command to all the
         # CoreListener.send("handleRemoteCommand", cmd=cmd)
         self.onCommand(cmd)
@@ -93,8 +96,8 @@ class CommandDispatcher(object):
         if current_tl_track is None:
             current_tl_track = \
                 self.core.playback.get_current_tl_track().get()
-        track = current_tl_track.track
-        voices.speak('PLAY_URI', val=track.name)
+        # track = current_tl_track.trackvoices.speak
+        # voices.speak('PLAY_URI', val=track.name)
         self.core.playback.play(tlid=current_tl_track.tlid)
         self.change_mode(C_MODE_PLAYER)
 
@@ -140,10 +143,12 @@ class CommandDispatcher(object):
                 self.core.tracklist.clear()
                 self.core.tracklist.add(uri=current_item.uri)
                 self.core.playback.play()
-                voices.speak('PLAY_URI', val=current_item.name)
+                # voices.speak('PLAY_URI', val=current_item.name)
             else:
                 self.core.library.browse(current_item.uri)
-                voices.speak('ENTER_DIR', val=current_item.name)
+                voices.speak(
+                    'ENTER_DIR', voices.convert_text(
+                        val=current_item.name), remove_file_extension=True)
 
     def lib_next(self):
         print('lib_next')

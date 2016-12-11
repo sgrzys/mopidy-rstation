@@ -16,7 +16,7 @@ def load_best_playlist(albums, names, item):
             Utils.core.tracklist.clear()
             Utils.core.tracklist.add(uri=album.path)
             Utils.core.playback.play()
-            voices.speak('PLAY_URI', val=album.title)
+            # voices.speak('PLAY_URI', val=album.title)
 
 
 def load_best_track(tracks, titles, item):
@@ -30,7 +30,7 @@ def load_best_track(tracks, titles, item):
             tl_tracks = Utils.core.tracklist.tl_tracks.get()
             for tl_track in tl_tracks:
                 if tl_track.track.name == title[0]:
-                    voices.speak('PLAY_URI', val=tl_track.track.name)
+                    # voices.speak('PLAY_URI', val=tl_track.track.name)
                     Utils.core.playback.play(tlid=tl_track.tlid)
 
 
