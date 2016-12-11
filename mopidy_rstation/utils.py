@@ -135,7 +135,7 @@ class Utils:
         except Exception:
             voices.speak_text('Wikipedia Error ' + query)
             return
-        voices.speak('ANSWER_WIKIPEDIA' + ' ' + len(ret))
+        voices.speak('ANSWER_WIKIPEDIA' + ' ' + str(len(ret)))
         v = pyvona.create_voice()
         ret = ret.replace('=', '')
         ret = ret[0:8192]
