@@ -212,7 +212,7 @@ class Utils:
         dd = time.strftime("%A %e %B %Y", curr_time)
         v = pyvona.create_voice()
         v.speak(u'Godzina ' + t + u' dzisiaj jest ' + dd + u' rok')
-        if Utils.get_current_lang == 'pl-PL':
+        if settings.Config.get_current_lang == 'pl-PL':
             mm = m
             if m == '01':
                 mm = 'Stycznia'
