@@ -1,8 +1,8 @@
 {
     "en": {
         "LANGUAGE": "English",
-        "MENU_LANGUAGE": "Language",
-        "MENU_VOICES": "Voice",
+        "MENU_LANGUAGE": "Languages",
+        "MENU_VOICE": "Voices",
         "MENU_HELP": "Help",
         "PROCESSING": "Processing",
         "PLAY": "Play",

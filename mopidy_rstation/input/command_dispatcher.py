@@ -121,6 +121,10 @@ class CommandDispatcher(object):
         print('go_to_settings')
         voices.speak('SETTINGS')
         self.change_mode(C_MODE_SETTINGS)
+        Settings.G_MAIN_MENU_CURRENT = ''
+        Settings.G_MAIN_MENU_FOCUS = ''
+        Settings.G_MENU_CURRENT = ''
+        Settings.G_MENU_FOCUS = ''
 
     def go_to_player(self):
         print('go_to_player')
@@ -129,8 +133,6 @@ class CommandDispatcher(object):
 
     def change_lang(self):
         Config.switch_current_lang()
-        voices.voice = None
-        voices.speak("LANGUAGE")
 
     def lib_enter(self):
         print('lib_enter')
@@ -146,9 +148,9 @@ class CommandDispatcher(object):
                 # voices.speak('PLAY_URI', val=current_item.name)
             else:
                 self.core.library.browse(current_item.uri)
-                voices.speak(
-                    'ENTER_DIR', voices.convert_text(
-                        val=current_item.name), remove_file_extension=True)
+                t = voices.convert_text(
+                    current_item.name, remove_file_extension=True)
+                voices.speak('ENTER_DIR', val=t)
 
     def lib_next(self):
         print('lib_next')
@@ -265,18 +267,13 @@ class CommandDispatcher(object):
         if self.current_mode is None:
             self.change_mode(C_MODE_LIBRARY)
 
-        # in settings mode we will wait until user change the mode
-        if self.current_mode == C_MODE_SETTINGS:
-            return
-
         # if nothing to play switch to LIBRARY mode
         # tracks = self.core.tracklist.tl_tracks.get()
         # if self.current_mode == C_MODE_PLAYER and len(tracks) == 0:
         #     self.change_mode(C_MODE_LIBRARY)
         # if nothing was pressed after 10 seconds in mode TRACKLIST
         # switch back to PLAYER mode
-        if self.current_mode == C_MODE_TRACKLIST or \
-           self.current_mode == C_MODE_SETTINGS:
+        if self.current_mode == C_MODE_TRACKLIST:
             sec_left = time.time() - self.change_mode_time
             print('check_mode sec_left: ' + str(sec_left))
             if sec_left > 10:

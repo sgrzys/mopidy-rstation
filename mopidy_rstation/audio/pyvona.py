@@ -257,20 +257,13 @@ class Voice(object):
         self.access_key = config['ivona_access_key']
         self.secret_key = config['ivona_secret_key']
         self.language = config['language']
+        self.voice_name = config['voice_name']
         self.region = 'eu-west'
-        if self.language == 'pl-PL':
-            # self.voice_name = 'Agnieszka' Maja Ewa Jaccek Jan
-            self.voice_name = 'Ewa'
-        elif self.language == 'ru-RU':
-            self.voice_name = 'Maxim'
-        elif self.language == 'en-US':
-            self.voice_name = 'Joey'
-        elif self.language == 'fr-FR':
-            self.voice_name = 'Celine'
-        else:
-            print('----------------------------------------')
-            print('the language is: ' + self.language + ' ----')
-            print('----------------------------------------')
+
+        print('----------------------------------------')
+        print('the language is: ' + self.language + ' ----')
+        print('the voice is: ' + self.voice_name + ' ----')
+        print('----------------------------------------')
 
 
         # [Nicole, Enrique, Agnieszka, Tatyana, Russell,

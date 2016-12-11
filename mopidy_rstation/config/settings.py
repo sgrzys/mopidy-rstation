@@ -1,6 +1,7 @@
 # encoding=utf8
 from ConfigParser import ConfigParser
 from ConfigParser import RawConfigParser
+import time
 
 
 class Config:
@@ -45,70 +46,182 @@ class Config:
         else:
             if cur_lang == 'pl-PL':
                 new_lang = 'en-US'
+                Config.switch_current_voice('Joey')
             elif cur_lang == 'en-US':
                 new_lang = 'ru-RU'
+                Config.switch_current_voice('Maxim')
             elif cur_lang == 'ru-RU':
                 new_lang = 'fr-FR'
+                Config.switch_current_voice('Celine')
             elif cur_lang == 'fr-FR':
                 new_lang = 'pl-PL'
+                Config.switch_current_voice('Ewa')
 
         Config.change_config('language', new_lang)
+        from mopidy_rstation.audio import voices
+        voices.voice = None
+        voices.speak("LANGUAGE")
         print('languate changed to ' + str(new_lang))
+
+    @staticmethod
+    def switch_current_voice(voice=None):
+        if voice is not None:
+            new_voice = voice
+            Config.change_config('voice_name', new_voice)
+        else:
+            cur_lang = Config.get_current_lang()
+            cur_voice = Config.get_config()['voice_name']
+            if cur_lang == 'pl-PL':
+                if cur_voice == 'Ewa':
+                    new_voice = 'Agnieszka'
+                elif cur_voice == 'Agnieszka':
+                    new_voice = 'Maja'
+                elif cur_voice == 'Maja':
+                    new_voice = 'Jacek'
+                elif cur_voice == 'Jacek':
+                    new_voice = 'Jan'
+                elif cur_voice == 'Jan':
+                    new_voice = 'Ewa'
+                t = 'Cześć, mam na imię ' + new_voice + '.' \
+                    + ' Jestem jednym z głosów Twojego radia.'
+            elif cur_lang == 'en-US':
+                if cur_voice == 'Joey':
+                    new_voice = 'Justin'
+                elif cur_voice == 'Justin':
+                    new_voice = 'Salli'
+                elif cur_voice == 'Salli':
+                    new_voice = 'Kimberly'
+                elif cur_voice == 'Kimberly':
+                    new_voice = 'Kendra'
+                elif cur_voice == 'Kendra':
+                    new_voice = 'Eric'
+                elif cur_voice == 'Eric':
+                    new_voice = 'Jennifer'
+                elif cur_voice == 'Jennifer':
+                    new_voice = 'Ivy'
+                elif cur_voice == 'Ivy':
+                    new_voice = 'Chipmunk'
+                elif cur_voice == 'Chipmunk':
+                    new_voice = 'Joey'
+                t = 'Hello there, my name is ' + new_voice + '.' \
+                    + ' I am one of the redio voices.'
+            elif cur_lang == 'ru-RU':
+                if cur_voice == 'Maxim':
+                    new_voice = 'Tatyana'
+                elif cur_voice == 'Tatyana':
+                    new_voice = 'Maxim'
+                t = 'Привет, меня зовут ' + new_voice + '.' \
+                    + ' Я один из голосов программы преобразования' \
+                    + ' текста в речь Radio.'
+            elif cur_lang == 'fr-FR':
+                if cur_voice == 'Celine':
+                    new_voice = 'Mathieu'
+                elif cur_voice == 'Mathieu':
+                    new_voice = 'Celine'
+                t = 'Bonjour, mon nom est ' + new_voice + '.' \
+                    + ' Je suis une des voix radio.'
+            Config.change_config('voice_name', new_voice)
+            from mopidy_rstation.audio import voices
+            voices.voice = None
+            voices.speak_text(t)
+
+        print('voice changed to ' + str(new_voice))
 
 
 class Settings:
-    current_main_menu = None
-    current_menu = None
+    G_MAIN_MENU_CURRENT = ''
+    G_MAIN_MENU_FOCUS = ''
+    G_MENU_CURRENT = ''
+    G_MENU_FOCUS = ''
 
     @staticmethod
-    def speak(text):
+    def speak(text, val=None):
         from mopidy_rstation.audio import voices
-        voices.speak(text)
+        voices.speak(text, val='')
 
     @staticmethod
     def main_menu_right():
-        if Settings.current_menu is None:
-            Settings.current_menu = "MENU_LANGUAGE"
-        if Settings.current_menu == "MENU_LANGUAGE":
-            Settings.current_menu = "MENU_VOICE"
-        if Settings.current_menu == "MENU_VOICE":
-            Settings.current_menu = "MENU_HELP"
-        if Settings.current_menu == "MENU_HELP":
-            Settings.current_menu = "MENU_LANGUAGE"
-        Settings.speak(Settings.current_menu)
+        print(
+            'main_menu_right G_MAIN_MENU_FOCUS ' + Settings.G_MAIN_MENU_FOCUS)
+        if Settings.G_MAIN_MENU_FOCUS == '':
+            Settings.G_MAIN_MENU_FOCUS = "MENU_LANGUAGE"
+        elif Settings.G_MAIN_MENU_FOCUS == "MENU_LANGUAGE":
+            Settings.G_MAIN_MENU_FOCUS = "MENU_VOICE"
+        elif Settings.G_MAIN_MENU_FOCUS == "MENU_VOICE":
+            Settings.G_MAIN_MENU_FOCUS = "MENU_HELP"
+        elif Settings.G_MAIN_MENU_FOCUS == "MENU_HELP":
+            Settings.G_MAIN_MENU_FOCUS = "MENU_LANGUAGE"
+        Settings.speak(Settings.G_MAIN_MENU_FOCUS)
 
     @staticmethod
     def main_menu_left():
-        if Settings.current_menu is None:
-            Settings.current_menu = "MENU_HELP"
-        if Settings.current_menu == "MENU_HELP":
-            Settings.current_menu = "MENU_VOICE"
-        if Settings.current_menu == "MENU_VOICE":
-            Settings.current_menu = "MENU_LANGUAGE"
-        if Settings.current_menu == "MENU_LANGUAGE":
-            Settings.current_menu = "MENU_HELP"
-        Settings.speak(Settings.current_menu)
+        print(
+            'main_menu_left G_MAIN_MENU_FOCUS ' + Settings.G_MAIN_MENU_FOCUS)
+        if Settings.G_MAIN_MENU_FOCUS == '':
+            Settings.G_MAIN_MENU_FOCUS = "MENU_HELP"
+        elif Settings.G_MAIN_MENU_FOCUS == "MENU_HELP":
+            Settings.G_MAIN_MENU_FOCUS = "MENU_VOICE"
+        elif Settings.G_MAIN_MENU_FOCUS == "MENU_VOICE":
+            Settings.G_MAIN_MENU_FOCUS = "MENU_LANGUAGE"
+        elif Settings.G_MAIN_MENU_FOCUS == "MENU_LANGUAGE":
+            Settings.G_MAIN_MENU_FOCUS = "MENU_HELP"
+        Settings.speak(Settings.G_MAIN_MENU_FOCUS)
+
+    @staticmethod
+    def menu_enter():
+        print("menu_enter")
+        Settings.G_MAIN_MENU_CURRENT = Settings.G_MAIN_MENU_FOCUS
+        Settings.speak('ENTER_DIR')
+        time.sleep(0.7)
+        Settings.speak(Settings.G_MAIN_MENU_CURRENT)
+        print("menu_enter")
+
+    @staticmethod
+    def menu_up():
+        Settings.G_MAIN_MENU_CURRENT = ''
+        Settings.speak('UP_DIR')
 
     @staticmethod
     def menu_left():
-        print('menu_left TODO')
+        from mopidy_rstation.config.settings import Config
+        if Settings.G_MAIN_MENU_FOCUS == "MENU_HELP":
+            Settings.speak('TODO')
+        elif Settings.G_MAIN_MENU_FOCUS == "MENU_VOICE":
+            Config.switch_current_voice()
+        elif Settings.G_MAIN_MENU_FOCUS == "MENU_LANGUAGE":
+            Config.switch_current_lang()
 
     @staticmethod
     def menu_right():
-        print('menu_right TODO')
+        from mopidy_rstation.config.settings import Config
+        if Settings.G_MAIN_MENU_FOCUS == "MENU_HELP":
+            Settings.speak('TODO')
+        elif Settings.G_MAIN_MENU_FOCUS == "MENU_VOICE":
+            Config.switch_current_voice()
+        elif Settings.G_MAIN_MENU_FOCUS == "MENU_LANGUAGE":
+            Config.switch_current_lang()
 
     @staticmethod
     def onCommand(cmd):
+        print('Settings.onCommand ' + cmd)
         if cmd == 'left':
-            if Settings.current_main_menu is None:
+            if Settings.G_MAIN_MENU_CURRENT == '':
                 Settings.main_menu_left()
             else:
                 Settings.menu_left()
         elif cmd == 'right':
-            if Settings.current_main_menu is None:
+            if Settings.G_MAIN_MENU_CURRENT == '':
                 Settings.main_menu_right()
             else:
                 Settings.menu_right()
+        elif cmd == 'enter' or cmd == 'down':
+            print('cmd enter')
+            if Settings.G_MAIN_MENU_FOCUS != '':
+                if Settings.G_MAIN_MENU_CURRENT == '':
+                    Settings.menu_enter()
+        elif cmd == 'up':
+            if Settings.G_MAIN_MENU_CURRENT != '':
+                Settings.menu_up()
 
 
 def main():
