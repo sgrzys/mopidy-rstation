@@ -25,6 +25,7 @@
         "PODCAST_DIR": "Podcasts",
         "RADIO_DIR": "Radio",
         "WEATHER_INFO": "Weather forecast for",
-        "ASKING_WIKIPEDIA": "We ask Wikipedia"
+        "ASKING_WIKIPEDIA": "We ask Wikipedia",
+        "ANSWER_WIKIPEDIA": "Processing answer from Wikipedia"
     }
 }

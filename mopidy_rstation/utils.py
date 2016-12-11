@@ -129,12 +129,13 @@ class Utils:
         from mopidy_rstation.config import settings
         voices.speak('ASKING_WIKIPEDIA')
         lang = settings.Config.get_current_lang(short=True)
+        ret = ''
         try:
             ret = u'' + search.do(query, lang)
         except Exception:
             voices.speak_text('Wikipedia Error ' + query)
             return
-
+        voices.speak('ANSWER_WIKIPEDIA' + ' ' + len(ret))
         v = pyvona.create_voice()
         ret = ret.replace('=', '')
         ret = ret[0:8192]

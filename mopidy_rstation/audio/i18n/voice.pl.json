@@ -25,6 +25,7 @@
         "PODCAST_DIR": "Podkasty",
         "RADIO_DIR": "Radio",
         "WEATHER_INFO": "Prognoza pogody dla",
-        "ASKING_WIKIPEDIA": "Pytamy Wikipedie"
+        "ASKING_WIKIPEDIA": "Pytamy Wikipedie",
+        "ANSWER_WIKIPEDIA": "Przetwarzam odpowiedź z Wikipedii"
     }
 }
