@@ -3,10 +3,12 @@
         "LANGUAGE": "Pусский",
         "MENU_LANGUAGE": "Language",
         "MENU_VOICE": "Voice",
+        "MENU_AUDIO_IN": "Microphone",
+        "MENU_AUDIO_OUT": "Speaker",
         "MENU_HELP": "Help",
         "PROCESSING": "Processing",
         "PLAY": "Play",
-        "PLAYPROCESSINGING": "Now playing",
+        "PLAYING": "Now playing",
         "PAUSE": "Pause",
         "SPEAK_ON": "Hints on",
         "SPEAK_OFF": "Hints off",
@@ -26,6 +28,12 @@
         "RADIO_DIR": "Radio",
         "WEATHER_INFO": "Weather forecast for",
         "ASKING_WIKIPEDIA": "We ask Wikipedia",
-        "ANSWER_WIKIPEDIA": "Processing answer from Wikipedia"
+        "ANSWER_WIKIPEDIA": "Processing answer from Wikipedia",
+        "AUDIO_IN_AIRMOUSE": "Microphone in remote controller",
+        "AUDIO_IN_ONBOARD": "Microphone built-in in the device",
+        "AUDIO_OUT_SPEAKER": "Built in speaker",
+        "AUDIO_OUT_SPDIF": "SPDIF digital output",
+        "AUDIO_OUT_HDMI": "HDMI digital output",
+        "AUDIO_OUT_JACK": "Audio Jack"
     }
 }

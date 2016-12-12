@@ -3,6 +3,8 @@
         "LANGUAGE": "Polski",
         "MENU_LANGUAGE": "Języki",
         "MENU_VOICE": "Głosy",
+        "MENU_AUDIO_IN": "Mikrofon",
+        "MENU_AUDIO_OUT": "Głośnik",
         "MENU_HELP": "Pomoc",
         "PROCESSING": "Przetwarzam",
         "PLAY": "Graj",
@@ -26,6 +28,12 @@
         "RADIO_DIR": "Radio",
         "WEATHER_INFO": "Prognoza pogody dla",
         "ASKING_WIKIPEDIA": "Pytamy Wikipedie",
-        "ANSWER_WIKIPEDIA": "Odpowiedz z Wikipedii"
+        "ANSWER_WIKIPEDIA": "Odpowiedz z Wikipedii",
+        "AUDIO_IN_AIRMOUSE": "Mikrofon w pilocie",
+        "AUDIO_IN_ONBOARD": "Mikrofon wbudowany w urządzeniu",
+        "AUDIO_OUT_SPEAKER": "Wbudowany głośnik",
+        "AUDIO_OUT_SPDIF": "Cyfrowe wyjście SPDIF",
+        "AUDIO_OUT_HDMI": "Cyfrowe wyjście HDMI",
+        "AUDIO_OUT_JACK": "Analogowa wtyczka Jack"
     }
 }

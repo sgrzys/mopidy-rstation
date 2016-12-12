@@ -3,11 +3,10 @@ from ConfigParser import ConfigParser
 from ConfigParser import RawConfigParser
 import time
 
-
 class Config:
     config = None
-    # config_file = '/home/pi/mopidy.conf'
-    config_file = '/etc/mopidy/mopidy.conf'
+    config_file = '/home/pi/mopidy.conf'
+    # config_file = '/etc/mopidy/mopidy.conf'
 
     @staticmethod
     def change_config(key, value, section="rstation"):
@@ -127,6 +126,48 @@ class Config:
 
         print('voice changed to ' + str(new_voice))
 
+    @staticmethod
+    def switch_current_audio_in():
+        new_audio_in_name = ''
+        cur_audio_in_name = Config.get_config()['audio_in_name']
+        audio_in_speak_code = ''
+        if cur_audio_in_name == 'sysdefault':
+            new_audio_in_name = 'Airmouse: USB Audio'
+            audio_in_speak_code = "AUDIO_IN_AIRMOUSE"
+        if cur_audio_in_name == 'Airmouse: USB Audio':
+            new_audio_in_name = 'sysdefault'
+            audio_in_speak_code = "AUDIO_IN_ONBOARD"
+
+        Config.change_config('audio_in_name', new_audio_in_name)
+        from mopidy_rstation.audio import voices
+        voices.voice = None
+        voices.speak(audio_in_speak_code)
+        print('audio in changed to ' + audio_in_speak_code)
+
+    @staticmethod
+    def switch_current_audio_out():
+        new_audio_out_name = ''
+        cur_audio_out_name = Config.get_config()['audio_out_name']
+        audio_out_speak_code = ''
+        if cur_audio_out_name == 'jack':
+            new_audio_out_name = 'hdmi'
+            audio_out_speak_code = "AUDIO_OUT_HDMI"
+        if cur_audio_out_name == 'hdmi':
+            new_audio_out_name = 'speaker'
+            audio_out_speak_code = "AUDIO_OUT_SPEAKER"
+        if cur_audio_out_name == 'speaker':
+            new_audio_out_name = 'spdif'
+            audio_out_speak_code = "AUDIO_OUT_SPDIF"
+        if cur_audio_out_name == 'spdif':
+            new_audio_out_name = 'jack'
+            audio_out_speak_code = "AUDIO_OUT_JACK"
+
+        Config.change_config('audio_out_name', new_audio_out_name)
+        from mopidy_rstation.audio import voices
+        voices.voice = None
+        voices.speak(audio_out_speak_code)
+        print('audio out changed to ' + audio_out_speak_code)
+
 
 class Settings:
     G_MAIN_MENU_CURRENT = ''
@@ -148,6 +189,10 @@ class Settings:
         elif Settings.G_MAIN_MENU_FOCUS == "MENU_LANGUAGE":
             Settings.G_MAIN_MENU_FOCUS = "MENU_VOICE"
         elif Settings.G_MAIN_MENU_FOCUS == "MENU_VOICE":
+            Settings.G_MAIN_MENU_FOCUS = "MENU_AUDIO_IN"
+        elif Settings.G_MAIN_MENU_FOCUS == "MENU_AUDIO_IN":
+            Settings.G_MAIN_MENU_FOCUS = "MENU_AUDIO_OUT"
+        elif Settings.G_MAIN_MENU_FOCUS == "MENU_AUDIO_OUT":
             Settings.G_MAIN_MENU_FOCUS = "MENU_HELP"
         elif Settings.G_MAIN_MENU_FOCUS == "MENU_HELP":
             Settings.G_MAIN_MENU_FOCUS = "MENU_LANGUAGE"
@@ -160,6 +205,10 @@ class Settings:
         if Settings.G_MAIN_MENU_FOCUS == '':
             Settings.G_MAIN_MENU_FOCUS = "MENU_HELP"
         elif Settings.G_MAIN_MENU_FOCUS == "MENU_HELP":
+            Settings.G_MAIN_MENU_FOCUS = "MENU_AUDIO_OUT"
+        elif Settings.G_MAIN_MENU_FOCUS == "MENU_AUDIO_OUT":
+            Settings.G_MAIN_MENU_FOCUS = "MENU_AUDIO_IN"
+        elif Settings.G_MAIN_MENU_FOCUS == "MENU_AUDIO_IN":
             Settings.G_MAIN_MENU_FOCUS = "MENU_VOICE"
         elif Settings.G_MAIN_MENU_FOCUS == "MENU_VOICE":
             Settings.G_MAIN_MENU_FOCUS = "MENU_LANGUAGE"
@@ -182,38 +231,30 @@ class Settings:
         Settings.speak('UP_DIR')
 
     @staticmethod
-    def menu_left():
+    def menu_switch():
         from mopidy_rstation.config.settings import Config
         if Settings.G_MAIN_MENU_FOCUS == "MENU_HELP":
-            Settings.speak('TODO')
+            Settings.speak('HELP_INFO')
         elif Settings.G_MAIN_MENU_FOCUS == "MENU_VOICE":
             Config.switch_current_voice()
         elif Settings.G_MAIN_MENU_FOCUS == "MENU_LANGUAGE":
             Config.switch_current_lang()
-
-    @staticmethod
-    def menu_right():
-        from mopidy_rstation.config.settings import Config
-        if Settings.G_MAIN_MENU_FOCUS == "MENU_HELP":
-            Settings.speak('TODO')
-        elif Settings.G_MAIN_MENU_FOCUS == "MENU_VOICE":
-            Config.switch_current_voice()
-        elif Settings.G_MAIN_MENU_FOCUS == "MENU_LANGUAGE":
-            Config.switch_current_lang()
+        elif Settings.G_MAIN_MENU_FOCUS == "MENU_AUDIO_IN":
+            Config.switch_current_audio_in()
+        elif Settings.G_MAIN_MENU_FOCUS == "MENU_AUDIO_OUT":
+            Config.switch_current_audio_out()
 
     @staticmethod
     def onCommand(cmd):
         print('Settings.onCommand ' + cmd)
-        if cmd == 'left':
+        if cmd == 'left' or cmd == 'right':
             if Settings.G_MAIN_MENU_CURRENT == '':
-                Settings.main_menu_left()
+                if cmd == 'left':
+                    Settings.main_menu_left()
+                else:
+                    Settings.main_menu_right()
             else:
-                Settings.menu_left()
-        elif cmd == 'right':
-            if Settings.G_MAIN_MENU_CURRENT == '':
-                Settings.main_menu_right()
-            else:
-                Settings.menu_right()
+                Settings.menu_switch()
         elif cmd == 'enter' or cmd == 'down':
             print('cmd enter')
             if Settings.G_MAIN_MENU_FOCUS != '':
