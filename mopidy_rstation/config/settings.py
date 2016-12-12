@@ -3,10 +3,11 @@ from ConfigParser import ConfigParser
 from ConfigParser import RawConfigParser
 import time
 
+
 class Config:
     config = None
-    config_file = '/home/pi/mopidy.conf'
-    # config_file = '/etc/mopidy/mopidy.conf'
+    # config_file = '/home/pi/mopidy.conf'
+    config_file = '/etc/mopidy/mopidy.conf'
 
     @staticmethod
     def change_config(key, value, section="rstation"):
