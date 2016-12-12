@@ -184,7 +184,7 @@ class KeyPad(threading.Thread):
     def handle_event(self, code):
         print('KeyPad -> handle_event -> ' + code)
         # workeround - kill the ivona - to stop the forecast
-        if code != 'vol_down' and code != 'vol_up':
+        if code != 'KEY_VOLUMEDOWN' and code != 'KEY_VOLUMEUP':
             try:
                 if sounds.channel.get_busy():
                     sounds.channel.stop()
