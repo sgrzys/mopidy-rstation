@@ -132,7 +132,7 @@ class Config:
         new_audio_in_name = ''
         cur_audio_in_name = Config.get_config()['audio_in_name']
         audio_in_speak_code = ''
-        if cur_audio_in_name == 'sysdefault':
+        if cur_audio_in_name == 'sysdefault' or cur_audio_in_name == '':
             new_audio_in_name = 'Airmouse: USB Audio'
             audio_in_speak_code = "AUDIO_IN_AIRMOUSE"
         if cur_audio_in_name == 'Airmouse: USB Audio':
