@@ -92,7 +92,6 @@ def record_only():
     wf.setframerate(RATE)
     wf.writeframes(b''.join(all))
     wf.close()
-    voices.speak('PROCESSING')
     return output_file
 
 
@@ -116,7 +115,6 @@ def record_and_stream():
     stream.stop_stream()
     stream.close()
     p.terminate()
-    # voices.speak('PROCESSING')
 
 
 def ask_bot():
