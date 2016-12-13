@@ -24,6 +24,7 @@ class Extension(ext.Extension):
         schema['weather_api_key'] = config.String()
         # optional
         schema['audio_in_name'] = config.String(optional=True)
+        schema['audio_out_name'] = config.String(optional=True)
         schema['language'] = config.String(optional=True)
         schema['voice_name'] = config.String(optional=True)
         schema['enable_irda'] = config.Boolean(optional=True)

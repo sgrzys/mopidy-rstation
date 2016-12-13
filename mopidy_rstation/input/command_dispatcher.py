@@ -268,9 +268,9 @@ class CommandDispatcher(object):
             self.change_mode(C_MODE_LIBRARY)
 
         # if nothing to play switch to LIBRARY mode
-        # tracks = self.core.tracklist.tl_tracks.get()
-        # if self.current_mode == C_MODE_PLAYER and len(tracks) == 0:
-        #     self.change_mode(C_MODE_LIBRARY)
+        tracks = self.core.tracklist.tl_tracks.get()
+        if self.current_mode == C_MODE_PLAYER and len(tracks) == 0:
+            self.change_mode(C_MODE_LIBRARY)
         # if nothing was pressed after 10 seconds in mode TRACKLIST
         # switch back to PLAYER mode
         if self.current_mode == C_MODE_TRACKLIST:
@@ -278,6 +278,16 @@ class CommandDispatcher(object):
             print('check_mode sec_left: ' + str(sec_left))
             if sec_left > 10:
                 self.change_mode(C_MODE_PLAYER)
+
+        # if nothing was pressed after 10 seconds in mode SETTINGS
+        # switch back to LIBRARY mode
+        if self.current_mode == C_MODE_SETTINGS:
+            sec_left = time.time() - self.change_mode_time
+            print('check_mode sec_left: ' + str(sec_left))
+            if sec_left > 10:
+                self.change_mode(C_MODE_LIBRARY)
+        # reset the change mode time after echa command
+        self.change_mode_time = time.time()
 
     def onCommand(self, cmd):
         print(cmd + ': on Command started, mode: ' + str(self.current_mode))

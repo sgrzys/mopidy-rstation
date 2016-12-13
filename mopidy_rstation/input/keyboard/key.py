@@ -31,7 +31,7 @@ class KeyPad(threading.Thread):
 
     def checkIfDevIsKeyboard(self, d):
         d.capabilities()
-        return "airmouse" in d.name.lower()
+        return "airmouse" in d.name.lower() or "wireless" in d.name.lower()
         # return "keyboard" in d.name.lower() \
         #     or "microsoft" in d.name.lower() \
         #     or "airmouse" in d.name.lower()
@@ -154,7 +154,7 @@ class KeyPad(threading.Thread):
                 self.ButtonPressed('vol_down')
             if code == 'KEY_PLUS' or code == 'KEY_VOLUMEUP':
                 self.ButtonPressed('vol_up')
-            if code == 'KEY_F24' or code == 'KEY_COMPOSE':
+            if code in ['KEY_F24', 'KEY_COMPOSE', 'KEY_HOMEPAGE']:
                 self.ButtonPressed('ask_bot')
             if code == 'KEY_PREVIOUSSONG':
                 self.ButtonPressed('player_prev')
