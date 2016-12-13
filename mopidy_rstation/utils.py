@@ -174,17 +174,15 @@ class Utils:
         if location is not None:
             from geopy.geocoders import Nominatim
             geolocator = Nominatim()
-            location = geolocator.geocode(location)
-            settings.Config.get_config()['location_gps'] = \
-                str(location.latitude) + \
-                ',' + str(location.longitude)
-
-        weather = forecast.ForecastData()
+            loc = geolocator.geocode(location)
+            gps = str(loc.latitude) + ',' + str(loc.longitude)
+            weather = forecast.ForecastData(location_gps=gps)
+        else:
+            weather = forecast.ForecastData(location_gps=None)
         weather.verbose = True
-
         voices.speak(
             'WEATHER_INFO',
-            val=weather.country_name + ', ' + weather.location_name)
+            val=weather.location_name + ', ' + weather.country_name)
 
         days = weather.read_txt_forecast()
         text = u""

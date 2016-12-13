@@ -14,21 +14,27 @@ class ForecastData:
     location_name = None
     country_name = None
     temp_file = None
+    station = None
 
-    def __init__(self):
+    def __init__(self, location_gps=None):
         self.conf = Config.get_config()
+        if location_gps is not None:
+            self.conf['location_gps'] = location_gps
         self.temp_file = "/tmp/rstation.weather.cache" + \
             self.conf['location_gps']
         geo = self.geolookup()
         self.temp_file = self.temp_file + ".json"
-        self.location_name = geo['location']['city']
+        self.station = \
+            geo['location']['nearby_weather_stations']['pws']['station'][0]
+        self.location_name = self.station['city'] + \
+            ', ' + self.station['neighborhood']
         self.country_name = geo['location']['country_name']
 
         if os.path.exists(self.temp_file):
             age = time.time() - os.path.getmtime(self.temp_file)
             print('File age is: ' + str(age))
-            # 60s - 1 minute
-            if age > 60:
+            # 600s - 10 minute
+            if age > 600:
                 if self.verbose:
                     print("Updating cache file")
                 self.fetch_data()
