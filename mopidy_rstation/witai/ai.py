@@ -20,7 +20,7 @@ CHUNK = 256
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
-RECORD_SECONDS = 10
+RECORD_SECONDS = 6
 INPUT_DEVICE_INDEX = None
 if pack('@h', 1) == pack('<h', 1):
     ENDIAN = 'little'
@@ -161,8 +161,9 @@ def ask_bot():
                             odtwarzanie ' + item_type + u'. Niestety \
                             nie zrozumiałam co konkretnie mam włączyć.')
                         return
-                    v.speak(u'OK, już włączam ' + item_type + ' ' + item)
                     control.play_item(item, item_type)
+                    # voices.speak('PLAY_URI', val=item_type + ' ' + item)
+                    # v.speak(u'OK, już włączam ' + item_type + ' ' + item)
 
                 elif intent == 'set_volume':
                     try:
