@@ -10,6 +10,7 @@ import errno
 import traceback
 from threading import Thread
 from mopidy_rstation.audio import sounds
+from mopidy_rstation.audio import voices
 from mopidy_rstation.witai import ai
 
 logger = logging.getLogger('mopidy_Rstation')
@@ -188,6 +189,7 @@ class KeyPad(threading.Thread):
             try:
                 if sounds.channel.get_busy():
                     sounds.channel.stop()
+                    voices.stop_speak_long_text = True
             except Exception:
                 traceback.print_exc()
 

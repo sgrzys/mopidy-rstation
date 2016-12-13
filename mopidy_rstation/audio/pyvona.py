@@ -265,7 +265,12 @@ class Voice(object):
         print('the voice is: ' + self.voice_name + ' ----')
         print('----------------------------------------')
 
-
+        self.speech_rate = 'medium'
+        self.sentence_break = 400
+        self.paragraph_break = 650
+        # speech_cache_dir = os.getcwd() + '/speech_cache/'
+        self.speech_cache_dir = '/home/pi/mopidy-rstation/speech_cache/' + \
+            self.language + '/' + self.voice_name + '/'
         # [Nicole, Enrique, Agnieszka, Tatyana, Russell,
         # Lotte, Geraint, Carmen, Mads, Penelope, Jennifer,
         # Brian, Eric, Ruben, Ricardo, Maxim, Giorgio, Carla,
@@ -273,9 +278,3 @@ class Voice(object):
         # Ewa, Conchita, Karl, Miguel, Mathieu, Justin, Chipmunk,
         # Jacek, Ines, Gwyneth, Cristiano, Celine, Jan, Liv,
         # Joey, Raveena, Filiz, Dora, Salli, Vitoria, Emma, Hans, Kendra]
-        self.speech_rate = 'medium'
-        self.sentence_break = 400
-        self.paragraph_break = 650
-        # speech_cache_dir = os.getcwd() + '/speech_cache/'
-        self.speech_cache_dir = '/home/pi/mopidy-rstation/speech_cache/' + \
-            self.language + '/' + self.voice_name + '/'

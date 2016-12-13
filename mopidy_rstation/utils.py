@@ -2,7 +2,6 @@
 import json
 import os
 import subprocess
-from threading import Thread
 import time
 from mopidy_rstation.audio import pyvona
 import locale
@@ -136,17 +135,8 @@ class Utils:
         except Exception:
             voices.speak_text('Wikipedia Error ' + query)
             return
-        voices.speak('ANSWER_WIKIPEDIA' + ' ' + str(len(ret)))
-        v = pyvona.create_voice()
         ret = ret.replace('=', '')
-        ret = ret[0:8192]
-        t = Thread(
-            target=v.speak,
-            kwargs={
-                'text_to_speak': ret,
-                'use_cache': False,
-                'async': True})
-        t.start()
+        voices.speak_long_text(ret)
 
     @staticmethod
     def forecast_weather(location=None):
@@ -189,14 +179,7 @@ class Utils:
         for day in days:
             text = text + u" " + day['title'] + ' ' + parse_text(day['text'])
 
-        v = pyvona.create_voice()
-        t = Thread(
-            target=v.speak,
-            kwargs={
-                'text_to_speak': text,
-                'use_cache': False,
-                'async': True})
-        t.start()
+        voices.speak_long_text(text)
 
     @staticmethod
     def get_time():
@@ -244,8 +227,6 @@ class Utils:
 
 # TODO
 def main():
-    from mopidy_rstation.config import settings
-    settings.Config.get_config()
     Utils.get_time()
     # Utils.forecast_weather()
     # item = sys.argv[1]

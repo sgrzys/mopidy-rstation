@@ -5,9 +5,12 @@ import sys
 from threading import Thread
 import time
 import i18n
+# import sounds
 
 speak_time = None
 voice = None
+stop_speak_long_text = False
+
 # to avoid the UnicodeDecodeError: 'ascii' codec can't decode byte
 reload(sys)
 sys.setdefaultencoding("utf-8")
@@ -28,6 +31,37 @@ def convert_text(text, remove_file_extension=False):
         # remove the file extension
         t = os.path.splitext(t)[0]
     return t
+
+
+def tokenizer(text):
+    result = text
+    result = result.strip()
+    result = result.split('.')
+    return result
+
+
+def speak_long_text(text):
+    global speak_time
+    global voice
+    global stop_speak_long_text
+    if voice is None:
+        set_voice()
+    # IVONA limit is 8192
+    # if sounds.channel.get_busy():
+    # text = text[0:8192]
+    parts = tokenizer(text)
+    stop_speak_long_text = False
+    for t in parts:
+        if stop_speak_long_text:
+            break
+        voice.speak(t)
+    # t = Thread(
+    #     target=voice.speak,
+    #     kwargs={
+    #         'text_to_speak': text,
+    #         'use_cache': False,
+    #         'async': True})
+    # t.start()
 
 
 def speak_text(text, thread=True):
