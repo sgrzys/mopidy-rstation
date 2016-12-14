@@ -14,7 +14,7 @@ C_MODE_LIBRARY = 'LIBRARY'
 C_MODE_TRACKLIST = 'TRACKLIST'
 C_MODE_SETTINGS = 'SETTINGS'
 current_tl_track = None
-url = u'rstation:/home/pi/mopidy-rstation/media'
+url = u'rstation:' + Config.get_config()['media_dir']
 
 
 class Event(list):
@@ -268,47 +268,48 @@ class CommandDispatcher(object):
             self.change_mode(C_MODE_LIBRARY)
 
         # if nothing to play switch to LIBRARY mode
-        tracks = self.core.tracklist.tl_tracks.get()
-        if self.current_mode == C_MODE_PLAYER and len(tracks) == 0:
-            self.change_mode(C_MODE_LIBRARY)
+        elif self.current_mode == C_MODE_PLAYER:
+            if len(self.core.tracklist.tl_tracks.get()) == 0:
+                self.change_mode(C_MODE_LIBRARY)
         # if nothing was pressed after 10 seconds in mode TRACKLIST
         # switch back to PLAYER mode
-        if self.current_mode == C_MODE_TRACKLIST:
+        elif self.current_mode == C_MODE_TRACKLIST:
             sec_left = time.time() - self.change_mode_time
             print('check_mode sec_left: ' + str(sec_left))
             if sec_left > 10:
                 self.change_mode(C_MODE_PLAYER)
 
         # if nothing was pressed after 10 seconds in mode SETTINGS
-        # switch back to LIBRARY mode
-        if self.current_mode == C_MODE_SETTINGS:
+        # switch back to LIBRARY or PLAYER mode
+        elif self.current_mode == C_MODE_SETTINGS:
             sec_left = time.time() - self.change_mode_time
             print('check_mode sec_left: ' + str(sec_left))
             if sec_left > 10:
-                self.change_mode(C_MODE_LIBRARY)
+                if len(self.core.tracklist.tl_tracks.get()) == 0:
+                    self.change_mode(C_MODE_LIBRARY)
+                else:
+                    self.change_mode(C_MODE_PLAYER)
         # reset the change mode time after echa command
         self.change_mode_time = time.time()
 
     def onCommand(self, cmd):
-        print(cmd + ': on Command started, mode: ' + str(self.current_mode))
-        self.check_mode()
-        print('mode after check_mode: ' + self.current_mode)
         # main commands - avalible on each remote
         if cmd == 'mode':
-            # if len(self.core.tracklist.tl_tracks.get()) == 0:
-            #     self.go_to_library()
-            # else:
             if self.current_mode == C_MODE_PLAYER or \
                self.current_mode == C_MODE_TRACKLIST:
                     self.go_to_library()
                     return
-            if self.current_mode == C_MODE_LIBRARY:
+            elif self.current_mode == C_MODE_LIBRARY:
                 self.go_to_settings()
                 return
-            if self.current_mode == C_MODE_SETTINGS:
+            elif self.current_mode == C_MODE_SETTINGS:
                 self.go_to_player()
                 return
-
+        # test/change the current mode
+        print(cmd + ': on Command started, mode: ' + str(self.current_mode))
+        self.check_mode()
+        print('mode after check_mode: ' + self.current_mode)
+        # test/change the current mode
         if self.current_mode == C_MODE_SETTINGS:
             return Settings.onCommand(cmd)
             # TODO the same for all modes should be done

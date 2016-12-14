@@ -6,7 +6,6 @@ import time
 
 class Config:
     config = None
-    # config_file = '/home/pi/mopidy.conf'
     config_file = '/etc/mopidy/mopidy.conf'
 
     @staticmethod

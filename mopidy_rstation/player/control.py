@@ -3,7 +3,7 @@ from fuzzywuzzy import process
 from mopidy_rstation.finder import m3uparser
 # from mopidy.models import Track
 from mopidy_rstation.utils import Utils
-from mopidy_rstation.audio import voices
+from mopidy_rstation.config import settings
 import sys
 
 
@@ -43,29 +43,29 @@ def start_player():
 
 
 def play_item(item, item_type=None):
-
+    conf = settings.Config.get_config()
     if item_type == 'muzyka':
         albums, names = m3uparser.parseFolderForPlaylists(
-            '/home/pi/mopidy-rstation/media/Music')
+            conf['media_dir'] + '/Music')
         load_best_playlist(albums, names, item)
     elif item_type == 'audiobook':
         albums, names = m3uparser.parseFolderForPlaylists(
-            '/home/pi/mopidy-rstation/media/Audiobooks')
+            conf['media_dir'] + '/Audiobooks')
         load_best_playlist(albums, names, item)
     elif item_type == 'podcast':
         albums, names = m3uparser.parseFolderForPlaylists(
-            '/home/pi/mopidy-rstation/media/Podcasts')
+            conf['media_dir'] + 'Podcasts')
         load_best_playlist(albums, names, item)
     elif item_type == 'radio':
         tracks, titles = m3uparser.parseFolderForTracks(
-            '/home/pi/mopidy-rstation/media/Radio')
+            conf['media_dir'] + 'Radio')
         load_best_track(tracks, titles, item)
     else:
         # try to play without a type
         tracks, titles = m3uparser.parseFolderForTracks(
-            '/home/pi/mopidy-rstation/media')
+            conf['media_dir'])
         albums, names = m3uparser.parseFolderForPlaylists(
-            '/home/pi/mopidy-rstation/media')
+            conf['media_dir'])
         title = process.extractOne(item, titles)
         print(str(title))
         name = process.extractOne(item, names)

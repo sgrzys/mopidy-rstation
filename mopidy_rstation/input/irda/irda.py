@@ -3,11 +3,12 @@ import logging
 import threading
 import select
 from ..command_dispatcher import Event
+from mopidy_rstation.config.settings import Config
 import tempfile
 
 logger = logging.getLogger('mopidy_Rstation')
 LIRC_PROG_NAME = "mopidyRstation"
-url = u'rstation:/home/pi/mopidy-rstation/media'
+url = u'rstation:' + Config.get_config()['media_dir']
 
 
 class LircThread(threading.Thread):

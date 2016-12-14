@@ -6,7 +6,6 @@ from . import medialib
 from mopidy.m3u import playlists
 
 logger = logging.getLogger(__name__)
-url = u'rstation:/home/pi/mopidy-rstation/media'
 
 
 class MediaBackend(pykka.ThreadingActor, backend.Backend):
@@ -18,6 +17,8 @@ class MediaBackend(pykka.ThreadingActor, backend.Backend):
             backend=self, config=config)
         self.playlists = playlists.M3UPlaylistsProvider(
             backend=self, config=config)
+        # config is type 'tuple'
+        url = 'rstation:' + config['rstation']['media_dir'][0]
         self.library.browse(url)
 
     def on_start(self):
