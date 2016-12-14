@@ -178,7 +178,22 @@ class Settings:
     @staticmethod
     def speak(text, val=None):
         from mopidy_rstation.audio import voices
-        voices.speak(text, val='')
+        v = ''
+        if val is not None:
+            v = val
+        voices.speak(text, val=v)
+
+    @staticmethod
+    def switch_current_info():
+        if Settings.G_MENU_FOCUS == '':
+            Settings.G_MENU_FOCUS = 'INFO_VERSION'
+        elif Settings.G_MENU_FOCUS == 'INFO_VERSION':
+            Settings.G_MENU_FOCUS = 'INFO_UPDATE'
+        elif Settings.G_MENU_FOCUS == 'INFO_UPDATE':
+            Settings.G_MENU_FOCUS = 'INFO_ANALYSIS'
+        elif Settings.G_MENU_FOCUS == 'INFO_ANALYSIS':
+            Settings.G_MENU_FOCUS = 'INFO_VERSION'
+        Settings.speak(Settings.G_MENU_FOCUS)
 
     @staticmethod
     def main_menu_right():
@@ -217,24 +232,25 @@ class Settings:
         Settings.speak(Settings.G_MAIN_MENU_FOCUS)
 
     @staticmethod
-    def menu_enter():
-        print("menu_enter")
+    def main_menu_enter():
+        print("main_menu_enter")
         Settings.G_MAIN_MENU_CURRENT = Settings.G_MAIN_MENU_FOCUS
         Settings.speak('ENTER_DIR')
-        time.sleep(0.7)
+        time.sleep(0.6)
         Settings.speak(Settings.G_MAIN_MENU_CURRENT)
-        print("menu_enter")
 
     @staticmethod
-    def menu_up():
+    def main_menu_up():
         Settings.G_MAIN_MENU_CURRENT = ''
         Settings.speak('UP_DIR')
+        time.sleep(0.6)
+        Settings.speak('SETTINGS')
 
     @staticmethod
-    def menu_switch():
+    def main_menu_switch():
         from mopidy_rstation.config.settings import Config
         if Settings.G_MAIN_MENU_FOCUS == "MENU_HELP":
-            Settings.speak('HELP_INFO')
+            Settings.switch_current_info()
         elif Settings.G_MAIN_MENU_FOCUS == "MENU_VOICE":
             Config.switch_current_voice()
         elif Settings.G_MAIN_MENU_FOCUS == "MENU_LANGUAGE":
@@ -243,6 +259,28 @@ class Settings:
             Config.switch_current_audio_in()
         elif Settings.G_MAIN_MENU_FOCUS == "MENU_AUDIO_OUT":
             Config.switch_current_audio_out()
+
+    @staticmethod
+    def menu_enter():
+        print("menu_enter")
+        Settings.G_MENU_CURRENT = Settings.G_MENU_FOCUS
+        if Settings.G_MENU_CURRENT == 'INFO_VERSION':
+            Settings.speak(Settings.G_MENU_CURRENT, val='1.0 beta')
+        elif Settings.G_MENU_CURRENT == 'INFO_UPDATE':
+            Settings.speak(Settings.G_MENU_CURRENT, val='start')
+            import update
+            update.pull_media()
+            Settings.speak(Settings.G_MENU_CURRENT, val='koniec')
+
+        elif Settings.G_MENU_CURRENT == 'INFO_ANALYSIS':
+            Settings.speak(Settings.G_MENU_CURRENT, val='analiza systemu')
+
+    @staticmethod
+    def menu_up():
+        Settings.G_MENU_CURRENT = ''
+        Settings.speak('UP_DIR')
+        time.sleep(0.6)
+        Settings.speak(Settings.G_MAIN_MENU_CURRENT)
 
     @staticmethod
     def onCommand(cmd):
@@ -254,14 +292,19 @@ class Settings:
                 else:
                     Settings.main_menu_right()
             else:
-                Settings.menu_switch()
+                Settings.main_menu_switch()
         elif cmd == 'enter' or cmd == 'down':
             print('cmd enter')
             if Settings.G_MAIN_MENU_FOCUS != '':
                 if Settings.G_MAIN_MENU_CURRENT == '':
+                    Settings.main_menu_enter()
+                else:
                     Settings.menu_enter()
+
         elif cmd == 'up':
             if Settings.G_MAIN_MENU_CURRENT != '':
+                Settings.main_menu_up()
+            else:
                 Settings.menu_up()
 
 

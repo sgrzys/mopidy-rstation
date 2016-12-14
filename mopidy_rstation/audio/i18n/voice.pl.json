@@ -5,7 +5,7 @@
         "MENU_VOICE": "Głosy",
         "MENU_AUDIO_IN": "Mikrofon",
         "MENU_AUDIO_OUT": "Głośnik",
-        "MENU_HELP": "Pomoc",
+        "MENU_HELP": "Informacje",
         "PROCESSING": "Przetwarzam",
         "PLAY": "Graj",
         "PLAYING": "Gramy",
@@ -34,6 +34,9 @@
         "AUDIO_OUT_SPEAKER": "Wbudowany głośnik",
         "AUDIO_OUT_SPDIF": "Cyfrowe wyjście SPDIF",
         "AUDIO_OUT_HDMI": "Cyfrowe wyjście HDMI",
-        "AUDIO_OUT_JACK": "Analogowa wtyczka Jack"
+        "AUDIO_OUT_JACK": "Analogowa wtyczka Jack",
+        "INFO_VERSION": "Wersja",
+        "INFO_UPDATE" : "Aktualizacja",
+        "INFO_ANALYSIS": "Analiza"
     }
 }

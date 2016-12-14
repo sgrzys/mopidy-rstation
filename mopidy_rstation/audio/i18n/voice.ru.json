@@ -5,7 +5,7 @@
         "MENU_VOICE": "Voice",
         "MENU_AUDIO_IN": "Microphone",
         "MENU_AUDIO_OUT": "Speaker",
-        "MENU_HELP": "Help",
+        "MENU_HELP": "Info",
         "PROCESSING": "Processing",
         "PLAY": "Play",
         "PLAYING": "Now playing",
@@ -34,6 +34,9 @@
         "AUDIO_OUT_SPEAKER": "Built in speaker",
         "AUDIO_OUT_SPDIF": "SPDIF digital output",
         "AUDIO_OUT_HDMI": "HDMI digital output",
-        "AUDIO_OUT_JACK": "Audio Jack"
+        "AUDIO_OUT_JACK": "Audio Jack",
+        "INFO_VERSION": "Version",
+        "INFO_UPDATE" : "Update",
+        "INFO_ANALYSIS": "Analysis"
     }
 }

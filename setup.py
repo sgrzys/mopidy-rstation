@@ -34,7 +34,8 @@ setup(
         'pyaudio',
         'python-i18n',
         'evdev',
-        'python-Levenshtein'
+        'python-Levenshtein',
+        'gitpython'
     ],
     test_suite='nose.collector',
     tests_require=[
