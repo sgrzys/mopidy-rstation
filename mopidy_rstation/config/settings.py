@@ -215,8 +215,6 @@ class Settings:
 
     @staticmethod
     def main_menu_left():
-        print(
-            'main_menu_left G_MAIN_MENU_FOCUS ' + Settings.G_MAIN_MENU_FOCUS)
         if Settings.G_MAIN_MENU_FOCUS == '':
             Settings.G_MAIN_MENU_FOCUS = "MENU_HELP"
         elif Settings.G_MAIN_MENU_FOCUS == "MENU_HELP":
