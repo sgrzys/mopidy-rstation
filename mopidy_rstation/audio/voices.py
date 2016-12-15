@@ -93,18 +93,22 @@ def speak_text_thread(text):
         pass
 
 
-def speak(code, *param, **key):
+def speak(codes, *param, **key):
     lang = Config.get_current_lang(short=True)
     i18n.config.set(
         'load_path', ['/home/pi/mopidy-rstation/mopidy_rstation/audio/i18n'])
     i18n.config.set('locale', lang)
     i18n.config.set("encoding", "utf-8")
     val = ''
+    text = ''
     if ('val' in key):
         val = key['val']
         if isinstance(val, int):
             val = str(val)
         val = convert_text(val)
-    speak_text(
-        # i18n.t('voice.' + code) + ' ' + i18n.t('voice.' + val))
-        i18n.t('voice.' + code) + ' ' + val)
+    if type(codes) == list:
+        for code in codes:
+            text = text + i18n.t('voice.' + code) + ' '
+    else:
+        text = i18n.t('voice.' + codes)
+    speak_text(text + ' ' + val)

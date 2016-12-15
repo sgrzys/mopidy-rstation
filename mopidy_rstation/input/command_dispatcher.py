@@ -279,12 +279,12 @@ class CommandDispatcher(object):
             if sec_left > 10:
                 self.change_mode(C_MODE_PLAYER)
 
-        # if nothing was pressed after 10 seconds in mode SETTINGS
+        # if nothing was pressed after 20 seconds in mode SETTINGS
         # switch back to LIBRARY or PLAYER mode
         elif self.current_mode == C_MODE_SETTINGS:
             sec_left = time.time() - self.change_mode_time
             print('check_mode sec_left: ' + str(sec_left))
-            if sec_left > 10:
+            if sec_left > 20:
                 if len(self.core.tracklist.tl_tracks.get()) == 0:
                     self.change_mode(C_MODE_LIBRARY)
                 else:

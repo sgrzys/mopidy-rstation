@@ -176,12 +176,12 @@ class Settings:
     G_MENU_FOCUS = ''
 
     @staticmethod
-    def speak(text, val=None):
+    def speak(keys_list, val=None):
         from mopidy_rstation.audio import voices
         v = ''
         if val is not None:
             v = val
-        voices.speak(text, val=v)
+        voices.speak(keys_list, val=v)
 
     @staticmethod
     def switch_current_info():
@@ -235,7 +235,7 @@ class Settings:
     def main_menu_enter():
         print("main_menu_enter")
         Settings.G_MAIN_MENU_CURRENT = Settings.G_MAIN_MENU_FOCUS
-        Settings.speak('ENTER_DIR', val=Settings.G_MAIN_MENU_CURRENT)
+        Settings.speak(['ENTER_DIR', Settings.G_MAIN_MENU_CURRENT])
 
     @staticmethod
     def main_menu_up():
