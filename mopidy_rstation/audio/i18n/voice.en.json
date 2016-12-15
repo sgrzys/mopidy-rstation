@@ -37,6 +37,12 @@
         "AUDIO_OUT_JACK": "Audio Jack",
         "INFO_VERSION": "Version",
         "INFO_UPDATE" : "Update",
-        "INFO_ANALYSIS": "Analysis"
+        "INFO_ANALYSIS": "Analysis",
+        "MEDIA_UP_TO_DATE": "Your media are up to date",
+        "MEDIA_UPDATED": "Updating media",
+        "APP_SOURCES_UP_TO_DATE": "All of the system sources are up to date",
+        "APP_SOURCES_UPDATED": "Updating the system sources",
+        "APP_UPDATED": "System upgrade",
+        "SERVICE_RESTART": "Restarting"
     }
 }

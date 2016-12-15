@@ -105,4 +105,6 @@ def speak(code, *param, **key):
         if isinstance(val, int):
             val = str(val)
         val = convert_text(val)
-    speak_text(i18n.t('voice.' + code) + ' ' + val)
+    speak_text(
+        # i18n.t('voice.' + code) + ' ' + i18n.t('voice.' + val))
+        i18n.t('voice.' + code) + ' ' + val)

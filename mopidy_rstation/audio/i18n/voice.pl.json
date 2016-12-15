@@ -37,6 +37,12 @@
         "AUDIO_OUT_JACK": "Analogowa wtyczka Jack",
         "INFO_VERSION": "Wersja",
         "INFO_UPDATE" : "Aktualizacja",
-        "INFO_ANALYSIS": "Analiza"
+        "INFO_ANALYSIS": "Analiza",
+        "MEDIA_UP_TO_DATE": "Twoje media są aktualne",
+        "MEDIA_UPDATED": "Aktualizuję media",
+        "APP_SOURCES_UP_TO_DATE": "Źródła systemu są aktualne",
+        "APP_SOURCES_UPDATED": "Aktualizuję źródła systemu",
+        "APP_UPDATED": "Aktualizuję system",
+        "SERVICE_RESTART": "Restart usługi, do usłyszenia za chwilę!"
     }
 }

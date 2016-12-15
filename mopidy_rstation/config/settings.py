@@ -235,16 +235,12 @@ class Settings:
     def main_menu_enter():
         print("main_menu_enter")
         Settings.G_MAIN_MENU_CURRENT = Settings.G_MAIN_MENU_FOCUS
-        Settings.speak('ENTER_DIR')
-        time.sleep(0.6)
-        Settings.speak(Settings.G_MAIN_MENU_CURRENT)
+        Settings.speak('ENTER_DIR', val=Settings.G_MAIN_MENU_CURRENT)
 
     @staticmethod
     def main_menu_up():
         Settings.G_MAIN_MENU_CURRENT = ''
-        Settings.speak('UP_DIR')
-        time.sleep(0.6)
-        Settings.speak('SETTINGS')
+        Settings.speak('UP_DIR', val='SETTINGS')
 
     @staticmethod
     def main_menu_switch():
@@ -267,10 +263,23 @@ class Settings:
         if Settings.G_MENU_CURRENT == 'INFO_VERSION':
             Settings.speak(Settings.G_MENU_CURRENT, val='1.0 beta')
         elif Settings.G_MENU_CURRENT == 'INFO_UPDATE':
-            Settings.speak(Settings.G_MENU_CURRENT, val='start')
             import update
-            update.pull_media()
-            Settings.speak(Settings.G_MENU_CURRENT, val='koniec')
+            # MEDIA
+            if update.needToPull(update.MEDIA_DIR):
+                Settings.speak('MEDIA_UP_TO_DATE')
+            else:
+                update.pull(update.C_MEDIA)
+                Settings.speak('MEDIA_UPDATED')
+            # APP
+            if update.needToPull(update.APP_SOURCE_DIR):
+                Settings.speak('APP_SOURCES_UP_TO_DATE')
+            else:
+                update.pull(update.C_APP)
+                Settings.speak('APP_SOURCES_UPDATED')
+                update.updateApp()
+                Settings.speak('APP_UPDATED')
+                update.restartService()
+                Settings.speak('SERVICE_RESTART')
 
         elif Settings.G_MENU_CURRENT == 'INFO_ANALYSIS':
             Settings.speak(Settings.G_MENU_CURRENT, val='analiza systemu')
@@ -278,9 +287,7 @@ class Settings:
     @staticmethod
     def menu_up():
         Settings.G_MENU_CURRENT = ''
-        Settings.speak('UP_DIR')
-        time.sleep(0.6)
-        Settings.speak(Settings.G_MAIN_MENU_CURRENT)
+        Settings.speak('UP_DIR', val=Settings.G_MAIN_MENU_CURRENT)
 
     @staticmethod
     def onCommand(cmd):

@@ -29,6 +29,8 @@ class Extension(ext.Extension):
         schema['voice_name'] = config.String(optional=True)
         schema['media_dir'] = config.List(optional=True)
         schema['media_remote_url'] = config.String(optional=True)
+        schema['app_source_remote_url'] = config.String(optional=True)
+        schema['app_source_dir'] = config.String(optional=True)
         schema['enable_irda'] = config.Boolean(optional=True)
         schema['enable_keypad'] = config.Boolean(optional=True)
         schema['debug_irda_simulate'] = config.Boolean(optional=True)
