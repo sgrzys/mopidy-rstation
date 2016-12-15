@@ -240,7 +240,7 @@ class Settings:
     @staticmethod
     def main_menu_up():
         Settings.G_MAIN_MENU_CURRENT = ''
-        Settings.speak('UP_DIR', val='SETTINGS')
+        Settings.speak(['UP_DIR', 'SETTINGS'])
 
     @staticmethod
     def main_menu_switch():
@@ -266,28 +266,30 @@ class Settings:
             import update
             # MEDIA
             if update.needToPull(update.MEDIA_DIR):
-                Settings.speak('MEDIA_UP_TO_DATE')
-            else:
                 update.pull(update.C_MEDIA)
                 Settings.speak('MEDIA_UPDATED')
+            else:
+                Settings.speak('MEDIA_UP_TO_DATE')
             # APP
             if update.needToPull(update.APP_SOURCE_DIR):
-                Settings.speak('APP_SOURCES_UP_TO_DATE')
-            else:
                 update.pull(update.C_APP)
                 Settings.speak('APP_SOURCES_UPDATED')
                 update.updateApp()
                 Settings.speak('APP_UPDATED')
                 update.restartService()
                 Settings.speak('SERVICE_RESTART')
+            else:
+                Settings.speak('APP_SOURCES_UP_TO_DATE')
 
         elif Settings.G_MENU_CURRENT == 'INFO_ANALYSIS':
-            Settings.speak(Settings.G_MENU_CURRENT, val='analiza systemu')
+            Settings.speak(
+                Settings.G_MENU_CURRENT,
+                val='Właśnie wykonałam analiza systemu. Jest super!')
 
     @staticmethod
     def menu_up():
         Settings.G_MENU_CURRENT = ''
-        Settings.speak('UP_DIR', val=Settings.G_MAIN_MENU_CURRENT)
+        Settings.speak(['UP_DIR', Settings.G_MAIN_MENU_CURRENT])
 
     @staticmethod
     def onCommand(cmd):

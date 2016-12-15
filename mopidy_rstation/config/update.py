@@ -12,6 +12,7 @@ C_MEDIA = 'MEDIA'
 
 def git(*args):
     ret = subprocess.check_output(['git'] + list(args))
+    print('git ' + str(list(args)))
     return ret
 
 
@@ -92,12 +93,17 @@ def restartService():
 def main(git_dir):
     if isUpToDate(git_dir):
         print(git_dir + ' Is up to date!')
+    else:
+        print(git_dir + ' In NOT up to date!')
     if needToPull(git_dir):
         print(git_dir + ' Need to pull!')
+    else:
+        print(git_dir + ' NO need to pull!')
     if needToPush(git_dir):
         print(git_dir + ' Need to push!')
-    updateApp()
+    else:
+        print(git_dir + ' NO need to push!')
 
 if __name__ == '__main__':
     main(APP_SOURCE_DIR)
-    main(MEDIA_DIR)
+    # main(MEDIA_DIR)

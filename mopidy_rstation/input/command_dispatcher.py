@@ -207,7 +207,19 @@ class CommandDispatcher(object):
         uri = item.uri.rsplit('/', 2)[0]
         name = item.uri.rsplit('/', 2)[1]
         self.core.library.browse(uri)
-        voices.speak('UP_DIR', val=name)
+        text = ''
+        codes = 'UP_DIR'
+        if name == 'Audiobooks':
+            codes = ['UP_DIR', 'AUDIOBOOKS_DIR']
+        elif name == 'Music':
+            codes = ['UP_DIR', 'MUSIC_DIR']
+        elif name == 'Podcasts':
+            codes = ['UP_DIR', 'PODCAST_DIR']
+        elif name == 'Radio':
+            codes = ['UP_DIR', 'RADIO_DIR']
+        else:
+            text = name
+        voices.speak(codes, val=text)
 
     def lib_down(self):
         print('lib_down')
