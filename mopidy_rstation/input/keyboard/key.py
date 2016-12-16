@@ -110,6 +110,13 @@ class KeyPad(threading.Thread):
                 # ENODEV.  So be sure to handle that.
                 try:
                     for event in r.read():
+                        print('######################################')
+                        # if r.name == 'micbutton':
+                        #     print('ok')
+                        print(r.name)
+                        print(type(r))
+                        print(str(r))
+                        print('######################################')
                         # event.value == 1 key down
                         # event.value == 0 key up
                         # event.value == 2 key hold
