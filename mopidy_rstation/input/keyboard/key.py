@@ -110,13 +110,6 @@ class KeyPad(threading.Thread):
                 # ENODEV.  So be sure to handle that.
                 try:
                     for event in r.read():
-                        print('######################################')
-                        # if r.name == 'micbutton':
-                        #     print('ok')
-                        print(r.name)
-                        print(type(r))
-                        print(str(r))
-                        print('######################################')
                         # event.value == 1 key down
                         # event.value == 0 key up
                         # event.value == 2 key hold
@@ -128,6 +121,9 @@ class KeyPad(threading.Thread):
                             # esc with mouse mode on airmouse
                             elif event.code == 273:
                                 self.handle_event('KEY_ESC')
+                            # key on device
+                            elif r.name == 'sunxi-gpiokey':
+                                self.handle_event('KEY_MIC_ON_DEVICE')
                             else:
                                 self.handle_event(evdev.ecodes.KEY[event.code])
                         if event.type == evdev.ecodes.EV_KEY & \
@@ -163,7 +159,9 @@ class KeyPad(threading.Thread):
                 self.ButtonPressed('vol_down')
             if code == 'KEY_PLUS' or code == 'KEY_VOLUMEUP':
                 self.ButtonPressed('vol_up')
-            if code in ['KEY_F24', 'KEY_COMPOSE', 'KEY_HOMEPAGE', 'KEY_HOME']:
+            if code in ['KEY_F24', 'KEY_COMPOSE', 'KEY_HOMEPAGE']:
+                self.ButtonPressed('ask_bot')
+            if code in ['KEY_MIC_ON_DEVICE']:
                 self.ButtonPressed('ask_bot')
             if code == 'KEY_PREVIOUSSONG':
                 self.ButtonPressed('player_prev')
