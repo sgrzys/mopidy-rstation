@@ -125,7 +125,7 @@ class KeyPad(threading.Thread):
                                 self.handle_event('KEY_ESC')
                             # key on device
                             elif r.name == 'sunxi-gpiokey':
-                                self.handle_event('KEY_MIC_ON_DEVICE')
+                                return self.handle_event('KEY_MIC_ON_DEVICE')
                             else:
                                 self.handle_event(evdev.ecodes.KEY[event.code])
                         if event.type == evdev.ecodes.EV_KEY & \
