@@ -1,8 +1,0 @@
-cat /proc/asound/cards
-
-arecord a.wav -D sysdefault:CARD=1
-aplay a.wav
-scp pi@10.0.0.3:/home/pi/a.wav .
-
-
-apt-get install alsa-oss alsaplayer mpg321 alsaplayer-alsa alsa-base

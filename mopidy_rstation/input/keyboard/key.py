@@ -32,7 +32,8 @@ class KeyPad(threading.Thread):
 
     def checkIfDevIsKeyboard(self, d):
         d.capabilities()
-        return "airmouse" in d.name.lower() or "wireless" in d.name.lower()
+        return "microsoft" not in d.name.lower()
+        # return "airmouse" in d.name.lower() or "wireless" in d.name.lower()
         # return "keyboard" in d.name.lower() \
         #     or "microsoft" in d.name.lower() \
         #     or "airmouse" in d.name.lower()
@@ -67,7 +68,7 @@ class KeyPad(threading.Thread):
             if self.checkIfDevIsKeyboard(d):
                 print('We have keyboard device ' + str(d))
                 self.devices[d.fn] = d
-                d.grab()
+                # d.grab() FIXIT after test
 
         self.devices['monitor'] = self.monitor
 
@@ -86,8 +87,8 @@ class KeyPad(threading.Thread):
                             new_d = evdev.InputDevice(udev.device_node)
                             if self.checkIfDevIsKeyboard(new_d):
                                 self.devices[udev.device_node] = new_d
-                                new_d.grab()
-                                sounds.play_file(sounds.C_SOUND_PLUG_IN)
+                                # new_d.grab()
+                                # sounds.play_file(sounds.C_SOUND_PLUG_IN)
                         except Exception:
                             print('Error during add device ')
                             traceback.print_exc()
@@ -97,7 +98,7 @@ class KeyPad(threading.Thread):
                             "Device removed (udev): %s" %
                             self.devices[udev.device_node])
                         del self.devices[udev.device_node]
-                        sounds.play_file(sounds.C_SOUND_PLUG_OUT)
+                        # sounds.play_file(sounds.C_SOUND_PLUG_OUT)
 
             for r in rs:
                 # You can't read from a monitor
@@ -155,7 +156,7 @@ class KeyPad(threading.Thread):
                 self.ButtonPressed('vol_down')
             if code == 'KEY_PLUS' or code == 'KEY_VOLUMEUP':
                 self.ButtonPressed('vol_up')
-            if code in ['KEY_F24', 'KEY_COMPOSE', 'KEY_HOMEPAGE']:
+            if code in ['KEY_F24', 'KEY_COMPOSE', 'KEY_HOMEPAGE', 'KEY_HOME']:
                 self.ButtonPressed('ask_bot')
             if code == 'KEY_PREVIOUSSONG':
                 self.ButtonPressed('player_prev')
