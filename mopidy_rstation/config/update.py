@@ -23,7 +23,7 @@ def pip(*args):
 
 def isUpToDate(repo_dir):
     # git fetch origin
-    git("--git-dir=" + repo_dir + "/.git", "fetch", 'origin')
+    git("--git-dir=" + repo_dir + "/.git", "fetch", 'origin', 'master')
     sha1_rev_local = ''
     sha1_rev_remote = ''
     # local VS remote
@@ -82,13 +82,17 @@ def pull(repo):
 
 
 def resetHard(repo):
-    # git reset --hard origin/master
+    # git reset --hard FETCH_HEAD
     if repo == C_MEDIA:
         git("--git-dir=" + MEDIA_DIR + "/.git",
-            "reset", '--hard', 'origin/master')
+            "reset", '--hard', 'FETCH_HEAD')
+        # ("--git-dir=" + MEDIA_DIR + "/.git",
+        #     "clean", "-df")
     elif repo == C_APP:
         git("--git-dir=" + APP_SOURCE_DIR + "/.git",
-            "reset", '--hard', 'origin/master')
+            "reset", '--hard', 'FETCH_HEAD')
+        # ("--git-dir=" + MEDIA_DIR + "/.git",
+        #     "clean", "-df")
 
 
 def updateApp():
