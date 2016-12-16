@@ -3,7 +3,6 @@ from pprint import pprint
 # from StringIO import StringIO
 import wit
 from mopidy_rstation.utils import Utils
-from mopidy_rstation.audio import pyvona
 from mopidy_rstation.player import control
 from mopidy_rstation.config.settings import Config
 import pyaudio
@@ -20,7 +19,7 @@ CHUNK = 256
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
-RECORD_SECONDS = 6
+RECORD_SECONDS = 5
 INPUT_DEVICE_INDEX = None
 if pack('@h', 1) == pack('<h', 1):
     ENDIAN = 'little'
@@ -118,7 +117,6 @@ def record_and_stream():
 
 
 def ask_bot():
-    v = pyvona.create_voice()
     try:
         config = Config.get_config()
         w = wit.Wit(config['wit_token'])
@@ -138,6 +136,7 @@ def ask_bot():
     intent = u' '
     item_type = u' '
     item = None
+    pprint('result')
     if result is not None:
         try:
             intent = result['entities']['intent'][0]['value']
@@ -150,13 +149,14 @@ def ask_bot():
                     try:
                         item_type = result['entities']['type'][0]['value']
                     except Exception:
-                        traceback.print_exc()
+                        print('we do not have item type')
                         item_type = ''
                     try:
                         item = result['entities']['item'][0]['value']
                     except Exception:
-                        traceback.print_exc()
-                        v.speak(u'Usłyszałam ' + result['_text'] + u' \
+                        print('we do not have item!')
+                        voices.speak_text(
+                            u'Usłyszałam ' + result['_text'] + u' \
                             . Zrozumiałam, że intencją jest \
                             odtwarzanie ' + item_type + u'. Niestety \
                             nie zrozumiałam co konkretnie mam włączyć.')
@@ -170,7 +170,8 @@ def ask_bot():
                         vol = int(result['entities']['value'][0]['value'])
                     except Exception:
                         traceback.print_exc()
-                        v.speak(u'Usłyszałam ' + result['_text'] + u' \
+                        voices.speak_text(
+                            u'Usłyszałam ' + result['_text'] + u' \
                             . Zrozumiałam, że intencją jest ustawienie \
                             głośności. Niestety nie zrozumiałam jaką głośność \
                             mam ustawić.')
@@ -179,7 +180,8 @@ def ask_bot():
                         Utils.set_volume(vol)
                     except Exception:
                         traceback.print_exc()
-                        v.speak(u'Mam problem z ustawieniem głośności, \
+                        voices.speak_text(
+                            u'Mam problem z ustawieniem głośności, \
                             sprawdz kotku w logach.')
 
                 elif intent == 'get_weather':
@@ -196,7 +198,8 @@ def ask_bot():
                             'wikipedia_search_query'][0]['value']
                     except Exception:
                         traceback.print_exc()
-                        v.speak(u'Usłyszałam ' + result['_text'] + u' \
+                        voices.speak_text(
+                            u'Usłyszałam ' + result['_text'] + u' \
                             . Zrozumiałam, że intencją jest \
                             szukanie informacji na Wikipedii ' + u'. Niestety \
                             nie zrozumiałam co konkretnie mam szukać.')
@@ -205,10 +208,11 @@ def ask_bot():
                 elif intent == 'get_time':
                     Utils.get_time()
             else:
-                v.speak(u'Usłyszałam ' + result['_text'] + u' Niestety nie \
-                zrozumiałam twojej intencji.')
+                voices.speak_text(
+                    u'Usłyszałam ' + result['_text'] + u' Niestety nie \
+                    zrozumiałam twojej intencji.')
         else:
-            v.speak(u'Przepraszam, ale nic nie słyszałam.')
+            voices.speak_text(u'Przepraszam, ale nic nie słyszałam.')
 
 
 if __name__ == '__main__':

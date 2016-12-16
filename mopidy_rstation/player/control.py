@@ -43,6 +43,7 @@ def start_player():
 
 
 def play_item(item, item_type=None):
+    print('play_item')
     conf = settings.Config.get_config()
     if item_type == 'muzyka':
         albums, names = m3uparser.parseFolderForPlaylists(
@@ -54,11 +55,11 @@ def play_item(item, item_type=None):
         load_best_playlist(albums, names, item)
     elif item_type == 'podcast':
         albums, names = m3uparser.parseFolderForPlaylists(
-            conf['media_dir'] + 'Podcasts')
+            conf['media_dir'] + '/Podcasts')
         load_best_playlist(albums, names, item)
     elif item_type == 'radio':
         tracks, titles = m3uparser.parseFolderForTracks(
-            conf['media_dir'] + 'Radio')
+            conf['media_dir'] + '/Radio')
         load_best_track(tracks, titles, item)
     else:
         # try to play without a type

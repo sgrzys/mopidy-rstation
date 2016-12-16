@@ -32,7 +32,9 @@ class KeyPad(threading.Thread):
 
     def checkIfDevIsKeyboard(self, d):
         d.capabilities()
-        return "microsoft" not in d.name.lower()
+        return "microsoft" not in d.name.lower() \
+            and "AT Translated Set 2 keyboard" not in d.name \
+            and "AlpsPS/2" not in d.name
         # return "airmouse" in d.name.lower() or "wireless" in d.name.lower()
         # return "keyboard" in d.name.lower() \
         #     or "microsoft" in d.name.lower() \
@@ -128,6 +130,10 @@ class KeyPad(threading.Thread):
                                 self.handle_event(evdev.ecodes.KEY[event.code])
                         if event.type == evdev.ecodes.EV_KEY & \
                            event.value == 0:
+                            if r.name == 'sunxi-gpiokey':
+                                print('$$$$$$$$$$$$$$$$$$$$$$')
+                                print('sunxi-gpiokey')
+                                print('$$$$$$$$$$$$$$$$$$$$$$')
                             # key up
                             ai.RECORDING = False
 

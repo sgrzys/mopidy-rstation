@@ -58,7 +58,7 @@ def needToPull(repo_dir):
 def needToPush(repo_dir):
     sha1_rev_remote = ''
     sha1_rev_base = ''
-    # remote VS base
+    # remote VS baseMEDIA_REMOTE_URL
     # git rev-parse @ VS git rev-parse @{u}
     sha1_rev_remote = git(
         "--git-dir=" + MEDIA_DIR + "/.git", "rev-parse", '@{u}')
@@ -72,7 +72,6 @@ def needToPush(repo_dir):
 
 
 def pull(repo):
-    # TODO reset --hard HEAD
     if repo == C_MEDIA:
         git("--git-dir=" + MEDIA_DIR + "/.git",
             "pull", MEDIA_REMOTE_URL)
