@@ -21,6 +21,7 @@ CHANNELS = 1
 RATE = 44100
 RECORD_SECONDS = 5
 INPUT_DEVICE_INDEX = None
+G_AUDIO_IN_NAME = None
 if pack('@h', 1) == pack('<h', 1):
     ENDIAN = 'little'
 else:
@@ -31,12 +32,14 @@ CONTENT_TYPE = \
 
 
 def set_audio_in(audio_in_name):
-    if INPUT_DEVICE_INDEX is not None:
-        return
     global CHANNELS
     global RATE
     global INPUT_DEVICE_INDEX
     global CONTENT_TYPE
+    global G_AUDIO_IN_NAME
+    if INPUT_DEVICE_INDEX is not None and G_AUDIO_IN_NAME is not None:
+        if G_AUDIO_IN_NAME == audio_in_name:
+            return
     p = pyaudio.PyAudio()
     for x in range(p.get_device_count()):
         try:
@@ -51,6 +54,7 @@ def set_audio_in(audio_in_name):
                         'raw;encoding=signed-integer;bits=16;' + \
                         'rate={0};endian={1}' \
                         .format(RATE, ENDIAN)
+                    G_AUDIO_IN_NAME = audio_in_name
                     print('*********************************************')
                     print('Selected device index: ' + str(INPUT_DEVICE_INDEX))
                     print('Selected device rate: ' + str(RATE))
@@ -121,6 +125,7 @@ def ask_bot():
         config = Config.get_config()
         w = wit.Wit(config['wit_token'])
         audio_in_name = config['audio_in_name']
+        print('set_audio_in -> ' + audio_in_name)
         set_audio_in(audio_in_name)
         # TODO this is a faster version but the qualitty have to be improved
         result = w.post_speech(
