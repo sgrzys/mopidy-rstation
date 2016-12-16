@@ -22,6 +22,8 @@ def pip(*args):
 
 
 def isUpToDate(repo_dir):
+    # git fetch origin
+    git("--git-dir=" + repo_dir + "/.git", "fetch", 'origin')
     sha1_rev_local = ''
     sha1_rev_remote = ''
     # local VS remote
@@ -79,6 +81,16 @@ def pull(repo):
             "pull", APP_SOURCE_REMOTE_URL)
 
 
+def resetHard(repo):
+    # git reset --hard origin/master
+    if repo == C_MEDIA:
+        git("--git-dir=" + MEDIA_DIR + "/.git",
+            "reset", '--hard', 'origin/master')
+    elif repo == C_APP:
+        git("--git-dir=" + APP_SOURCE_DIR + "/.git",
+            "reset", '--hard', 'origin/master')
+
+
 def updateApp():
     ret = pip('install', APP_SOURCE_DIR, '-U')
     print(ret)
@@ -94,7 +106,7 @@ def main(git_dir):
     if isUpToDate(git_dir):
         print(git_dir + ' Is up to date!')
     else:
-        print(git_dir + ' In NOT up to date!')
+        print(git_dir + ' Is NOT up to date!')
     if needToPull(git_dir):
         print(git_dir + ' Need to pull!')
     else:
@@ -105,5 +117,7 @@ def main(git_dir):
         print(git_dir + ' NO need to push!')
 
 if __name__ == '__main__':
+    print('--- APP ---')
     main(APP_SOURCE_DIR)
-    # main(MEDIA_DIR)
+    print('--- MEDIA ---')
+    main(MEDIA_DIR)

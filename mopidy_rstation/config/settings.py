@@ -261,23 +261,24 @@ class Settings:
         if Settings.G_MENU_CURRENT == 'INFO_VERSION':
             Settings.speak(Settings.G_MENU_CURRENT, val='1.0 beta')
         elif Settings.G_MENU_CURRENT == 'INFO_UPDATE':
+            Settings.speak('PROCESSING')
             import update
             # MEDIA
-            if update.needToPull(update.MEDIA_DIR):
-                update.pull(update.C_MEDIA)
-                Settings.speak('MEDIA_UPDATED')
-            else:
+            if update.isUpToDate(update.MEDIA_DIR):
                 Settings.speak('MEDIA_UP_TO_DATE')
+            else:
+                update.resetHard(update.C_MEDIA)
+                Settings.speak('MEDIA_UPDATED')
             # APP
-            if update.needToPull(update.APP_SOURCE_DIR):
-                update.pull(update.C_APP)
+            if update.isUpToDate(update.APP_SOURCE_DIR):
+                Settings.speak('APP_SOURCES_UP_TO_DATE')
+            else:
+                update.resetHard(update.C_APP)
                 Settings.speak('APP_SOURCES_UPDATED')
                 update.updateApp()
                 Settings.speak('APP_UPDATED')
                 update.restartService()
                 Settings.speak('SERVICE_RESTART')
-            else:
-                Settings.speak('APP_SOURCES_UP_TO_DATE')
 
         elif Settings.G_MENU_CURRENT == 'INFO_ANALYSIS':
             Settings.speak(
