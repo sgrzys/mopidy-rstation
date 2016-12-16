@@ -9,6 +9,13 @@ Dependencies
 
 - ``Mopidy`` >= 2.1
 - ``Pykka`` >= 1.1
+- ``geopy``
+- ``wikipedia``
+- ``fuzzywuzzy``
+- ``pyaudio``
+- ``python-i18n``
+- ``evdev``
+- ``python-Levenshtein``
 
 
 Installation
@@ -35,6 +42,12 @@ Mopidy-Rstation to your Mopidy configuration file::
     ivona_access_key = XXX
     ivona_secret_key = X/X
     language = pl-PL
-    location = Wrocław
+    voice_name = Ewa
+    location_gps = 51.199688,16.6093018
     weather_api_key = XXX
     audio_in_name = Airmouse: USB Audio
+    audio_out_name = hdmi
+    media_dir = /home/pi/media
+    media_remote_url =  https://xxx/yyy/media.git
+    app_source_dir = /home/pi/mopidy-rstation
+    app_source_remote_url = https://xxx/yyy/mopidy-rstation.git
