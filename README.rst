@@ -1,5 +1,5 @@
 ******************
-Mopidy-rstation
+Mopidy-rStation
 ******************
 
 Extension for remotely controlling Mopidy
