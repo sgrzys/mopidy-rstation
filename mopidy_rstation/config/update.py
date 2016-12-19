@@ -10,8 +10,8 @@ C_APP = 'APP'
 C_MEDIA = 'MEDIA'
 
 
-def git(*args):
-    ret = subprocess.check_output(['git'] + list(args))
+def git(repo_dir, *args):
+    ret = subprocess.check_output(['git'] + list(args), cwd=repo_dir)
     print('git ' + str(list(args)))
     return ret
 
@@ -23,15 +23,14 @@ def pip(*args):
 
 def isUpToDate(repo_dir):
     # git fetch origin
-    git("--git-dir=" + repo_dir + "/.git", "fetch", 'origin', 'master')
+    # "--git-dir=" + repo_dir + "/.git"
+    git(repo_dir, "fetch", 'origin', 'master')
     sha1_rev_local = ''
     sha1_rev_remote = ''
     # local VS remote
     # git rev-parse @ VS git rev-parse @{u}
-    sha1_rev_local = git(
-        "--git-dir=" + repo_dir + "/.git", "rev-parse", '@')
-    sha1_rev_remote = git(
-        "--git-dir=" + repo_dir + "/.git", "rev-parse", '@{u}')
+    sha1_rev_local = git(repo_dir, "rev-parse", '@')
+    sha1_rev_remote = git(repo_dir, "rev-parse", '@{u}')
 
     if sha1_rev_local == sha1_rev_remote:
         return True
@@ -44,10 +43,8 @@ def needToPull(repo_dir):
     sha1_rev_base = ''
     # local VS base
     # git rev-parse @ VS git merge-base @ @{u}
-    sha1_rev_local = git(
-        "--git-dir=" + repo_dir + "/.git", "rev-parse", '@')
-    sha1_rev_base = git(
-        "--git-dir=" + repo_dir + "/.git", "merge-base", '@', '@{u}')
+    sha1_rev_local = git(repo_dir, "rev-parse", '@')
+    sha1_rev_base = git(repo_dir, "merge-base", '@', '@{u}')
     if sha1_rev_local != sha1_rev_base:
         # Need to pull
         return True
@@ -60,10 +57,8 @@ def needToPush(repo_dir):
     sha1_rev_base = ''
     # remote VS baseMEDIA_REMOTE_URL
     # git rev-parse @ VS git rev-parse @{u}
-    sha1_rev_remote = git(
-        "--git-dir=" + MEDIA_DIR + "/.git", "rev-parse", '@{u}')
-    sha1_rev_base = git(
-        "--git-dir=" + repo_dir + "/.git", "merge-base", '@', '@{u}')
+    sha1_rev_remote = git(repo_dir, "rev-parse", '@{u}')
+    sha1_rev_base = git(repo_dir, "merge-base", '@', '@{u}')
     # Need to push
     if sha1_rev_remote != sha1_rev_base:
         return True
@@ -71,27 +66,13 @@ def needToPush(repo_dir):
         return False
 
 
-def pull(repo):
-    if repo == C_MEDIA:
-        git("--git-dir=" + MEDIA_DIR + "/.git",
-            "pull", MEDIA_REMOTE_URL)
-    elif repo == C_APP:
-        git("--git-dir=" + APP_SOURCE_DIR + "/.git",
-            "pull", APP_SOURCE_REMOTE_URL)
+def pull(repo_dir):
+    git(repo_dir, "pull")
 
 
-def resetHard(repo):
+def resetHard(repo_dir):
     # git reset --hard FETCH_HEAD
-    if repo == C_MEDIA:
-        git("--git-dir=" + MEDIA_DIR + "/.git",
-            "reset", '--hard', 'FETCH_HEAD')
-        # ("--git-dir=" + MEDIA_DIR + "/.git",
-        #     "clean", "-df")
-    elif repo == C_APP:
-        git("--git-dir=" + APP_SOURCE_DIR + "/.git",
-            "reset", '--hard', 'FETCH_HEAD')
-        # ("--git-dir=" + MEDIA_DIR + "/.git",
-        #     "clean", "-df")
+    git(repo_dir, "reset", '--hard', 'FETCH_HEAD')
 
 
 def updateApp():
@@ -120,7 +101,12 @@ def main(git_dir):
         print(git_dir + ' NO need to push!')
 
 if __name__ == '__main__':
-    print('--- APP ---')
-    main(APP_SOURCE_DIR)
-    print('--- MEDIA ---')
-    main(MEDIA_DIR)
+    # print('--- APP ---')
+    # main(APP_SOURCE_DIR)
+    # print('--- MEDIA ---')
+    # main(MEDIA_DIR)
+    if isUpToDate(MEDIA_DIR):
+        print('MEDIA_UP_TO_DATE')
+    else:
+        resetHard(MEDIA_DIR)
+        print('MEDIA_UPDATED')

@@ -267,13 +267,13 @@ class Settings:
             if update.isUpToDate(update.MEDIA_DIR):
                 Settings.speak('MEDIA_UP_TO_DATE')
             else:
-                update.resetHard(update.C_MEDIA)
+                update.resetHard(update.MEDIA_DIR)
                 Settings.speak('MEDIA_UPDATED')
             # APP
             if update.isUpToDate(update.APP_SOURCE_DIR):
                 Settings.speak('APP_SOURCES_UP_TO_DATE')
             else:
-                update.resetHard(update.C_APP)
+                update.resetHard(update.APP_SOURCE_DIR)
                 Settings.speak('APP_SOURCES_UPDATED')
                 update.updateApp()
                 Settings.speak('APP_UPDATED')
