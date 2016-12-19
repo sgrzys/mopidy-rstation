@@ -86,6 +86,10 @@ def restartService():
     subprocess.call(command, shell=False)
 
 
+def get_version_info(repo_dir):
+    return git(repo_dir, "log", "-1", "--pretty=format:'%s %cr %an'")
+
+
 def main(git_dir):
     if isUpToDate(git_dir):
         print(git_dir + ' Is up to date!')

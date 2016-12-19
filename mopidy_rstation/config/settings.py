@@ -256,13 +256,14 @@ class Settings:
 
     @staticmethod
     def menu_enter():
+        import update
         print("menu_enter")
         Settings.G_MENU_CURRENT = Settings.G_MENU_FOCUS
         if Settings.G_MENU_CURRENT == 'INFO_VERSION':
-            Settings.speak(Settings.G_MENU_CURRENT, val='1.0 beta')
+            ver = update.get_version_info(update.APP_SOURCE_DIR)
+            Settings.speak(Settings.G_MENU_CURRENT, val=ver)
         elif Settings.G_MENU_CURRENT == 'INFO_UPDATE':
             Settings.speak('PROCESSING')
-            import update
             # MEDIA
             if update.isUpToDate(update.MEDIA_DIR):
                 Settings.speak('MEDIA_UP_TO_DATE')
