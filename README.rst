@@ -26,7 +26,7 @@ System Requirements
     gstreamer1.0-plugins-bad gstreamer1.0-tools \
     python-alsaaudio python-pygame build-essential \
     python-dev python-pip portaudio19-dev python-all-dev \
-    python-pyudev gstreamer1.0-alsa
+    python-pyudev gstreamer1.0-alsa gstreamer0.10-alsa
 
 
 
