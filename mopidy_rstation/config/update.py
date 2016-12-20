@@ -81,8 +81,9 @@ def updateApp():
 
 
 def restartService():
+    command = ['pkill', '-9', 'mopidy']
+    subprocess.call(command, shell=False)
     command = ['systemctl', 'restart', 'mopidy']
-    # shell=FALSE for sudo to work.
     subprocess.call(command, shell=False)
 
 
