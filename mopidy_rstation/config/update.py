@@ -81,10 +81,8 @@ def updateApp():
 
 
 def restartService():
-    command = ['pkill', '-9', 'mopidy']
-    subprocess.call(command, shell=False)
-    command = ['systemctl', 'restart', 'mopidy']
-    subprocess.call(command, shell=False)
+    subprocess.call(
+        ['./update.sh'], cwd=APP_SOURCE_DIR + '/mopidy_rstation/config)
 
 
 def get_version_info(repo_dir):
@@ -110,8 +108,9 @@ if __name__ == '__main__':
     # main(APP_SOURCE_DIR)
     # print('--- MEDIA ---')
     # main(MEDIA_DIR)
-    if isUpToDate(MEDIA_DIR):
-        print('MEDIA_UP_TO_DATE')
-    else:
-        resetHard(MEDIA_DIR)
-        print('MEDIA_UPDATED')
+    # if isUpToDate(MEDIA_DIR):
+    #     print('MEDIA_UP_TO_DATE')
+    # else:
+    #     resetHard(MEDIA_DIR)
+    #     print('MEDIA_UPDATED')
+    restartService()
