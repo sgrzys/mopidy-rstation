@@ -64,3 +64,5 @@ Mopidy-Rstation to your Mopidy configuration file::
     media_remote_url =  https://xxx/yyy/media.git
     app_source_dir = /home/pi/mopidy-rstation
     app_source_remote_url = https://xxx/yyy/mopidy-rstation.git
+    
+    
