@@ -56,12 +56,11 @@ class RstationFrontend(pykka.ThreadingActor, core.CoreListener):
         pass
 
     def track_playback_started(self, tl_track):
-        print("PLAYING " + tl_track.track.name)
-        # if tl_track is not None:
-        #     try:
-        #         voices.speak("PLAYING", val=tl_track.track.name)
-        #     except Exception as e:
-        #         print(str(e))
+        if tl_track is not None:
+            try:
+                voices.speak("PLAYING", val=tl_track.track.name)
+            except Exception as e:
+                print(str(e))
 
     def on_start(self):
         try:
