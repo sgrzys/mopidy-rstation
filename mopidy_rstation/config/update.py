@@ -82,7 +82,7 @@ def updateApp():
 
 def restartService():
     subprocess.call(
-        ['./update.sh'], cwd=APP_SOURCE_DIR + '/mopidy_rstation/config)
+        ['./update.sh'], cwd=APP_SOURCE_DIR + '/mopidy_rstation/config')
 
 
 def get_version_info(repo_dir):
