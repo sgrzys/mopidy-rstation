@@ -27,7 +27,7 @@ if pack('@h', 1) == pack('<h', 1):
 else:
     ENDIAN = 'big'
 CONTENT_TYPE = \
-    'raw;encoding=signed-integer;bits=16;rate={0};endian={1}' \
+    'audio/raw;encoding=signed-integer;bits=16;rate={0};endian={1}' \
     .format(RATE, ENDIAN)
 
 
@@ -47,12 +47,11 @@ def set_audio_in(audio_in_name):
             if info['maxInputChannels'] > 0:
                 if info['name'].startswith(audio_in_name):
                     INPUT_DEVICE_INDEX = info['index']
-                    # RATE = int(info['defaultSampleRate'])
-                    RATE = 8000
+                    RATE = min(16000, int(info['defaultSampleRate']))
                     # CHANNELS = int(info['maxInputChannels'])
                     CHANNELS = 1
                     CONTENT_TYPE = \
-                        'raw;encoding=signed-integer;bits=16;' + \
+                        'audio/raw;encoding=signed-integer;bits=16;' + \
                         'rate={0};endian={1}' \
                         .format(RATE, ENDIAN)
                     G_AUDIO_IN_NAME = audio_in_name
@@ -122,6 +121,8 @@ def record_and_stream():
 
 
 def ask_bot(mic=None):
+    result = None
+    global RECORDING
     try:
         config = Config.get_config()
         w = wit.Wit(config['wit_token'])
@@ -134,6 +135,9 @@ def ask_bot(mic=None):
         # TODO this is a faster version but the qualitty have to be improved
         result = w.post_speech(
             record_and_stream(), content_type=CONTENT_TYPE)
+
+        if result is not None:
+            RECORDING = False
         # slow version
         # output_file = StringIO()
         # output_file = record_only()

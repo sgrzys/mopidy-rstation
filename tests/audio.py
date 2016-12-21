@@ -21,7 +21,7 @@ for x in range(p.get_device_count()):
         # USB Audio Device / Airmouse: USB Audio / HDA Intel
         if info['name'].startswith('sysdefault'):
             INPUT_DEVICE_INDEX = info['index']
-            RATE = int(info['defaultSampleRate'])
+            RATE = min(16000, int(info['defaultSampleRate']))
             # CHANNELS = int(info['maxInputChannels'])
             CHANNELS = 1
 

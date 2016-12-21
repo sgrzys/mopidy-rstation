@@ -1,5 +1,4 @@
 import json
-import helpers
 from connector import Connector
 
 
@@ -55,7 +54,7 @@ class Wit(object):
         response = self._connector.get(body, 'message')
         return self._handle_response(response)
 
-    def post_speech(self, data=None, content_type='wav',
+    def post_speech(self, data=None, content_type='audio/wav',
                     context=None, meta=None, msg_id=None):
         """Return meaning extracted from a posted sound file
 
@@ -80,8 +79,9 @@ class Wit(object):
         if msg_id:
             params['msg_id'] = msg_id
 
-        content_type = helpers.process_content_type(content_type)
-        headers = {'Content-Type': content_type}
+        headers = {
+            'Content-Type': content_type,
+            'Transfer-encoding': 'chunked'}
         response = self._connector.post(data, 'speech', params, headers)
         return self._handle_response(response)
 
