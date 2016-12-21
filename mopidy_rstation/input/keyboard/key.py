@@ -168,7 +168,7 @@ class KeyPad(threading.Thread):
             if code in ['KEY_F24', 'KEY_COMPOSE', 'KEY_HOMEPAGE']:
                 self.ButtonPressed('ask_bot')
             if code in ['KEY_MIC_ON_DEVICE']:
-                self.ButtonPressed('ask_bot')
+                self.ButtonPressed('ask_bot_2')
             if code == 'KEY_PREVIOUSSONG':
                 self.ButtonPressed('player_prev')
             if code == 'KEY_SPACE' or code == 'KEY_PLAYPAUSE':

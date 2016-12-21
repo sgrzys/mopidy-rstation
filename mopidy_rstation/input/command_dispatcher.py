@@ -400,6 +400,15 @@ class CommandDispatcher(object):
                 str("Error in ai.ask_bot")
                 traceback.print_exc()
 
+        if cmd == 'ask_bot_2':
+            self.change_mode(C_MODE_PLAYER)
+            try:
+                self.core.playback.pause()
+                ai.ask_bot('sysdefault')
+            except Exception:
+                str("Error in ai.ask_bot")
+                traceback.print_exc()
+
         if cmd == 'backlight_up':
             Utils.backlight_up()
 

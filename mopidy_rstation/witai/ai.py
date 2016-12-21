@@ -120,11 +120,14 @@ def record_and_stream():
     p.terminate()
 
 
-def ask_bot():
+def ask_bot(mic=None):
     try:
         config = Config.get_config()
         w = wit.Wit(config['wit_token'])
-        audio_in_name = config['audio_in_name']
+        if mic is not None:
+            audio_in_name = mic
+        else:
+            audio_in_name = config['audio_in_name']
         print('set_audio_in -> ' + audio_in_name)
         set_audio_in(audio_in_name)
         # TODO this is a faster version but the qualitty have to be improved
