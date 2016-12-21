@@ -10,15 +10,15 @@ import wave
 from StringIO import StringIO
 import traceback
 from struct import pack
-from ..audio import sounds
-from ..audio import voices
+from mopidy_rstation.audio import sounds
+from mopidy_rstation.audio import voices
 
 
 RECORDING = False
 CHUNK = 256
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
-RATE = 44100
+RATE = 8000
 RECORD_SECONDS = 5
 INPUT_DEVICE_INDEX = None
 G_AUDIO_IN_NAME = None
@@ -45,10 +45,10 @@ def set_audio_in(audio_in_name):
         try:
             info = p.get_device_info_by_index(x)
             if info['maxInputChannels'] > 0:
-                # USB Audio Device or Airmouse: USB Audio
                 if info['name'].startswith(audio_in_name):
                     INPUT_DEVICE_INDEX = info['index']
-                    RATE = int(info['defaultSampleRate'])
+                    # RATE = int(info['defaultSampleRate'])
+                    RATE = 8000
                     # CHANNELS = int(info['maxInputChannels'])
                     CHANNELS = 1
                     CONTENT_TYPE = \
@@ -225,4 +225,4 @@ def ask_bot(mic=None):
 
 
 if __name__ == '__main__':
-    ask_bot()
+    ask_bot('sysdefault')
