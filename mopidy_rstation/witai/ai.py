@@ -50,7 +50,7 @@ def set_audio_in(audio_in_name):
                     INPUT_DEVICE_INDEX = info['index']
                     RATE = int(info['defaultSampleRate'])
                     # CHANNELS = int(info['maxInputChannels'])
-                    CHANNELS = 2
+                    CHANNELS = 1
                     CONTENT_TYPE = \
                         'raw;encoding=signed-integer;bits=16;' + \
                         'rate={0};endian={1}' \

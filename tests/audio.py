@@ -22,9 +22,8 @@ for x in range(p.get_device_count()):
         if info['name'].startswith('sysdefault'):
             INPUT_DEVICE_INDEX = info['index']
             RATE = int(info['defaultSampleRate'])
-            CHANNELS = int(info['maxInputChannels'])
-            # name USB Audio Device: - (hw:1,0)
-            # HDA Intel
+            # CHANNELS = int(info['maxInputChannels'])
+            CHANNELS = 1
 
 print('selected device index: ' + str(INPUT_DEVICE_INDEX))
 print('selected device rate: ' + str(RATE))
