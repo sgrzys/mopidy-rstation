@@ -284,7 +284,7 @@ class Settings:
                 Settings.speak('APP_UPDATED')
                 time.sleep(2)
                 Settings.speak('SERVICE_RESTART')
-                time.sleep(3)
+                time.sleep(4)
                 update.restartService()
 
         elif Settings.G_MENU_CURRENT == 'INFO_ANALYSIS':

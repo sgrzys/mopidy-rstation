@@ -193,7 +193,7 @@ class Utils:
         d = time.strftime("%e", curr_time)
         dd = time.strftime("%A %e %B %Y", curr_time)
         v = pyvona.create_voice()
-        v.speak(u'Godzina ' + t + u' dzisiaj jest ' + dd + u' rok')
+        v.speak(u'Godzina ' + t + u'. Dzisiaj jest ' + dd + u' rok.')
         if settings.Config.get_current_lang() == 'pl-PL':
             mm = m
             if m == '01':
