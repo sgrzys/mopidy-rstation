@@ -47,7 +47,8 @@ def set_audio_in(audio_in_name):
             if info['maxInputChannels'] > 0:
                 if info['name'].startswith(audio_in_name):
                     INPUT_DEVICE_INDEX = info['index']
-                    RATE = min(16000, int(info['defaultSampleRate']))
+                    RATE = int(info['defaultSampleRate'])
+                    # RATE = min(16000, int(info['defaultSampleRate']))
                     # CHANNELS = int(info['maxInputChannels'])
                     CHANNELS = 1
                     CONTENT_TYPE = \
