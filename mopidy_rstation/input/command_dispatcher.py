@@ -150,7 +150,19 @@ class CommandDispatcher(object):
                 self.core.library.browse(current_item.uri)
                 t = voices.convert_text(
                     current_item.name, remove_file_extension=True)
-                voices.speak('ENTER_DIR', val=t)
+                text = ''
+                codes = 'ENTER_DIR'
+                if t == 'Audiobooks':
+                    codes = ['ENTER_DIR', 'AUDIOBOOKS_DIR']
+                elif t == 'Music':
+                    codes = ['ENTER_DIR', 'MUSIC_DIR']
+                elif t == 'Podcasts':
+                    codes = ['ENTER_DIR', 'PODCAST_DIR']
+                elif t == 'Radio':
+                    codes = ['ENTER_DIR', 'RADIO_DIR']
+                else:
+                    text = t
+                voices.speak(codes, val=text)
 
     def lib_next(self):
         print('lib_next')
@@ -201,12 +213,13 @@ class CommandDispatcher(object):
 
     def lib_up(self):
         print('lib_up')
-        if len(Utils.lib_items) == 0:
-            pass
         item = Utils.lib_items[Utils.curr_lib_item_id]
         uri = item.uri.rsplit('/', 2)[0]
-        name = item.uri.rsplit('/', 2)[1]
+        name = item.uri.rsplit('/', 3)[1]
         self.core.library.browse(uri)
+        if name == 'pi':
+            voices.speak('LIBRARY')
+            return
         text = ''
         codes = 'UP_DIR'
         if name == 'Audiobooks':
@@ -217,6 +230,8 @@ class CommandDispatcher(object):
             codes = ['UP_DIR', 'PODCAST_DIR']
         elif name == 'Radio':
             codes = ['UP_DIR', 'RADIO_DIR']
+        elif name == 'media':
+            codes = ['UP_DIR', 'LIBRARY']
         else:
             text = name
         voices.speak(codes, val=text)
