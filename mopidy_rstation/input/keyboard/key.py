@@ -130,9 +130,10 @@ class KeyPad(threading.Thread):
                                 self.handle_event(evdev.ecodes.KEY[event.code])
                         if event.type == evdev.ecodes.EV_KEY & \
                            event.value == 0:
-                            if r.name == 'sunxi-gpiokey':
-                                print('key up on sunxi-gpiokey')
-                                print('$$$$$$$$$$$$$$$$$$$$$$$')
+                            if r.name == 'sunxi-gpiokey' or \
+                             evdev.ecodes.KEY[event.code] == 'KEY_COMPOSE':
+                                print('key up on sunxi-gpiokey or KEY_COMPOSE')
+                                print('this action is ignored')
                             else:
                                 # key up
                                 ai.RECORDING = False
