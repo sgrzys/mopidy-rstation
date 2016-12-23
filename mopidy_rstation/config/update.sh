@@ -1,6 +1,16 @@
 #!/bin/sh
-
-sudo systemctl restart mopidy &&
-sleep 3 &&
-sudo pkill -9 mopidy &&
+echo "start"
+echo "stop mopidy and sleep 3sec"
+sudo systemctl stop mopidy &
+echo 3
+sleep 1
+echo 2
+sleep 1
+echo 1
+sleep 1
+echo 0
+echo "kill mopdidy"
+sudo pkill -9 mopidy
+echo "start mopidy"
 sudo systemctl start mopidy
+echo "done"
