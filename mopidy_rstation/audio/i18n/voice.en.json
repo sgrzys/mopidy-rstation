@@ -39,6 +39,7 @@
         "INFO_VERSION": "Version",
         "INFO_UPDATE" : "Update",
         "INFO_ANALYSIS": "Analysis",
+        "INFO_RESTART": "Restart",
         "MEDIA_UP_TO_DATE": "Your media are up to date",
         "MEDIA_UPDATED": "Updating media",
         "APP_SOURCES_UP_TO_DATE": "All of the system sources are up to date",

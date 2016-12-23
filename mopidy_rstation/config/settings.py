@@ -199,6 +199,8 @@ class Settings:
         elif Settings.G_MENU_FOCUS == 'INFO_UPDATE':
             Settings.G_MENU_FOCUS = 'INFO_ANALYSIS'
         elif Settings.G_MENU_FOCUS == 'INFO_ANALYSIS':
+            Settings.G_MENU_FOCUS = 'INFO_RESTART'
+        elif Settings.G_MENU_FOCUS == 'INFO_RESTART':
             Settings.G_MENU_FOCUS = 'INFO_VERSION'
         Settings.speak(Settings.G_MENU_FOCUS)
 
@@ -269,6 +271,10 @@ class Settings:
         if Settings.G_MENU_CURRENT == 'INFO_VERSION':
             ver = update.get_version_info(update.APP_SOURCE_DIR)
             Settings.speak(Settings.G_MENU_CURRENT, val=ver)
+        elif Settings.G_MENU_CURRENT == 'INFO_RESTART':
+            Settings.speak('SERVICE_RESTART')
+            time.sleep(4)
+            update.restartService()
         elif Settings.G_MENU_CURRENT == 'INFO_UPDATE':
             Settings.speak('PROCESSING')
             # MEDIA
