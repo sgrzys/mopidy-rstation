@@ -37,11 +37,11 @@ def set_audio_in(audio_in_name):
     global INPUT_DEVICE_INDEX
     global CONTENT_TYPE
     global G_AUDIO_IN_NAME
-    global FORMAT
-    if audio_in_name == 'USB Camera':
-        FORMAT = pyaudio.paInt32
-    else:
-        FORMAT = pyaudio.paInt16
+    # global FORMAT
+    # if audio_in_name == 'USB Camera':
+    #     FORMAT = pyaudio.paInt32
+    # else:
+    #     FORMAT = pyaudio.paInt16
     # check if all was already configured
     if INPUT_DEVICE_INDEX is not None and G_AUDIO_IN_NAME == audio_in_name:
             return
