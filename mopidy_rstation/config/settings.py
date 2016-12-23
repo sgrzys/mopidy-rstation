@@ -131,18 +131,17 @@ class Config:
         new_audio_in_name = ''
         cur_audio_in_name = Config.get_config()['audio_in_name']
         audio_in_speak_code = ''
-        # default is sysdefault - mic on board
-        if cur_audio_in_name == '':
-            cur_audio_in_name = 'sysdefault'
-            audio_in_speak_code = "AUDIO_IN_ONBOARD"
-        elif cur_audio_in_name == 'sysdefault':
+        if cur_audio_in_name == 'sysdefault':
             new_audio_in_name = 'Airmouse: USB Audio'
             audio_in_speak_code = "AUDIO_IN_AIRMOUSE"
         elif cur_audio_in_name == 'Airmouse: USB Audio':
-            new_audio_in_name = 'array_gain'
+            new_audio_in_name = 'USB Camera'
             audio_in_speak_code = "AUDIO_IN_ARRAY"
-        elif cur_audio_in_name == 'array_gain':
+        elif cur_audio_in_name == 'USB Camera':
             new_audio_in_name = 'sysdefault'
+            audio_in_speak_code = "AUDIO_IN_ONBOARD"
+        else:
+            cur_audio_in_name = 'sysdefault'
             audio_in_speak_code = "AUDIO_IN_ONBOARD"
 
         Config.change_config('audio_in_name', new_audio_in_name)
