@@ -133,12 +133,15 @@ class Config:
         audio_in_speak_code = ''
         # default is sysdefault - mic on board
         if cur_audio_in_name == '':
-            new_audio_in_name = 'sysdefault'
+            cur_audio_in_name = 'sysdefault'
             audio_in_speak_code = "AUDIO_IN_ONBOARD"
         elif cur_audio_in_name == 'sysdefault':
             new_audio_in_name = 'Airmouse: USB Audio'
             audio_in_speak_code = "AUDIO_IN_AIRMOUSE"
         elif cur_audio_in_name == 'Airmouse: USB Audio':
+            new_audio_in_name = 'array_gain'
+            audio_in_speak_code = "AUDIO_IN_ARRAY"
+        elif cur_audio_in_name == 'array_gain':
             new_audio_in_name = 'sysdefault'
             audio_in_speak_code = "AUDIO_IN_ONBOARD"
 

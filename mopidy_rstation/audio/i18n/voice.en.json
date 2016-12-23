@@ -31,6 +31,7 @@
         "ANSWER_WIKIPEDIA": "Processing answer from Wikipedia",
         "AUDIO_IN_AIRMOUSE": "Microphone in remote controller",
         "AUDIO_IN_ONBOARD": "Microphone built-in in the device",
+        "AUDIO_IN_ARRAY": "Array of microphones",
         "AUDIO_OUT_SPEAKER": "Built in speaker",
         "AUDIO_OUT_SPDIF": "SPDIF digital output",
         "AUDIO_OUT_HDMI": "HDMI digital output",
