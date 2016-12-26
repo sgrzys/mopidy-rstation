@@ -292,7 +292,10 @@ class CommandDispatcher(object):
     def check_mode(self):
         # after start switch to PLAYER mode
         if self.current_mode is None:
-            self.change_mode(C_MODE_LIBRARY)
+            if len(self.core.tracklist.tl_tracks.get()) == 0:
+                self.change_mode(C_MODE_LIBRARY)
+            else:
+                self.change_mode(C_MODE_PLAYER)
 
         # if nothing to play switch to LIBRARY mode
         elif self.current_mode == C_MODE_PLAYER:
