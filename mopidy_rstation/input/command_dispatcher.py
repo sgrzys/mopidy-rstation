@@ -35,7 +35,7 @@ class CommandDispatcher(object):
     def __init__(self, core, config, buttonPressEvent):
         self.core = core
         self.config = config
-        self.current_mode = C_MODE_LIBRARY
+        self.current_mode = None
         self.change_mode_time = None
         buttonPressEvent.append(self.handleCommand)
 
