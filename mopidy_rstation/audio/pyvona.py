@@ -139,6 +139,11 @@ class Voice(object):
             if not os.path.isdir(self.speech_cache_dir):
                 os.makedirs(self.speech_cache_dir)
 
+            # remove the empty file
+            if os.path.isfile(self.speech_cache_dir + cache_f):
+                if not os.path.getsize(self.speech_cache_dir + cache_f) > 0:
+                    os.remove(self.speech_cache_dir + cache_f)
+
             if not os.path.isfile(self.speech_cache_dir + cache_f):
                 with self.use_ogg_codec():
                     self.fetch_voice(
