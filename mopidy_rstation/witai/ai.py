@@ -141,7 +141,6 @@ def ask_bot(mic=None):
         # TODO this is a faster version but the qualitty have to be improved
         result = w.post_speech(
             record_and_stream(), content_type=CONTENT_TYPE)
-
         if result is not None:
             RECORDING = False
         # slow version

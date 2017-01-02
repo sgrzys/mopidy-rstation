@@ -115,7 +115,7 @@ class KeyPad(threading.Thread):
                         # event.value == 1 key down
                         # event.value == 0 key up
                         # event.value == 2 key hold
-                        if event.type == evdev.ecodes.EV_KEY & \
+                        if event.type == evdev.ecodes.EV_KEY and \
                            event.value == 1:
                             # enter with mouse mode on airmouse
                             if event.code == 272:
@@ -128,14 +128,13 @@ class KeyPad(threading.Thread):
                                 self.handle_event('KEY_MIC_ON_DEVICE')
                             else:
                                 self.handle_event(evdev.ecodes.KEY[event.code])
-                        if event.type == evdev.ecodes.EV_KEY & \
-                           event.value == 0:
+                        if event.type == evdev.ecodes.EV_KEY and \
+                           (event.value == 0 or event.value == 00):
                             if r.name == 'sunxi-gpiokey' or \
                              evdev.ecodes.KEY[event.code] == 'KEY_COMPOSE':
                                 print('key up on sunxi-gpiokey or KEY_COMPOSE')
                                 print('this action is ignored')
                             else:
-                                # key up
                                 ai.RECORDING = False
 
                 except Exception as e:
