@@ -15,7 +15,5 @@ echo "update mopidy"
 cd /home/pi/mopidy
 git pull
 pip install . -U
-echo "start mopidy"
-sudo systemctl start mopidy
-echo "done"
-apt-get upgrade
+apt-get update
+apt-get -y upgrade
