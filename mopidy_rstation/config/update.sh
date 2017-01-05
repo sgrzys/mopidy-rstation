@@ -17,3 +17,6 @@ git pull
 pip install . -U
 apt-get update
 apt-get -y upgrade
+echo "start mopidy"
+sudo systemctl start mopidy
+echo "done"
