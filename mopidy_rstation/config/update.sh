@@ -11,12 +11,11 @@ sleep 1
 echo 0
 echo "kill mopdidy"
 sudo pkill -9 mopidy
-echo "update mopidy"
-cd /home/pi/mopidy
-git pull
-pip install . -U
-apt-get update
-apt-get -y upgrade
+# cd /home/pi/mopidy
+# git pull
+# pip install . -U
+# apt-get update
+# apt-get -y upgrade
 echo "start mopidy"
 sudo systemctl start mopidy
 echo "done"
