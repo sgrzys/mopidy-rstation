@@ -7,8 +7,8 @@ from mopidy_rstation.audio import sounds
 from mopidy_rstation.audio import voices
 import requests
 import json
-import pyaudio
 import traceback
+import alsaaudio
 
 RECORDING = False
 CHUNK = 512
@@ -17,30 +17,27 @@ RECORD_SECONDS = 5
 INPUT_DEVICE_INDEX = None
 
 
-def set_audio_in(audio_in_name):
-    global INPUT_DEVICE_INDEX
-    p = pyaudio.PyAudio()
-    for x in range(p.get_device_count()):
-        try:
-            info = p.get_device_info_by_index(x)
-            if info['maxInputChannels'] > 0:
-                print('----------------------')
-                print('MIC: ' + str(info))
-                print('----------------------')
-                if info['name'].startswith(audio_in_name):
-                    INPUT_DEVICE_INDEX = info['index']
-                    print('**************************************************')
-                    print('Selected device index: ' + str(INPUT_DEVICE_INDEX))
-                    print('**************************************************')
-        except Exception as e:
-            print(str(x) + '. Error: ' + str(e))
-    p.terminate()
+def set_mic(audio_in_name):
+    for pd in alsaaudio.pcms(alsaaudio.PCM_CAPTURE):
+            # pcm = alsaaudio.PCM(alsaaudio.PCM_CAPTURE, device=pd)
+            print(str(pd))
+    # PCM_NONBLOCK
+    inp = alsaaudio.PCM(
+        type=alsaaudio.PCM_CAPTURE,
+        mode=alsaaudio.PCM_NORMAL,
+        device='plughw:CARD=CameraB409241,DEV=0')
+    inp.setchannels(1)
+    inp.setrate(RATE)
+    inp.setformat(alsaaudio.PCM_FORMAT_S16_LE)
+    inp.setperiodsize(CHUNK)
+    return inp
 
 
-def record_and_stream(stream):
+def record_and_stream(inp):
     global RECORDING
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
-        yield stream.read(CHUNK, exception_on_overflow=False)
+        _, data = inp.read()
+        yield data
         if RECORDING is False:
             break
 
@@ -54,8 +51,8 @@ def ask_bot(mic=None):
             audio_in_name = mic
         else:
             audio_in_name = config['audio_in_name']
-        print('set_audio_in -> ' + audio_in_name)
-        set_audio_in(audio_in_name)
+        print('set_mic -> ' + audio_in_name)
+        inp = set_mic(audio_in_name)
 
         headers = {'Authorization': 'Bearer ' + config['wit_token'],
                    'Content-Type': 'audio/raw; encoding=signed-integer; ' +
@@ -63,28 +60,14 @@ def ask_bot(mic=None):
                    'Transfer-Encoding': 'chunked'}
         url = 'https://api.wit.ai/speech'
 
-        p = pyaudio.PyAudio()
-        stream = p.open(
-            format=pyaudio.paInt16,
-            channels=1,
-            rate=RATE,
-            input=True,
-            output=True,
-            frames_per_buffer=CHUNK,
-            input_device_index=INPUT_DEVICE_INDEX)
+        print("\n[*]> Starting Recording\n")
         RECORDING = True
         sounds.play_file(sounds.C_SOUND_REC_START)
-
         result = requests.post(
-            url, headers=headers, data=record_and_stream(stream))
-
+            url, headers=headers, data=record_and_stream(inp))
         sounds.play_file(sounds.C_SOUND_REC_END)
-        stream.stop_stream()
-        stream.close()
-        p.terminate()
-
-        if result is not None:
-            RECORDING = False
+        RECORDING = False
+        print("[*]> Ready Recognize Voice\n")
     except Exception:
         traceback.print_exc()
         return
