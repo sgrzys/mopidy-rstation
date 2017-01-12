@@ -9,26 +9,22 @@ import pyaudio
 import wave
 from StringIO import StringIO
 import traceback
-from struct import pack
 from mopidy_rstation.audio import sounds
 from mopidy_rstation.audio import voices
 
 
 RECORDING = False
-CHUNK = 256
+# CHUNK = 256
+CHUNK = 1024
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 8000
 RECORD_SECONDS = 5
 INPUT_DEVICE_INDEX = None
 G_AUDIO_IN_NAME = None
-if pack('@h', 1) == pack('<h', 1):
-    ENDIAN = 'little'
-else:
-    ENDIAN = 'big'
 CONTENT_TYPE = \
-    'audio/raw;encoding=signed-integer;bits=16;rate={0};endian={1}' \
-    .format(RATE, ENDIAN)
+    'audio/raw; encoding=signed-integer; bits=16; rate={0};endian=little' \
+    .format(RATE)
 
 
 def set_audio_in(audio_in_name):
@@ -37,14 +33,8 @@ def set_audio_in(audio_in_name):
     global INPUT_DEVICE_INDEX
     global CONTENT_TYPE
     global G_AUDIO_IN_NAME
-    # global FORMAT
-    # if audio_in_name == 'USB Camera':
-    #     FORMAT = pyaudio.paInt32
-    # else:
-    #     FORMAT = pyaudio.paInt16
-    # check if all was already configured
-    if INPUT_DEVICE_INDEX is not None and G_AUDIO_IN_NAME == audio_in_name:
-            return
+    # if INPUT_DEVICE_INDEX is not None and G_AUDIO_IN_NAME == audio_in_name:
+    #         return
     p = pyaudio.PyAudio()
     for x in range(p.get_device_count()):
         try:
@@ -58,8 +48,7 @@ def set_audio_in(audio_in_name):
                     CHANNELS = 1
                     CONTENT_TYPE = \
                         'audio/raw;encoding=signed-integer;bits=16;' + \
-                        'rate={0};endian={1}' \
-                        .format(RATE, ENDIAN)
+                        'rate={0};endian={1}'.format(RATE)
                     G_AUDIO_IN_NAME = audio_in_name
                     print('*********************************************')
                     print('Selected device index: ' + str(INPUT_DEVICE_INDEX))

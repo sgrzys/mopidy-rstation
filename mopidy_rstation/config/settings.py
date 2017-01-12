@@ -136,9 +136,9 @@ class Config:
             new_audio_in_name = 'Airmouse: USB Audio'
             audio_in_speak_code = "AUDIO_IN_AIRMOUSE"
         elif cur_audio_in_name == 'Airmouse: USB Audio':
-            new_audio_in_name = 'Camera'
+            new_audio_in_name = 'array_gain'
             audio_in_speak_code = "AUDIO_IN_ARRAY"
-        elif cur_audio_in_name == 'Camera':
+        elif cur_audio_in_name == 'array_gain':
             new_audio_in_name = 'sysdefault'
             audio_in_speak_code = "AUDIO_IN_ONBOARD"
         else:
