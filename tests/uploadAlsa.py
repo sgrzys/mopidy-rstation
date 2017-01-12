@@ -2,7 +2,7 @@ import alsaaudio
 from audioop import rms
 import requests
 
-access_key = 'MEN4GZIFBTCEVKCMETRNYPYJBZXMGAMI'
+access_key = 'JNPP4VAYBMTEEBYHNIHDSMHDEMTJLIBV'
 THRESHOLD = 2000
 CHUNK_SIZE = 128
 

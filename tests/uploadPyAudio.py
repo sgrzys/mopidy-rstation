@@ -9,7 +9,7 @@ CHUNK_SIZE = 512
 FORMAT = pyaudio.paInt16
 RATE = 16000
 SHORT_NORMALIZE = (1.0/32768.0)
-access_key = 'MEN4GZIFBTCEVKCMETRNYPYJBZXMGAMI'
+access_key = 'JNPP4VAYBMTEEBYHNIHDSMHDEMTJLIBV'
 
 
 # Returns if the RMS of block is less than the threshold
