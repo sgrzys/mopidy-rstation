@@ -56,7 +56,7 @@ def set_audio_in(audio_in_name):
                     print('Content type: ' + str(CONTENT_TYPE))
                     print('*********************************************')
         except Exception as e:
-            print(x + '. Error: ' + e)
+            print(str(x) + '. Error: ' + e)
     p.terminate()
 
 
