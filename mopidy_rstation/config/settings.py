@@ -132,17 +132,17 @@ class Config:
         cur_audio_in_name = Config.get_config()['audio_in_name']
         audio_in_speak_code = ''
 
-        if cur_audio_in_name == 'sysdefault':
-            new_audio_in_name = 'Airmouse: USB Audio'
+        if cur_audio_in_name == 'audiocodec':
+            new_audio_in_name = 'Airmouse'
             audio_in_speak_code = "AUDIO_IN_AIRMOUSE"
-        elif cur_audio_in_name == 'Airmouse: USB Audio':
-            new_audio_in_name = 'array_gain'
+        elif cur_audio_in_name == 'Airmouse':
+            new_audio_in_name = 'CameraB409241'
             audio_in_speak_code = "AUDIO_IN_ARRAY"
-        elif cur_audio_in_name == 'array_gain':
-            new_audio_in_name = 'sysdefault'
+        elif cur_audio_in_name == 'CameraB409241':
+            new_audio_in_name = 'audiocodec'
             audio_in_speak_code = "AUDIO_IN_ONBOARD"
         else:
-            new_audio_in_name = 'sysdefault'
+            new_audio_in_name = 'audiocodec'
             audio_in_speak_code = "AUDIO_IN_ONBOARD"
 
         Config.change_config('audio_in_name', new_audio_in_name)

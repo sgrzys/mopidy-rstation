@@ -18,14 +18,19 @@ INPUT_DEVICE_INDEX = None
 
 
 def set_mic(audio_in_name):
-    for pd in alsaaudio.pcms(alsaaudio.PCM_CAPTURE):
-            # pcm = alsaaudio.PCM(alsaaudio.PCM_CAPTURE, device=pd)
-            print(str(pd))
+    mic = 'plughw:CARD=' + audio_in_name + ',DEV=0'
+    # plughw:CARD=audiocodec,DEV=0
+    # plughw:CARD=Airmouse,DEV=0
+    # plughw:CARD=CameraB409241,DEV=0
+    #
+    # TODO test is we have this hardware
+    # for pd in alsaaudio.pcms(alsaaudio.PCM_CAPTURE):
+    #         print(str(pd))
     # PCM_NONBLOCK
     inp = alsaaudio.PCM(
         type=alsaaudio.PCM_CAPTURE,
         mode=alsaaudio.PCM_NORMAL,
-        device='plughw:CARD=CameraB409241,DEV=0')
+        device=mic)
     inp.setchannels(1)
     inp.setrate(RATE)
     inp.setformat(alsaaudio.PCM_FORMAT_S16_LE)
