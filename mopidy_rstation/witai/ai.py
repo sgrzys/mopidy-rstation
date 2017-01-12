@@ -11,7 +11,7 @@ import traceback
 import alsaaudio
 
 RECORDING = False
-CHUNK = 128
+CHUNK = 512
 RATE = 8000
 RECORD_SECONDS = 5
 INPUT_DEVICE_INDEX = None
