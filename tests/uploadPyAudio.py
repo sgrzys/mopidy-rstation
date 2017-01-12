@@ -1,7 +1,6 @@
 from array import array
 import struct
 import pyaudio
-import json
 import requests
 import math
 
@@ -43,9 +42,8 @@ def returnUpTo(iterator, values, returnNum):
 def gen(p, stream):
     num_silent = 0
     snd_started = False
-    start_pack = 0
     counter = 0
-    print "Microphone on!"
+    print("Microphone on!")
     i = 0
     data = []
 
@@ -65,7 +63,7 @@ def gen(p, stream):
             if i < 0:                     # so we can hear the start of speech.
                 i = 0
             snd_started = True
-            print "TRIGGER at " + str(rms) + " rms."
+            print("TRIGGER at " + str(rms) + " rms.")
 
         elif not silent and snd_started and not i >= len(data):
             i, temp = returnUpTo(i, data, 1024)
@@ -73,22 +71,22 @@ def gen(p, stream):
             num_silent = 0
 
         if snd_started and num_silent > 5:
-            print "Stop Trigger"
+            print("Stop Trigger")
             break
 
         if counter > 75:  # Slightly less than 10 seconds.
-            print "Timeout, Stop Trigger"
+            print("Timeout, Stop Trigger")
             break
 
         if snd_started:
             counter = counter + 1
 
     # Yield the rest of the data.
-    print "Pre-streamed " + str(i) + " of " + str(len(data)) + "."
+    print("Pre-streamed " + str(i) + " of " + str(len(data)) + ".")
     while (i < len(data)):
         i, temp = returnUpTo(i, data, 512)
         yield temp
-    print "Swapping to thinking."
+    print("Swapping to thinking.")
 
 
 if __name__ == '__main__':
@@ -106,5 +104,5 @@ if __name__ == '__main__':
     stream.stop_stream()
     stream.close()
     p.terminate()
-    print foo.text
-    print "Done."
+    print(foo.text)
+    print("Done.")

@@ -39,6 +39,9 @@ def set_audio_in(audio_in_name):
     for x in range(p.get_device_count()):
         try:
             info = p.get_device_info_by_index(x)
+            print('----------------------')
+            print('we have: ' + str(info))
+            print('----------------------')
             if info['maxInputChannels'] > 0:
                 if info['name'].startswith(audio_in_name):
                     INPUT_DEVICE_INDEX = info['index']
@@ -56,7 +59,7 @@ def set_audio_in(audio_in_name):
                     print('Content type: ' + str(CONTENT_TYPE))
                     print('*********************************************')
         except Exception as e:
-            print(str(x) + '. Error: ' + e)
+            print(str(x) + '. Error: ' + str(e))
     p.terminate()
 
 
