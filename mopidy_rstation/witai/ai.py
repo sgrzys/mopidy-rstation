@@ -51,7 +51,7 @@ def set_audio_in(audio_in_name):
                     CHANNELS = 1
                     CONTENT_TYPE = \
                         'audio/raw;encoding=signed-integer;bits=16;' + \
-                        'rate={0};endian={1}'.format(RATE)
+                        'rate={0};endian=little'.format(RATE)
                     G_AUDIO_IN_NAME = audio_in_name
                     print('*********************************************')
                     print('Selected device index: ' + str(INPUT_DEVICE_INDEX))
