@@ -5,7 +5,7 @@ import requests
 import math
 
 THRESHOLD = .09
-CHUNK_SIZE = 512
+CHUNK_SIZE = 128
 FORMAT = pyaudio.paInt16
 RATE = 16000
 SHORT_NORMALIZE = (1.0/32768.0)

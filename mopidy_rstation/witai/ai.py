@@ -11,7 +11,7 @@ import traceback
 import alsaaudio
 
 RECORDING = False
-CHUNK = 512
+CHUNK = 128
 RATE = 8000
 RECORD_SECONDS = 5
 INPUT_DEVICE_INDEX = None
@@ -41,10 +41,10 @@ def set_mic(audio_in_name):
 def record_and_stream(inp):
     global RECORDING
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
-        _, data = inp.read()
-        yield data
         if RECORDING is False:
             break
+        _, data = inp.read()
+        yield data
 
 
 def ask_bot(mic=None):
@@ -160,4 +160,4 @@ def ask_bot(mic=None):
 
 
 if __name__ == '__main__':
-    ask_bot('default')
+    ask_bot('PCH')

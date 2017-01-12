@@ -135,6 +135,7 @@ class KeyPad(threading.Thread):
                                 print('key up on sunxi-gpiokey or KEY_COMPOSE')
                                 print('this action is ignored')
                             else:
+                                print("\n[*]> KEYUP -> ai.RECORDING = False\n")
                                 ai.RECORDING = False
 
                 except Exception as e:
