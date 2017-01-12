@@ -1,121 +1,48 @@
 # encoding=utf8
 from pprint import pprint
-# from StringIO import StringIO
-import wit
 from mopidy_rstation.utils import Utils
 from mopidy_rstation.player import control
 from mopidy_rstation.config.settings import Config
-import pyaudio
-import wave
-from StringIO import StringIO
-import traceback
 from mopidy_rstation.audio import sounds
 from mopidy_rstation.audio import voices
-
+import requests
+import json
+import pyaudio
+import traceback
 
 RECORDING = False
-# CHUNK = 256
-CHUNK = 1024
-FORMAT = pyaudio.paInt16
-CHANNELS = 1
+CHUNK = 512
 RATE = 8000
 RECORD_SECONDS = 5
 INPUT_DEVICE_INDEX = None
-G_AUDIO_IN_NAME = None
-CONTENT_TYPE = \
-    'audio/raw; encoding=signed-integer; bits=16; rate={0};endian=little' \
-    .format(RATE)
 
 
 def set_audio_in(audio_in_name):
-    global CHANNELS
-    global RATE
     global INPUT_DEVICE_INDEX
-    global CONTENT_TYPE
-    global G_AUDIO_IN_NAME
-    # if INPUT_DEVICE_INDEX is not None and G_AUDIO_IN_NAME == audio_in_name:
-    #         return
     p = pyaudio.PyAudio()
     for x in range(p.get_device_count()):
         try:
             info = p.get_device_info_by_index(x)
-            print('----------------------')
-            print('we have: ' + str(info))
-            print('----------------------')
             if info['maxInputChannels'] > 0:
+                print('----------------------')
+                print('MIC: ' + str(info))
+                print('----------------------')
                 if info['name'].startswith(audio_in_name):
                     INPUT_DEVICE_INDEX = info['index']
-                    RATE = int(info['defaultSampleRate'])
-                    # RATE = min(16000, int(info['defaultSampleRate']))
-                    # CHANNELS = int(info['maxInputChannels'])
-                    CHANNELS = 1
-                    CONTENT_TYPE = \
-                        'audio/raw;encoding=signed-integer;bits=16;' + \
-                        'rate={0};endian=little'.format(RATE)
-                    G_AUDIO_IN_NAME = audio_in_name
-                    print('*********************************************')
+                    print('**************************************************')
                     print('Selected device index: ' + str(INPUT_DEVICE_INDEX))
-                    print('Selected device rate: ' + str(RATE))
-                    print('Content type: ' + str(CONTENT_TYPE))
-                    print('*********************************************')
+                    print('**************************************************')
         except Exception as e:
             print(str(x) + '. Error: ' + str(e))
     p.terminate()
 
 
-def record_only():
+def record_and_stream(stream):
     global RECORDING
-    p = pyaudio.PyAudio()
-    output_file = StringIO()
-    stream = p.open(
-        format=FORMAT,
-        channels=CHANNELS,
-        rate=RATE,
-        input=True,
-        frames_per_buffer=CHUNK,
-        input_device_index=INPUT_DEVICE_INDEX)
-    all = []
-    sounds.play_file(sounds.C_SOUND_REC_START)
-    RECORDING = True
-    for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
-        data = stream.read(CHUNK, exception_on_overflow=False)
-        all.append(data)
-        # stop recording after RECORD_SECONDS or when the button is up
-        if RECORDING is False:
-            break
-    sounds.play_file(sounds.C_SOUND_REC_END)
-    stream.stop_stream()
-    stream.close()
-    p.terminate()
-    wf = wave.open(output_file, 'wb')
-    wf.setnchannels(CHANNELS)
-    wf.setsampwidth(p.get_sample_size(FORMAT))
-    wf.setframerate(RATE)
-    wf.writeframes(b''.join(all))
-    wf.close()
-    return output_file
-
-
-def record_and_stream():
-    global RECORDING
-    p = pyaudio.PyAudio()
-    stream = p.open(
-        format=FORMAT,
-        channels=CHANNELS,
-        rate=RATE,
-        input=True,
-        frames_per_buffer=CHUNK,
-        input_device_index=INPUT_DEVICE_INDEX)
-    RECORDING = True
-    sounds.play_file(sounds.C_SOUND_REC_START)
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
         yield stream.read(CHUNK, exception_on_overflow=False)
         if RECORDING is False:
             break
-    sounds.play_file(sounds.C_SOUND_REC_END)
-    stream.stop_stream()
-    stream.close()
-    p.terminate()
 
 
 def ask_bot(mic=None):
@@ -123,30 +50,51 @@ def ask_bot(mic=None):
     global RECORDING
     try:
         config = Config.get_config()
-        w = wit.Wit(config['wit_token'])
         if mic is not None:
             audio_in_name = mic
         else:
             audio_in_name = config['audio_in_name']
         print('set_audio_in -> ' + audio_in_name)
         set_audio_in(audio_in_name)
-        # TODO this is a faster version but the qualitty have to be improved
-        result = w.post_speech(
-            record_and_stream(), content_type=CONTENT_TYPE)
+
+        headers = {'Authorization': 'Bearer ' + config['wit_token'],
+                   'Content-Type': 'audio/raw; encoding=signed-integer; ' +
+                   'bits=16; rate=8000; endian=little',
+                   'Transfer-Encoding': 'chunked'}
+        url = 'https://api.wit.ai/speech'
+
+        p = pyaudio.PyAudio()
+        stream = p.open(
+            format=pyaudio.paInt16,
+            channels=1,
+            rate=RATE,
+            input=True,
+            output=True,
+            frames_per_buffer=CHUNK,
+            input_device_index=INPUT_DEVICE_INDEX)
+        RECORDING = True
+        sounds.play_file(sounds.C_SOUND_REC_START)
+
+        result = requests.post(
+            url, headers=headers, data=record_and_stream(stream))
+
+        sounds.play_file(sounds.C_SOUND_REC_END)
+        stream.stop_stream()
+        stream.close()
+        p.terminate()
+
         if result is not None:
             RECORDING = False
-        # slow version
-        # output_file = StringIO()
-        # output_file = record_only()
-        # result = w.post_speech(output_file.getvalue())
     except Exception:
         traceback.print_exc()
         return
     pprint(result)
+    result = json.loads(result.text)
+    pprint(result)
     intent = u' '
     item_type = u' '
     item = None
-    pprint('result')
+
     if result is not None:
         try:
             intent = result['entities']['intent'][0]['value']
@@ -172,8 +120,6 @@ def ask_bot(mic=None):
                             nie zrozumiałam co konkretnie mam włączyć.')
                         return
                     control.play_item(item, item_type)
-                    # voices.speak('PLAY_URI', val=item_type + ' ' + item)
-                    # v.speak(u'OK, już włączam ' + item_type + ' ' + item)
 
                 elif intent == 'set_volume':
                     try:
@@ -226,4 +172,4 @@ def ask_bot(mic=None):
 
 
 if __name__ == '__main__':
-    ask_bot('sysdefault')
+    ask_bot('default')

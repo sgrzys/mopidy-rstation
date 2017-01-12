@@ -4,12 +4,12 @@ import pyaudio
 import requests
 import math
 
-THRESHOLD = .05
-CHUNK_SIZE = 1024
+THRESHOLD = .09
+CHUNK_SIZE = 512
 FORMAT = pyaudio.paInt16
-RATE = 8000
+RATE = 16000
 SHORT_NORMALIZE = (1.0/32768.0)
-access_key = ''  # Your wit.ai key should go here.
+access_key = 'MEN4GZIFBTCEVKCMETRNYPYJBZXMGAMI'
 
 
 # Returns if the RMS of block is less than the threshold
@@ -48,15 +48,21 @@ def gen(p, stream):
     data = []
 
     while 1:
-        rms_data = stream.read(CHUNK_SIZE)
+        rms_data = stream.read(CHUNK_SIZE, exception_on_overflow=False)
         snd_data = array('i', rms_data)
         for d in snd_data:
             data.append(struct.pack('<i', d))
-
         rms, silent = is_silent(rms_data)
 
-        if silent and snd_started:
+        if silent:
             num_silent += 1
+            print('silent: ' + str(num_silent))
+        else:
+            print('NO silent: ' + str(num_silent))
+
+        if silent and snd_started:
+            # num_silent += 1
+            pass
 
         elif not silent and not snd_started:
             i = len(data) - CHUNK_SIZE*2  # Set the counter back a few seconds
@@ -66,13 +72,13 @@ def gen(p, stream):
             print("TRIGGER at " + str(rms) + " rms.")
 
         elif not silent and snd_started and not i >= len(data):
-            i, temp = returnUpTo(i, data, 1024)
+            i, temp = returnUpTo(i, data, 512)
             yield temp
             num_silent = 0
 
-        if snd_started and num_silent > 5:
-            print("Stop Trigger")
-            break
+        # if snd_started and num_silent > 20:
+        #    print("Stop Trigger")
+        #    break
 
         if counter > 75:  # Slightly less than 10 seconds.
             print("Timeout, Stop Trigger")
@@ -93,11 +99,11 @@ if __name__ == '__main__':
     p = pyaudio.PyAudio()
     stream = p.open(format=FORMAT, channels=1, rate=RATE,
                     input=True, output=True,
-                    frames_per_buffer=CHUNK_SIZE)
+                    frames_per_buffer=CHUNK_SIZE, input_device_index=8)
 
     headers = {'Authorization': 'Bearer ' + access_key,
                'Content-Type': 'audio/raw; encoding=signed-integer; bits=16;' +
-               ' rate=8000; endian=little', 'Transfer-Encoding': 'chunked'}
+               ' rate=16000; endian=little', 'Transfer-Encoding': 'chunked'}
     url = 'https://api.wit.ai/speech'
 
     foo = requests.post(url, headers=headers, data=gen(p, stream))
