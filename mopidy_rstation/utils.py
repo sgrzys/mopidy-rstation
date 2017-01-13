@@ -160,19 +160,20 @@ class Utils:
 
         from mopidy_rstation.weather import forecast
         from mopidy_rstation.audio import voices
-        from mopidy_rstation.config import settings
         if location is not None:
-            from geopy.geocoders import Nominatim
-            geolocator = Nominatim()
-            loc = geolocator.geocode(location)
-            gps = str(loc.latitude) + ',' + str(loc.longitude)
-            weather = forecast.ForecastData(location_gps=gps)
+            try:
+                from geopy.geocoders import Nominatim
+                geolocator = Nominatim()
+                loc = geolocator.geocode(location)
+                gps = str(loc.latitude) + ',' + str(loc.longitude)
+                weather = forecast.ForecastData(location_gps=gps)
+            except Exception as e:
+                voices.speak(
+                    'WEATHER_INFO',
+                    val='Error ' + str(e))
         else:
             weather = forecast.ForecastData(location_gps=None)
         weather.verbose = True
-        voices.speak(
-            'WEATHER_INFO',
-            val=weather.location_name + ', ' + weather.country_name)
 
         days = weather.read_txt_forecast()
         text = u""

@@ -41,10 +41,12 @@ def set_mic(audio_in_name):
 def record_and_stream(inp):
     global RECORDING
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
+        print('i ' + str(i) + ' RECORDING is ' + str(RECORDING))
         if RECORDING is False:
             break
         _, data = inp.read()
         yield data
+    print('record_and_stream done')
 
 
 def ask_bot(mic=None):
@@ -70,9 +72,9 @@ def ask_bot(mic=None):
         sounds.play_file(sounds.C_SOUND_REC_START)
         result = requests.post(
             url, headers=headers, data=record_and_stream(inp))
-        sounds.play_file(sounds.C_SOUND_REC_END)
         RECORDING = False
         print("[*]> Ready Recognize Voice\n")
+        sounds.play_file(sounds.C_SOUND_REC_END)
     except Exception:
         traceback.print_exc()
         return
