@@ -28,15 +28,18 @@ def set_mic(audio_in_name):
     # for pd in alsaaudio.pcms(alsaaudio.PCM_CAPTURE):
     #         print(str(pd))
     # PCM_NONBLOCK
-    inp = alsaaudio.PCM(
-        type=alsaaudio.PCM_CAPTURE,
-        mode=alsaaudio.PCM_NORMAL,
-        device=mic)
-    inp.setchannels(1)
-    inp.setrate(RATE)
-    inp.setformat(alsaaudio.PCM_FORMAT_S16_LE)
-    inp.setperiodsize(CHUNK)
-    return inp
+    try:
+        inp = alsaaudio.PCM(
+            type=alsaaudio.PCM_CAPTURE,
+            mode=alsaaudio.PCM_NORMAL,
+            device=mic)
+        inp.setchannels(1)
+        inp.setrate(RATE)
+        inp.setformat(alsaaudio.PCM_FORMAT_S16_LE)
+        inp.setperiodsize(CHUNK)
+        return inp
+    except Exception:
+        voices.speak_text('Problem z mikrofonem. Spróbuj zmienic port usb.')
 
 
 def record_and_stream(inp):
