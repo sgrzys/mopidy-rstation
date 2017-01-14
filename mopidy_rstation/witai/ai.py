@@ -14,15 +14,21 @@ import pygame
 RECORDING = False
 CHUNK = 512
 RATE = 8000
-RECORD_SECONDS = 5
+RECORD_SECONDS = 4
 INPUT_DEVICE_INDEX = None
 
 
 def set_mic(audio_in_name):
-    mic = 'plughw:CARD=' + audio_in_name + ',DEV=0'
-    # plughw:CARD=audiocodec,DEV=0
-    # plughw:CARD=Airmouse,DEV=0
-    # plughw:CARD=CameraB409241,DEV=0
+    global RATE
+    if audio_in_name == 'audiocodec':
+        # to fix the issue with the audio speed up
+        RATE = 44100
+    else:
+        RATE = 8000
+    mic = 'plughw:CARD=' + audio_in_name
+    # plughw:CARD=audiocodec
+    # plughw:CARD=Airmouse
+    # plughw:CARD=CameraB409241
     #
     # TODO test is we have this hardware
     # for pd in alsaaudio.pcms(alsaaudio.PCM_CAPTURE):
