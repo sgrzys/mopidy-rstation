@@ -29,18 +29,22 @@ def play_file(f, async=False):
     global channel
     if not pygame.mixer.get_init():
         pygame.mixer.init()
-        channel = pygame.mixer.Channel(5)
-    else:
-        channel = pygame.mixer.find_channel()
-        if channel is None:
-            pygame.mixer.set_num_channels(
-                pygame.mixer.get_num_channels()+1)
-            channel = pygame.mixer.find_channel()
-
+    #     channel = pygame.mixer.Channel(5)
+    # else:
+    #     channel = pygame.mixer.find_channel()
+    #     if channel is None:
+    #         pygame.mixer.set_num_channels(
+    #             pygame.mixer.get_num_channels()+1)
+    #         channel = pygame.mixer.find_channel()
     if type(f) is str or isinstance(f, unicode):
         sound = pygame.mixer.Sound(f)
     else:
         sound = pygame.mixer.Sound(f.name)
+
+    if channel is not None and channel.get_busy():
+        channel.stop()
+
+    channel = pygame.mixer.find_channel()
     channel.play(sound)
 
     if async is False:

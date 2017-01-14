@@ -72,7 +72,7 @@ def speak_text(text, thread=True):
     t = convert_text(text)
 
     if thread:
-        speak_time = time.time()
+        # speak_time = time.time()
         t = Thread(target=speak_text_thread, args=(t,))
         t.start()
     else:
@@ -85,12 +85,12 @@ def speak_text_thread(text):
     if voice is None:
         set_voice()
     # wait a little
-    time.sleep(0.4)
+    # time.sleep(0.4)
     # check if no next button was pressed
-    if time.time() - speak_time > 0.4:
-        voice.speak(text)
-    else:
-        pass
+    # if time.time() - speak_time > 0.4:
+    voice.speak(text)
+    # else:
+    # pass
 
 
 def speak(codes, *param, **key):
