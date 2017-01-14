@@ -54,6 +54,7 @@ def ask_bot(mic=None):
     global RECORDING
     try:
         config = Config.get_config()
+        lang = Config.get_current_lang(short=True)
         if mic is not None:
             audio_in_name = mic
         else:
@@ -61,7 +62,7 @@ def ask_bot(mic=None):
         print('set_mic -> ' + audio_in_name)
         inp = set_mic(audio_in_name)
 
-        headers = {'Authorization': 'Bearer ' + config['wit_token'],
+        headers = {'Authorization': 'Bearer ' + config['wit_token_' + lang],
                    'Content-Type': 'audio/raw; encoding=signed-integer; ' +
                    'bits=16; rate=8000; endian=little',
                    'Transfer-Encoding': 'chunked'}

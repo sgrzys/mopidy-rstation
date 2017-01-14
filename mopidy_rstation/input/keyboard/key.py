@@ -9,7 +9,8 @@ import functools
 import errno
 import traceback
 from threading import Thread
-import pygame
+# import pygame
+from mopidy_rstation.audio import sounds
 from mopidy_rstation.audio import voices
 from mopidy_rstation.witai import ai
 
@@ -199,11 +200,14 @@ class KeyPad(threading.Thread):
         # workeround - kill the ivona - to stop the forecast
         if code != 'KEY_VOLUMEDOWN' and code != 'KEY_VOLUMEUP':
             try:
-                if pygame.mixer.music.get_busy:
-                    pygame.mixer.music.stop()
-                    pygame.mixer.quit()
-                    pygame.quit()
+                if sounds.channel.get_busy():
+                    sounds.channel.stop()
                     voices.stop_speak_long_text = True
+                # if pygame.mixer.music.get_busy:
+                #     pygame.mixer.music.stop()
+                #     pygame.mixer.quit()
+                #     pygame.quit()
+                #     voices.stop_speak_long_text = True
             except Exception:
                 traceback.print_exc()
 

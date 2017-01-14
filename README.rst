@@ -50,7 +50,10 @@ Mopidy-Rstation to your Mopidy configuration file::
 
     [rstation]
     enabled = true
-    wit_token = XXX
+    wit_token_pl = XXX
+    wit_token_en = XXX
+    wit_token_ru = XXX
+    wit_token_fr = XXX
     ivona_access_key = XXX
     ivona_secret_key = X/X
     language = pl-PL

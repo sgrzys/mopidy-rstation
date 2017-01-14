@@ -17,12 +17,15 @@ class Extension(ext.Extension):
 
     def get_config_schema(self):
         schema = super(Extension, self).get_config_schema()
-        schema['wit_token'] = config.String()
         schema['ivona_access_key'] = config.String()
         schema['ivona_secret_key'] = config.String()
         schema['location_gps'] = config.String()
         schema['weather_api_key'] = config.String()
         # optional
+        schema['wit_token_pl'] = config.String(optional=True)
+        schema['wit_token_en'] = config.String(optional=True)
+        schema['wit_token_ru'] = config.String(optional=True)
+        schema['wit_token_fr'] = config.String(optional=True)
         schema['audio_in_name'] = config.String(optional=True)
         schema['audio_out_name'] = config.String(optional=True)
         schema['language'] = config.String(optional=True)
