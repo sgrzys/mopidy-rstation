@@ -3,7 +3,7 @@ from mopidy_rstation.config.settings import Config
 import os
 import sys
 from threading import Thread
-import time
+# import time
 import i18n
 # import sounds
 

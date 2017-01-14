@@ -9,6 +9,7 @@ import requests
 import json
 import traceback
 import alsaaudio
+import pygame
 
 RECORDING = False
 CHUNK = 512
@@ -40,6 +41,10 @@ def set_mic(audio_in_name):
 
 def record_and_stream(inp):
     global RECORDING
+    if pygame.mixer.music.get_busy:
+        pygame.mixer.music.stop()
+        pygame.mixer.quit()
+        pygame.quit()
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
         print('i ' + str(i) + ' RECORDING is ' + str(RECORDING))
         if RECORDING is False:

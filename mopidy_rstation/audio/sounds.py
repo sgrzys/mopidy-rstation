@@ -28,7 +28,8 @@ def beep():
 def play_file(f, async=False):
     global channel
     if not pygame.mixer.get_init():
-        pygame.mixer.init()
+        pygame.mixer.init(
+            frequency=44100, size=-16, channels=1, buffer=2**12)
     #     channel = pygame.mixer.Channel(5)
     # else:
     #     channel = pygame.mixer.find_channel()
