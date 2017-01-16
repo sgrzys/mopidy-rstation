@@ -45,6 +45,8 @@
         "APP_SOURCES_UP_TO_DATE": "Źródła systemu są aktualne",
         "APP_SOURCES_UPDATED": "Aktualizuję źródła systemu",
         "APP_UPDATED": "Aktualizuję system",
-        "SERVICE_RESTART": "Restart usługi, do usłyszenia za chwilę!"
+        "SERVICE_RESTART": "Restart usługi, do usłyszenia za chwilę!",
+        "WIT_HEAR_NOTHING": "Przepraszam ale nic nie słychać.",
+        "WIT_HEAR_BUT_NOT_UNDERSTAND": "Nie rozumiem polecenia:"
     }
 }

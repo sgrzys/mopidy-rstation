@@ -45,6 +45,8 @@
         "APP_SOURCES_UP_TO_DATE": "System sources up to date",
         "APP_SOURCES_UPDATED": "Update system sources",
         "APP_UPDATED": "System update",
-        "SERVICE_RESTART": "Restarting"
+        "SERVICE_RESTART": "Restarting",
+        "WIT_HEAR_NOTHING": "Sorry, but I hear nothing!",
+        "WIT_HEAR_BUT_NOT_UNDERSTAND": "I don't understand what I heard:"
     }
 }

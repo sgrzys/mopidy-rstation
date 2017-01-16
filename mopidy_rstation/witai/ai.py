@@ -1,10 +1,9 @@
 # encoding=utf8
 from pprint import pprint
-from mopidy_rstation.utils import Utils
-from mopidy_rstation.player import control
 from mopidy_rstation.config.settings import Config
 from mopidy_rstation.audio import sounds
 from mopidy_rstation.audio import voices
+import parser
 import requests
 import json
 import traceback
@@ -14,7 +13,7 @@ import pygame
 RECORDING = False
 CHUNK = 512
 RATE = 8000
-RECORD_SECONDS = 4
+RECORD_SECONDS = 3
 INPUT_DEVICE_INDEX = None
 
 
@@ -93,88 +92,12 @@ def ask_bot(mic=None):
     except Exception:
         traceback.print_exc()
         return
+    # HTTP code
     pprint(result)
     result = json.loads(result.text)
+    # JSON message
     pprint(result)
-    intent = u' '
-    item_type = u' '
-    item = None
 
-    if result is not None:
-        try:
-            intent = result['entities']['intent'][0]['value']
-        except Exception:
-            traceback.print_exc()
-            intent = None
-        if result['_text'] is not None:
-            if intent is not None:
-                if intent == 'play_item':
-                    try:
-                        item_type = result['entities']['type'][0]['value']
-                    except Exception:
-                        print('we do not have item type')
-                        item_type = ''
-                    try:
-                        item = result['entities']['item'][0]['value']
-                    except Exception:
-                        print('we do not have item!')
-                        voices.speak_text(
-                            u'Usłyszałam ' + result['_text'] + u' \
-                            . Zrozumiałam, że intencją jest \
-                            odtwarzanie ' + item_type + u'. Niestety \
-                            nie zrozumiałam co konkretnie mam włączyć.')
-                        return
-                    control.play_item(item, item_type)
-
-                elif intent == 'set_volume':
-                    try:
-                        vol = int(result['entities']['value'][0]['value'])
-                    except Exception:
-                        traceback.print_exc()
-                        voices.speak_text(
-                            u'Usłyszałam ' + result['_text'] + u' \
-                            . Zrozumiałam, że intencją jest ustawienie \
-                            głośności. Niestety nie zrozumiałam jaką głośność \
-                            mam ustawić.')
-                        return
-                    try:
-                        Utils.set_volume(vol)
-                    except Exception:
-                        traceback.print_exc()
-                        voices.speak_text(
-                            u'Mam problem z ustawieniem głośności, \
-                            sprawdz kotku w logach.')
-
-                elif intent == 'get_weather':
-                    location = None
-                    try:
-                        location = result['entities']['location'][0]['value']
-                    except Exception:
-                        traceback.print_exc()
-                    Utils.forecast_weather(location)
-                elif intent == 'search_wikipedia':
-                    query = None
-                    try:
-                        query = result['entities'][
-                            'wikipedia_search_query'][0]['value']
-                    except Exception:
-                        traceback.print_exc()
-                        voices.speak_text(
-                            u'Usłyszałam ' + result['_text'] + u' \
-                            . Zrozumiałam, że intencją jest \
-                            szukanie informacji na Wikipedii ' + u'. Niestety \
-                            nie zrozumiałam co konkretnie mam szukać.')
-                        return
-                    Utils.search_wikipedia(query)
-                elif intent == 'get_time':
-                    Utils.get_time()
-            else:
-                voices.speak_text(
-                    u'Usłyszałam ' + result['_text'] + u' Niestety nie \
-                    zrozumiałam twojej intencji.')
-        else:
-            voices.speak_text(u'Przepraszam, ale nic nie słyszałam.')
-
-
+    parser.parse_wit(result)
 if __name__ == '__main__':
     ask_bot('PCH')

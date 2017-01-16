@@ -45,6 +45,8 @@
         "APP_SOURCES_UP_TO_DATE": "Источники в актуальном состоянии",
         "APP_SOURCES_UPDATED": "Источники обновления системы",
         "APP_UPDATED": "обновление системы",
-        "SERVICE_RESTART": "перезапуск"
+        "SERVICE_RESTART": "перезапуск",
+        "WIT_HEAR_NOTHING": "Sorry, but I hear nothing!",
+        "WIT_HEAR_BUT_NOT_UNDERSTAND": "I don't understand what I heard:"
     }
 }
