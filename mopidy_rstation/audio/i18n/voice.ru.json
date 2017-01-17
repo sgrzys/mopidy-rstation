@@ -46,7 +46,7 @@
         "APP_SOURCES_UPDATED": "Источники обновления системы",
         "APP_UPDATED": "обновление системы",
         "SERVICE_RESTART": "перезапуск",
-        "WIT_HEAR_NOTHING": "Sorry, but I hear nothing!",
-        "WIT_HEAR_BUT_NOT_UNDERSTAND": "I don't understand what I heard:"
+        "WIT_HEAR_NOTHING": "Извините, но я ничего не слышу!!",
+        "WIT_HEAR_BUT_NOT_UNDERSTAND": "Я не понял, что я слышал:"
     }
 }
