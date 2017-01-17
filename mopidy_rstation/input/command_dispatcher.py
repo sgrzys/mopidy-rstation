@@ -399,11 +399,11 @@ class CommandDispatcher(object):
             self.player_play_pause()
 
         if cmd == 'vol_down':
-            vol = max(int(self.core.playback.volume.get()) - 10, 0)
+            vol = max(int(self.core.playback.volume.get()) - 5, 0)
             self.core.playback.volume = vol
 
         if cmd == 'vol_up':
-            vol = min(int(self.core.playback.volume.get()) + 10, 100)
+            vol = min(int(self.core.playback.volume.get()) + 5, 100)
             self.core.playback.volume = vol
 
         if cmd == 'change_lang':

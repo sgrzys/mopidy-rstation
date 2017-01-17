@@ -10,6 +10,8 @@ from mopidy import backend, exceptions, models
 from mopidy.audio import scan, tags
 import mpath
 from ..utils import Utils
+from mopidy_rstation.podcast import feeds
+from mopidy_rstation.podcast import library
 
 
 logger = logging.getLogger(__name__)
@@ -107,7 +109,12 @@ class FileLibraryProvider(backend.LibraryProvider):
                         models.Track(uri=i.uri, name=i.name)
                     )
             return tracks
+        elif uri.endswith(('.opml')):
+            logger.debug('Medialib... we have opml: %s', uri)
+            tracks = feeds.get_tracks_form_opml(uri)
+            return tracks
         else:
+            track = None
             try:
                 result = self._scanner.scan(uri)
                 track = tags.convert_tags_to_track(result.tags).copy(
@@ -115,13 +122,11 @@ class FileLibraryProvider(backend.LibraryProvider):
             except exceptions.ScannerError as e:
                 logger.warning('Failed looking up %s: %s', uri, e)
                 track = models.Track(uri=uri)
-
             if not track.name:
                 filename = os.path.basename(local_path)
                 name = urllib2.unquote(filename).decode(FS_ENCODING, 'replace')
                 track = track.copy(name=name)
-
-        return [track]
+            return [track]
 
     def _get_media_dir(self, config):
         logger.debug('_get_media_dir ' + str(
